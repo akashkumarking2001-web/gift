@@ -25,17 +25,22 @@ export const ProfileService = {
         if (existing) return existing;
 
         // Create new profile
-        const { data: newProfile, error } = await supabase
+        // Create new profile without read-back to avoid RLS race condition
+        const { error } = await supabase
             .from('user_profiles')
             .insert({
                 id: user.id,
                 email: user.email || '',
-            })
-            .select()
-            .single();
+            });
 
         if (error) throw error;
-        return newProfile;
+
+        return {
+            id: user.id,
+            email: user.email || '',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        } as UserProfile;
     },
 
     // Update user profile
@@ -43,18 +48,24 @@ export const ProfileService = {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) throw new Error('User not authenticated');
 
-        const { data, error } = await supabase
+        // Update without read-back to avoid RLS race condition
+        const { error } = await supabase
             .from('user_profiles')
             .update({
                 ...updates,
                 updated_at: new Date().toISOString(),
             })
-            .eq('id', user.id)
-            .select()
-            .single();
+            .eq('id', user.id);
 
         if (error) throw error;
-        return data;
+
+        // Return constructed profile (partial is okay for immediate UI use)
+        return {
+            id: user.id,
+            email: user.email || '',
+            ...updates,
+            updated_at: new Date().toISOString()
+        } as UserProfile;
     },
 
     // Get user profile
