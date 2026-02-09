@@ -24,6 +24,7 @@ const Editor = () => {
     const [previewMode, setPreviewMode] = useState<'mobile' | 'desktop'>('mobile');
     const [isSaving, setIsSaving] = useState(false);
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
+    const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
     // Load template and gift data
     useEffect(() => {
@@ -53,6 +54,36 @@ const Editor = () => {
         }, 30000);
         return () => clearInterval(timer);
     }, [giftData]);
+
+    // Countdown Logic for Preview
+    useEffect(() => {
+        if (!template) return;
+        const activePage = template.pages[activePageIndex];
+        const pageData = giftData[activePage.id] || {};
+
+        if (activePage.type !== 'countdown' || !pageData.targetDate) return;
+
+        const target = new Date(pageData.targetDate).getTime();
+
+        const interval = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = target - now;
+
+            if (distance < 0) {
+                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+                return;
+            }
+
+            setTimeLeft({
+                days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+                seconds: Math.floor((distance % (1000 * 60)) / 1000)
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [activePageIndex, giftData, template]);
 
     const handleSave = async (isAuto = false) => {
         if (isSaving || !id) return;
@@ -123,6 +154,18 @@ const Editor = () => {
         }));
     };
 
+    const handlePreview = () => {
+        if (gift?.gift_uuid) {
+            window.open(`/gift/${gift.gift_uuid}`, '_blank');
+        } else {
+            toast({
+                title: "Preview Unavailable",
+                description: "Save your changes first to generate a preview.",
+                variant: "destructive"
+            });
+        }
+    };
+
     if (!template) return <div className="min-h-screen flex items-center justify-center">Loading editor...</div>;
 
     const activePage = template.pages[activePageIndex];
@@ -173,6 +216,7 @@ const Editor = () => {
 
                     <div className="flex items-center gap-3">
                         <motion.button
+                            onClick={handlePreview}
                             whileHover={{ y: -2 }}
                             whileTap={{ scale: 0.95 }}
                             className="flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-white/70 hover:text-white"
@@ -429,17 +473,28 @@ const Editor = () => {
 
                     <div className="flex-1 flex flex-col items-center justify-center">
                         <motion.div
+                            layout
                             initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            className="relative w-full max-w-[320px] aspect-[9/18.5] bg-[#0A0A0A] rounded-[4rem] border-[14px] border-[#1C1C1E] shadow-[0_100px_100px_-30px_rgba(0,0,0,0.8)] p-1 overflow-hidden group/phone"
+                            animate={{
+                                scale: 1,
+                                opacity: 1,
+                                maxWidth: previewMode === 'mobile' ? 320 : '100%',
+                                aspectRatio: previewMode === 'mobile' ? 9 / 18.5 : 16 / 9,
+                                borderRadius: previewMode === 'mobile' ? '4rem' : '1rem'
+                            }}
+                            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                            className={`relative w-full bg-[#0A0A0A] border-[14px] border-[#1C1C1E] shadow-[0_100px_100px_-30px_rgba(0,0,0,0.8)] p-1 overflow-hidden group/phone transition-all duration-500`}
                         >
                             {/* Notch */}
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-8 bg-[#1C1C1E] rounded-b-3xl z-50 flex items-center justify-center">
-                                <div className="w-12 h-1 bg-white/5 rounded-full" />
-                            </div>
+                            {/* Notch - Only show on mobile */}
+                            {previewMode === 'mobile' && (
+                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-8 bg-[#1C1C1E] rounded-b-3xl z-50 flex items-center justify-center">
+                                    <div className="w-12 h-1 bg-white/5 rounded-full" />
+                                </div>
+                            )}
 
                             {/* Screen Content */}
-                            <div className="w-full h-full bg-[#050505] rounded-[3rem] relative overflow-hidden flex items-center justify-center isolate">
+                            <div className={`w-full h-full bg-[#050505] ${previewMode === 'mobile' ? 'rounded-[3rem]' : 'rounded-lg'} relative overflow-hidden flex items-center justify-center isolate`}>
                                 <FloatingHearts />
                                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-secondary/10 pointer-events-none" />
 
@@ -472,6 +527,28 @@ const Editor = () => {
                                     >
                                         {giftData[activePage.id]?.message || giftData[activePage.id]?.subtext || "Real-time verification stream active..."}
                                     </motion.p>
+
+                                    {/* Countdown Preview */}
+                                    {activePage.type === 'countdown' && (
+                                        <motion.div
+                                            initial={{ scale: 0.8, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            transition={{ delay: 0.2 }}
+                                            className="grid grid-cols-4 gap-2 bg-black/40 p-3 rounded-2xl border border-white/10 mt-6"
+                                        >
+                                            {[
+                                                { label: 'D', value: timeLeft.days },
+                                                { label: 'H', value: timeLeft.hours },
+                                                { label: 'M', value: timeLeft.minutes },
+                                                { label: 'S', value: timeLeft.seconds }
+                                            ].map(item => (
+                                                <div key={item.label} className="text-center">
+                                                    <div className="text-lg font-black text-white">{String(item.value).padStart(2, '0')}</div>
+                                                    <div className="text-[6px] font-bold text-primary">{item.label}</div>
+                                                </div>
+                                            ))}
+                                        </motion.div>
+                                    )}
 
                                     {/* Bottom Indicator */}
                                     <div className="absolute bottom-12 left-0 right-0 px-10">
