@@ -86,5 +86,27 @@ export const GiftService = {
 
         if (error) throw error;
         return data;
+    },
+
+    async uploadMedia(file: File) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("User not authenticated");
+
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+        // Create bucket if not exists handle in UI or catch error? 
+        // Assuming bucket 'uploads' exists.
+        const { error: uploadError } = await supabase.storage
+            .from('uploads')
+            .upload(fileName, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('uploads')
+            .getPublicUrl(fileName);
+
+        return publicUrl;
     }
 };

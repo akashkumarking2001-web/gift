@@ -23,6 +23,8 @@ const Editor = () => {
     const [activePageIndex, setActivePageIndex] = useState(0);
     const [previewMode, setPreviewMode] = useState<'mobile' | 'desktop'>('mobile');
     const [isSaving, setIsSaving] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -110,6 +112,50 @@ const Editor = () => {
         } finally {
             setIsSaving(false);
         }
+    };
+
+
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, pageId: string, field: string) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+
+        setIsUploading(true);
+        const newUrls: string[] = [];
+
+        try {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                // Check size (max 50MB for video, 5MB for image)
+                const maxSize = file.type.startsWith('video/') ? 50 * 1024 * 1024 : 5 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    toast({ title: "File too large", description: `${file.name} is too large.`, variant: "destructive" });
+                    continue;
+                }
+
+                const url = await GiftService.uploadMedia(file);
+                if (url) newUrls.push(url);
+            }
+
+            // Update state
+            const currentUrls = giftData[pageId]?.[field] || [];
+            updateField(pageId, field, [...currentUrls, ...newUrls]);
+
+            toast({ title: "Upload Complete", description: `Successfully uploaded ${newUrls.length} file(s).` });
+        } catch (error: any) {
+            console.error("Upload error:", error);
+            toast({ title: "Upload Failed", description: error.message || "Failed to upload media.", variant: "destructive" });
+        } finally {
+            setIsUploading(false);
+            // Reset input
+            e.target.value = '';
+        }
+    };
+
+    const removeMedia = (pageId: string, field: string, indexToRemove: number) => {
+        const currentUrls = giftData[pageId]?.[field] || [];
+        const newUrls = currentUrls.filter((_: any, index: number) => index !== indexToRemove);
+        updateField(pageId, field, newUrls);
     };
 
     const handlePublish = async () => {
@@ -382,22 +428,57 @@ const Editor = () => {
                                                 />
                                                 <div className="absolute right-6 bottom-6 text-[10px] font-black tracking-widest text-white/20">CTRL + S</div>
                                             </div>
-                                        ) : field === 'photos' ? (
-                                            <motion.div
-                                                whileHover={{ scale: 0.99, y: 2 }}
-                                                className="group relative border-2 border-dashed border-white/10 rounded-[2.5rem] p-16 flex flex-col items-center justify-center gap-6 hover:bg-white/5 hover:border-primary/40 transition-all cursor-pointer"
-                                            >
-                                                <div className="w-20 h-20 rounded-[2rem] bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-inner group-hover:scale-110 transition-transform">
-                                                    <ImageIcon className="w-10 h-10" />
+                                        ) : field === 'photos' || field === 'videos' || field.includes('media') ? (
+                                            <div className="space-y-6">
+                                                {/* Upload Area */}
+                                                <div className="relative group border-2 border-dashed border-white/10 rounded-[2.5rem] p-10 hover:bg-white/5 hover:border-primary/40 transition-all text-center">
+                                                    <input
+                                                        type="file"
+                                                        multiple
+                                                        accept="image/*,video/*"
+                                                        onChange={(e) => handleFileUpload(e, activePage.id, field)}
+                                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                                        disabled={isUploading}
+                                                    />
+
+                                                    {isUploading ? (
+                                                        <div className="flex flex-col items-center gap-4">
+                                                            <div className="w-12 h-12 rounded-full border-4 border-primary/30 border-t-primary animate-spin" />
+                                                            <p className="text-sm font-bold text-white/60 animate-pulse">Uploading Media...</p>
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            <div className="w-16 h-16 rounded-[1.5rem] bg-primary/10 flex items-center justify-center text-primary border border-primary/20 mx-auto mb-4 group-hover:scale-110 transition-transform">
+                                                                <ImageIcon className="w-8 h-8" />
+                                                            </div>
+                                                            <p className="text-lg font-black text-white italic">Drop Images or Videos Here</p>
+                                                            <p className="text-[10px] font-bold text-white/30 mt-2 uppercase tracking-widest">JPG, PNG, MP4 (Max 50MB)</p>
+                                                        </>
+                                                    )}
                                                 </div>
-                                                <div className="text-center">
-                                                    <p className="text-xl font-black text-white italic tracking-tight underline decoration-primary/30 underline-offset-8">Inject Visual Assets</p>
-                                                    <p className="text-[10px] font-bold text-white/20 mt-4 uppercase tracking-widest">Supports high fidelity JPG, PNG, WEBP (Max 10)</p>
-                                                </div>
-                                                {/* Corner accents */}
-                                                <div className="absolute top-8 left-8 w-4 h-4 border-t-2 border-l-2 border-white/10 group-hover:border-primary/50 transition-colors" />
-                                                <div className="absolute bottom-8 right-8 w-4 h-4 border-b-2 border-r-2 border-white/10 group-hover:border-primary/50 transition-colors" />
-                                            </motion.div>
+
+                                                {/* Preview Grid */}
+                                                {(giftData[activePage.id]?.[field] || []).length > 0 && (
+                                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                                        {(giftData[activePage.id]?.[field] || []).map((url: string, idx: number) => (
+                                                            <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden group/item border border-white/10 bg-black/40">
+                                                                {url.match(/\.(mp4|webm|mov)$/i) ? (
+                                                                    <video src={url} className="w-full h-full object-cover" muted loop autoPlay playsInline />
+                                                                ) : (
+                                                                    <img src={url} alt="Uploaded" className="w-full h-full object-cover" />
+                                                                )}
+
+                                                                <button
+                                                                    onClick={() => removeMedia(activePage.id, field, idx)}
+                                                                    className="absolute top-2 right-2 w-8 h-8 bg-red-500/80 hover:bg-red-500 rounded-full flex items-center justify-center text-white opacity-0 group-hover/item:opacity-100 transition-opacity"
+                                                                >
+                                                                    X
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
                                         ) : field.includes('Date') ? (
                                             <div className="relative group">
                                                 <input
