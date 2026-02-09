@@ -99,15 +99,24 @@ const AdminDashboard = () => {
   };
 
   const checkAuth = async () => {
-    // Temporarily disabled for testing - direct access allowed
-    console.log("Auth check bypassed for testing");
-    return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      navigate("/admin/login");
+      return;
+    }
 
-    // Original auth check (commented out)
-    // const { data: { session } } = await supabase.auth.getSession();
-    // if (!session) {
-    //   navigate("/admin/login");
-    // }
+    const email = session.user.email || "";
+    const isAdmin = ['admin@giftmagic.com', 'gdchgcxhj@gmail.com', 'akashkumarking2001@gmail.com'].includes(email) ||
+      session.user.app_metadata?.role === 'admin';
+
+    if (!isAdmin) {
+      toast({
+        title: "Access Denied",
+        description: "You do not have administrative privileges.",
+        variant: "destructive"
+      });
+      navigate("/");
+    }
   };
 
   const fetchPayments = async () => {
@@ -390,14 +399,14 @@ const AdminDashboard = () => {
                   <div className="p-3 bg-emerald-500/10 rounded-xl"><div className="text-emerald-500 font-bold">₹</div></div>
                 </div>
                 <h3 className="text-white/60 text-sm font-medium">Total Revenue</h3>
-                <p className="text-4xl font-black mt-1">₹{totalRevenue}</p>
+                <p className="text-4xl font-black mt-1">₹{purchases.filter(p => p.status === 'approved').reduce((sum, p) => sum + p.amount_paid, 0)}</p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-6 rounded-2xl border-l-4 border-l-blue-500">
                 <div className="flex justify-between items-start mb-4">
                   <div className="p-3 bg-blue-500/10 rounded-xl"><Users className="w-5 h-5 text-blue-500" /></div>
                 </div>
                 <h3 className="text-white/60 text-sm font-medium">Total Transactions</h3>
-                <p className="text-4xl font-black mt-1">{paymentList.length}</p>
+                <p className="text-4xl font-black mt-1">{purchases.length}</p>
               </motion.div>
             </section>
 
@@ -437,15 +446,13 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
-                    {isLoading ? (
-                      <tr><td colSpan={7} className="p-8 text-center text-white/40">Loading...</td></tr>
-                    ) : displayedPayments.length === 0 ? (
-                      <tr><td colSpan={7} className="p-8 text-center text-white/40">No {paymentSubTab} records found.</td></tr>
-                    ) : displayedPayments.map((p) => (
+                    {purchases.length === 0 ? (
+                      <tr><td colSpan={7} className="p-8 text-center text-white/40">No records found.</td></tr>
+                    ) : (paymentSubTab === 'pending' ? purchases.filter(p => p.status === 'pending') : purchases.filter(p => p.status !== 'pending')).map((p) => (
                       <motion.tr key={p.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hover:bg-white/[0.02] transition-colors">
                         <td className="px-6 py-5 whitespace-nowrap">
-                          <div className="text-sm font-medium">{new Date(p.created_at).toLocaleDateString()}</div>
-                          <div className="text-[10px] text-white/30">{new Date(p.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                          <div className="text-sm font-medium">{new Date(p.purchased_at).toLocaleDateString()}</div>
+                          <div className="text-[10px] text-white/30">{new Date(p.purchased_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                         </td>
                         <td className="px-6 py-5">
                           <div className="font-bold text-sm text-white/90">{p.user_email.split('@')[0]}</div>
@@ -455,15 +462,15 @@ const AdminDashboard = () => {
                           <code className="bg-white/5 px-2 py-1 rounded text-[11px] text-primary/80 font-mono border border-white/5">{p.transaction_id}</code>
                         </td>
                         <td className="px-6 py-5">
-                          {p.screenshot_url ? (
-                            <a href={p.screenshot_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-blue-400 hover:text-blue-300">
+                          {p.payment_screenshot_url ? (
+                            <a href={p.payment_screenshot_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-blue-400 hover:text-blue-300">
                               <ImageIcon className="w-4 h-4" /> View
                             </a>
                           ) : (
                             <span className="text-xs text-white/20">No File</span>
                           )}
                         </td>
-                        <td className="px-6 py-5 font-black text-sm">₹{p.amount}</td>
+                        <td className="px-6 py-5 font-black text-sm">₹{p.amount_paid}</td>
                         <td className="px-6 py-5">
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border ${p.status === 'approved' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : p.status === 'rejected' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-primary/10 text-primary border-primary/20'}`}>
                             {p.status}
@@ -472,8 +479,8 @@ const AdminDashboard = () => {
                         <td className="px-6 py-5 text-right">
                           {p.status === 'pending' && (
                             <div className="flex justify-end gap-2">
-                              <button onClick={() => handleApprove(p.id)} className="bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white w-8 h-8 rounded-lg transition-all flex items-center justify-center border border-emerald-500/20"><Check className="w-4 h-4" /></button>
-                              <button onClick={() => handleReject(p.id)} className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white w-8 h-8 rounded-lg transition-all flex items-center justify-center border border-red-500/20"><X className="w-4 h-4" /></button>
+                              <button onClick={() => handleApprovePurchase(p.id)} className="bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white w-8 h-8 rounded-lg transition-all flex items-center justify-center border border-emerald-500/20"><Check className="w-4 h-4" /></button>
+                              <button onClick={() => handleRejectPurchase(p.id)} className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white w-8 h-8 rounded-lg transition-all flex items-center justify-center border border-red-500/20"><X className="w-4 h-4" /></button>
                             </div>
                           )}
                         </td>
@@ -558,13 +565,43 @@ const AdminDashboard = () => {
                           />
                         </div>
                         <div className="space-y-2">
-                          <label className="text-xs font-bold uppercase tracking-widest text-white/40">Category</label>
+                          <label className="text-xs font-bold uppercase tracking-widest text-white/40">Markdown MRP (₹)</label>
                           <input
-                            value={editingTemplate.category}
-                            onChange={(e) => setEditingTemplate({ ...editingTemplate, category: e.target.value })}
+                            type="number"
+                            value={editingTemplate.originalPrice || editingTemplate.price}
+                            onChange={(e) => setEditingTemplate({ ...editingTemplate, originalPrice: parseInt(e.target.value) })}
                             className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
                           />
                         </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-widest text-white/40">Category</label>
+                        <input
+                          value={editingTemplate.category}
+                          onChange={(e) => setEditingTemplate({ ...editingTemplate, category: e.target.value })}
+                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-widest text-white/40">Icon URL / Image</label>
+                        <input
+                          value={editingTemplate.icon}
+                          onChange={(e) => setEditingTemplate({ ...editingTemplate, icon: e.target.value })}
+                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                          placeholder="Emoji (✨) or https://..."
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-widest text-white/40">Theme Color (Tailwind Class)</label>
+                        <input
+                          value={editingTemplate.color}
+                          onChange={(e) => setEditingTemplate({ ...editingTemplate, color: e.target.value })}
+                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                          placeholder="from-pink-500 to-rose-500"
+                        />
                       </div>
 
                       <button
@@ -610,10 +647,10 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {Array.from(new Set(paymentList.map(p => p.user_email))).map((email) => {
-                    const userPayments = paymentList.filter(p => p.user_email === email);
-                    const lastPayment = userPayments[0];
-                    const totalSpent = userPayments.filter(p => p.status === 'approved').reduce((sum, p) => sum + p.amount, 0);
+                  {Array.from(new Set(purchases.map(p => p.user_email))).map((email) => {
+                    const userPurchases = purchases.filter(p => p.user_email === email);
+                    const lastPurchase = userPurchases[0];
+                    const totalSpent = userPurchases.filter(p => p.status === 'approved').reduce((sum, p) => sum + p.amount_paid, 0);
 
                     return (
                       <tr key={email} className="hover:bg-white/[0.02]">
@@ -624,14 +661,14 @@ const AdminDashboard = () => {
                           </div>
                         </td>
                         <td className="px-6 py-4 font-mono text-emerald-400">₹{totalSpent}</td>
-                        <td className="px-6 py-4 text-xs text-white/40">{new Date(lastPayment.created_at).toLocaleDateString()}</td>
+                        <td className="px-6 py-4 text-xs text-white/40">{new Date(lastPurchase.purchased_at).toLocaleDateString()}</td>
                         <td className="px-6 py-4 text-right">
                           <span className="text-[10px] bg-green-500/10 text-green-500 px-2 py-1 rounded-full font-bold uppercase">Active</span>
                         </td>
                       </tr>
                     );
                   })}
-                  {paymentList.length === 0 && (
+                  {purchases.length === 0 && (
                     <tr><td colSpan={4} className="p-8 text-center text-white/40">No user records found.</td></tr>
                   )}
                 </tbody>
