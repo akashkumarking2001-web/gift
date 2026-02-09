@@ -10,6 +10,7 @@ import { supabase } from "../lib/supabase";
 import { GiftService } from "../lib/gifts";
 import { PaymentService } from "../lib/payments";
 import { PurchaseService, UserPurchase } from "../lib/purchaseService";
+import { ProfileService } from "../lib/profileService";
 import { TemplateService } from "../lib/templateService";
 import { useToast } from "../hooks/use-toast";
 import { TEMPLATES, TemplateDefinition } from "../lib/templates";
@@ -38,11 +39,8 @@ const Dashboard = () => {
       setUser(session.user);
 
       // Fetch profile
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single();
+      // Fetch profile
+      const profileData = await ProfileService.getProfile();
       setProfile(profileData);
 
       // Fetch user purchases
