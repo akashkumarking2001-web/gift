@@ -39,6 +39,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '🤍',
         color: 'from-gray-400 to-slate-500',
         tag: 'Free',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'character', title: 'Welcome', requiredFields: ['greeting'] },
             { id: 'p2', type: 'message', title: 'Heart Note', requiredFields: ['text'] },
@@ -54,6 +55,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '📸',
         color: 'from-zinc-400 to-stone-500',
         tag: 'Free',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'photo', title: 'Memory', requiredFields: ['photos'] },
             { id: 'p2', type: 'message', title: 'Note', requiredFields: ['text'] },
@@ -69,6 +71,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '🎂',
         color: 'from-pink-500 to-rose-600',
         tag: 'Popular',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'loading', title: 'Loading Screen', requiredFields: ['subtext'] },
             { id: 'p2', type: 'countdown', title: 'Countdown', requiredFields: ['targetDate', 'heading'] },
@@ -87,6 +90,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '💝',
         color: 'from-red-500 to-pink-600',
         tag: 'Best Seller',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'character', title: 'Intro', requiredFields: ['greeting'] },
             { id: 'p2', type: 'game', title: 'The Question', requiredFields: ['question', 'yesText', 'noText'], config: { gameType: 'moving-no' } },
@@ -103,6 +107,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 899,
         icon: '💗',
         color: 'from-fuchsia-500 to-purple-600',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'character', title: 'Intro', requiredFields: ['greeting'] },
             { id: 'p2', type: 'message', title: 'Build-up', requiredFields: ['text'] },
@@ -120,6 +125,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 799,
         icon: '💕',
         color: 'from-rose-400 to-pink-500',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'message', title: 'Intro', requiredFields: ['text'] },
             { id: 'p2', type: 'flip-cards', title: 'Reasons List', requiredFields: ['r1', 'r2', 'r3', 'r4', 'r5'] },
@@ -136,6 +142,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '🐼',
         color: 'from-violet-500 to-purple-600',
         tag: 'Cute',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'character', title: 'Panda Hello', requiredFields: ['greeting'] },
             { id: 'p2', type: 'photo', title: 'Cute Memories', requiredFields: ['photos'] },
@@ -154,6 +161,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 1699,
         icon: '💍',
         color: 'from-amber-400 to-orange-500',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'message', title: 'Intro', requiredFields: ['text'] },
             { id: 'p2', type: 'countdown', title: 'Time Together', requiredFields: ['startDate'] },
@@ -171,6 +179,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '🕯️',
         color: 'from-yellow-400 to-orange-500',
         tag: 'Interactive',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'message', title: 'Age Count', requiredFields: ['age'] },
             { id: 'p2', type: 'game', title: 'Blow Candles', requiredFields: ['wish'], config: { gameType: 'candles' } },
@@ -188,6 +197,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 899,
         icon: '🥺',
         color: 'from-blue-400 to-indigo-500',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'character', title: 'Sad Panda', requiredFields: ['text'] },
             { id: 'p2', type: 'message', title: 'My Apology', requiredFields: ['text'] },
@@ -205,6 +215,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '🔮',
         color: 'from-purple-500 to-indigo-600',
         tag: 'Fun',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'message', title: 'Analysis', requiredFields: ['n1', 'n2'] },
             { id: 'p2', type: 'celebration', title: 'Match Found', requiredFields: ['text'] },
@@ -221,6 +232,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 699,
         icon: '🏳️',
         color: 'from-green-400 to-teal-500',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'message', title: 'White Flag', requiredFields: ['text'] },
             { id: 'p2', type: 'game', title: 'Mistake Swipe', requiredFields: ['m1', 'm2', 'm3'], config: { gameType: 'swipe' } },
@@ -236,6 +248,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 699,
         icon: '🔍',
         color: 'from-cyan-400 to-blue-500',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'message', title: 'Initializing', requiredFields: ['text'] },
             { id: 'p2', type: 'game', title: 'Scanning', requiredFields: ['text'], config: { gameType: 'scanner' } },
@@ -251,6 +264,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 699,
         icon: '🎆',
         color: 'from-yellow-600 to-orange-700',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'message', title: 'Countdown', requiredFields: ['year'] },
             { id: 'p2', type: 'game', title: 'Clear Bad Vibes', requiredFields: ['v1', 'v2', 'v3'], config: { gameType: 'swipe' } },
@@ -266,6 +280,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 899,
         icon: '🤝',
         color: 'from-orange-400 to-red-500',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'message', title: 'To My Friend', requiredFields: ['name'] },
             { id: 'p2', type: 'game', title: 'Memory Match', requiredFields: ['text'], config: { gameType: 'memory' } },
@@ -282,6 +297,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 1399,
         icon: '💜',
         color: 'from-purple-600 to-indigo-700',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'message', title: 'Intro', requiredFields: ['text'] },
             { id: 'p2', type: 'game', title: 'Love Quiz', requiredFields: ['q1', 'q2', 'q3'] },
@@ -297,6 +313,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 2499,
         icon: '🎁',
         color: 'from-rose-500 to-pink-600',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'countdown', title: 'Countdown', requiredFields: ['date'] },
             { id: 'p2', type: 'game', title: 'Candles', requiredFields: ['wish'] },
@@ -313,6 +330,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 2800,
         icon: '📖',
         color: 'from-red-600 to-rose-700',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'timeline', title: 'How we met', requiredFields: ['date', 'place'] },
             { id: 'p2', type: 'timeline', title: 'First Date', requiredFields: ['date', 'place'] },
@@ -329,6 +347,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 1199,
         icon: '📒',
         color: 'from-amber-300 to-orange-400',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'photo', title: 'Page 1', requiredFields: ['photos'] },
             { id: 'p2', type: 'photo', title: 'Page 2', requiredFields: ['photos'] },
@@ -344,6 +363,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 1199,
         icon: '📓',
         color: 'from-slate-400 to-gray-500',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'photo', title: 'Page 1', requiredFields: ['photos'] },
             { id: 'p2', type: 'photo', title: 'Page 2', requiredFields: ['photos'] },
@@ -359,6 +379,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 899,
         icon: '🍾',
         color: 'from-blue-300 to-cyan-400',
+        isActive: false,
         pages: [
             { id: 'p1', type: 'character', title: 'Start Journey', requiredFields: ['greeting', 'subtext'] },
             { id: 'p2', type: 'message', title: 'Floating...', requiredFields: ['text'] },
@@ -367,6 +388,7 @@ export const TEMPLATES: TemplateDefinition[] = [
             { id: 'p5', type: 'photo', title: 'Memories', requiredFields: ['photos'], config: { maxPhotos: 5 } },
         ],
     },
+    // KEEPING THIS ONE ACTIVE
     {
         id: 20,
         slug: 'romantic-valentines-journey',
@@ -377,92 +399,42 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '💖',
         color: 'from-pink-500 via-rose-500 to-red-600',
         tag: 'Premium',
+        isActive: false, // Old V1, user said V2 is needed.
         pages: [
             {
                 id: 'p1',
                 type: 'character',
                 title: 'Greeting',
-                requiredFields: [
-                    'greeting',
-                    'subtext',
-                    'mainImage',
-                    'buttonText'
-                ],
-                config: {
-                    style: 'polaroid',
-                    backgroundColor: 'gradient-pink-orange',
-                    hasFloatingHearts: true
-                }
+                requiredFields: ['greeting', 'subtext', 'mainImage', 'buttonText'],
+                config: { style: 'polaroid', backgroundColor: 'gradient-pink-orange', hasFloatingHearts: true }
             },
             {
                 id: 'p2',
                 type: 'flip-cards',
                 title: 'Why You?',
-                requiredFields: [
-                    'heading',
-                    'reason1',
-                    'reason2',
-                    'reason3',
-                    'reason4'
-                ],
-                config: {
-                    cardShape: 'heart',
-                    cardCount: 4,
-                    colors: ['#f04299', '#fb923c', '#f04299', '#a855f7']
-                }
+                requiredFields: ['heading', 'reason1', 'reason2', 'reason3', 'reason4'],
+                config: { cardShape: 'heart', cardCount: 4, colors: ['#f04299', '#fb923c', '#f04299', '#a855f7'] }
             },
             {
                 id: 'p3',
                 type: 'photo',
                 title: 'Memories',
-                requiredFields: [
-                    'heading',
-                    'photos',
-                    'polaroidCaption'
-                ],
-                config: {
-                    style: 'polaroid',
-                    minPhotos: 5,
-                    maxPhotos: 10,
-                    layout: 'single-focus',
-                    allowCaptions: true
-                }
+                requiredFields: ['heading', 'photos', 'polaroidCaption'],
+                config: { style: 'polaroid', minPhotos: 5, maxPhotos: 10, layout: 'single-focus', allowCaptions: true }
             },
             {
                 id: 'p4',
                 type: 'game',
                 title: 'The Question',
-                requiredFields: [
-                    'question',
-                    'characterImage',
-                    'yesText',
-                    'notSureText',
-                    'pleaseText'
-                ],
-                config: {
-                    gameType: 'valentine-question',
-                    noButtonBehavior: 'shrink-and-hide',
-                    celebrationOnYes: true
-                }
+                requiredFields: ['question', 'characterImage', 'yesText', 'notSureText', 'pleaseText'],
+                config: { gameType: 'valentine-question', noButtonBehavior: 'shrink-and-hide', celebrationOnYes: true }
             },
             {
                 id: 'p5',
                 type: 'celebration',
                 title: 'Final Message',
-                requiredFields: [
-                    'mainHeading',
-                    'characterImage',
-                    'loveMessage',
-                    'signature',
-                    'shareButtonText',
-                    'backButtonText'
-                ],
-                config: {
-                    hasConfetti: true,
-                    hasFloatingHearts: true,
-                    characterAnimation: 'heart-float',
-                    maxMessageLength: 500
-                }
+                requiredFields: ['mainHeading', 'characterImage', 'loveMessage', 'signature', 'shareButtonText', 'backButtonText'],
+                config: { hasConfetti: true, hasFloatingHearts: true, characterAnimation: 'heart-float', maxMessageLength: 500 }
             }
         ]
     },
@@ -476,201 +448,149 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '💖',
         color: 'from-pink-600 to-rose-600',
         tag: 'New',
-        isActive: true,
+        isActive: true, // ACTIVE
         pages: [
             {
                 id: 'p1',
                 type: 'character',
                 title: 'Greeting',
-                requiredFields: [
-                    'greeting',
-                    'recipientName',
-                    'subtext',
-                    'mainImage',
-                    'buttonText'
-                ],
-                config: {
-                    hasFloatingHearts: true,
-                    heartCount: 30,
-                    hasSparkles: true,
-                    sparkleCount: 10,
-                    animationType: 'polaroid-card'
-                }
+                requiredFields: ['greeting', 'recipientName', 'subtext', 'mainImage', 'buttonText'],
+                config: { hasFloatingHearts: true, heartCount: 30, hasSparkles: true, sparkleCount: 10, animationType: 'polaroid-card' }
             },
             {
                 id: 'p2',
                 type: 'flip-cards',
                 title: 'Why I Love You',
-                requiredFields: [
-                    'heading',
-                    'reason1',
-                    'reason2',
-                    'reason3',
-                    'reason4'
-                ],
-                config: {
-                    cardCount: 4,
-                    flipAnimation: '3d-rotate',
-                    hasFloatingHearts: true,
-                    heartCount: 15
-                }
+                requiredFields: ['heading', 'reason1', 'reason2', 'reason3', 'reason4'],
+                config: { cardCount: 4, flipAnimation: '3d-rotate', hasFloatingHearts: true, heartCount: 15 }
             },
             {
                 id: 'p3',
                 type: 'photo',
                 title: 'Our Memories',
-                requiredFields: [
-                    'heading',
-                    'photos',
-                    'polaroidCaption'
-                ],
-                config: {
-                    maxPhotos: 5,
-                    layout: 'polaroid-grid',
-                    hasZoomModal: true,
-                    hasFloatingHearts: true
-                }
+                requiredFields: ['heading', 'photos', 'polaroidCaption'],
+                config: { maxPhotos: 5, layout: 'polaroid-grid', hasZoomModal: true, hasFloatingHearts: true }
             },
             {
                 id: 'p4',
                 type: 'game',
                 title: 'The Question',
-                requiredFields: [
-                    'question',
-                    'characterImage',
-                    'yesText',
-                    'noText',
-                    'pleaseText'
-                ],
-                config: {
-                    gameType: 'moving-no-button',
-                    hasConfetti: true,
-                    noButtonBehavior: 'move-and-shrink',
-                    celebrationOnYes: true
-                }
+                requiredFields: ['question', 'characterImage', 'yesText', 'noText', 'pleaseText'],
+                config: { gameType: 'moving-no-button', hasConfetti: true, noButtonBehavior: 'move-and-shrink', celebrationOnYes: true }
             },
             {
                 id: 'p5',
                 type: 'celebration',
                 title: 'Celebration',
-                requiredFields: [
-                    'mainHeading',
-                    'characterImage',
-                    'loveMessage',
-                    'signature'
-                ],
-                config: {
-                    hasConfetti: true,
-                    confettiDuration: 5000,
-                    hasOrbitingHearts: true,
-                    hasFireworks: true
-                }
+                requiredFields: ['mainHeading', 'characterImage', 'loveMessage', 'signature'],
+                config: { hasConfetti: true, confettiDuration: 5000, hasOrbitingHearts: true, hasFireworks: true }
             },
             {
                 id: 'p6',
                 type: 'timeline',
                 title: 'Our Love Story',
-                requiredFields: [
-                    'heading',
-                    'milestone1Title',
-                    'milestone1Date',
-                    'milestone1Description',
-                    'milestone2Title',
-                    'milestone2Date',
-                    'milestone2Description',
-                    'milestone3Title',
-                    'milestone3Date',
-                    'milestone3Description',
-                    'milestone4Title',
-                    'milestone4Date',
-                    'milestone4Description'
-                ],
-                config: {
-                    layout: 'vertical-timeline',
-                    milestoneCount: 4,
-                    hasInteractiveHover: true
-                }
+                requiredFields: ['heading', 'milestone1Title', 'milestone1Date', 'milestone1Description', 'milestone2Title', 'milestone2Date', 'milestone2Description', 'milestone3Title', 'milestone3Date', 'milestone3Description', 'milestone4Title', 'milestone4Date', 'milestone4Description'],
+                config: { layout: 'vertical-timeline', milestoneCount: 4, hasInteractiveHover: true }
             },
             {
                 id: 'p7',
                 type: 'timeline',
                 title: 'Every Moment Counts',
-                requiredFields: [
-                    'heading',
-                    'moments'
-                ],
-                config: {
-                    layout: 'grid',
-                    defaultMomentCount: 6,
-                    hasGradientAccent: true
-                }
+                requiredFields: ['heading', 'moments'],
+                config: { layout: 'grid', defaultMomentCount: 6, hasGradientAccent: true }
             },
             {
                 id: 'p8',
                 type: 'photo',
                 title: 'Photo Gallery',
-                requiredFields: [
-                    'heading',
-                    'galleryPhotos',
-                    'captions'
-                ],
-                config: {
-                    maxPhotos: 8,
-                    layout: 'masonry',
-                    hasLightbox: true,
-                    hasHoverEffects: true
-                }
+                requiredFields: ['heading', 'galleryPhotos', 'captions'],
+                config: { maxPhotos: 8, layout: 'masonry', hasLightbox: true, hasHoverEffects: true }
             },
             {
                 id: 'p9',
                 type: 'letter',
                 title: 'A Letter From My Heart',
-                requiredFields: [
-                    'heading',
-                    'letterContent',
-                    'closingLine',
-                    'senderName'
-                ],
-                config: {
-                    maxLength: 1000,
-                    hasWaxSeal: true,
-                    hasDecorativeHearts: true,
-                    fontStyle: 'serif'
-                }
+                requiredFields: ['heading', 'letterContent', 'closingLine', 'senderName'],
+                config: { maxLength: 1000, hasWaxSeal: true, hasDecorativeHearts: true, fontStyle: 'serif' }
             },
             {
                 id: 'p10',
                 type: 'character',
                 title: 'Sealed With Love',
-                requiredFields: [
-                    'heading',
-                    'signatureText',
-                    'date',
-                    'sealText'
-                ],
-                config: {
-                    style: 'vintage-document',
-                    hasWaxSeal: true,
-                    hasDecorativeCorners: true
-                }
+                requiredFields: ['heading', 'signatureText', 'date', 'sealText'],
+                config: { style: 'vintage-document', hasWaxSeal: true, hasDecorativeCorners: true }
             },
             {
                 id: 'p11',
                 type: 'celebration',
                 title: 'Thank You',
-                requiredFields: [
-                    'thankYouText',
-                    'finalMessage',
-                    'shareText'
-                ],
-                config: {
-                    hasShareButton: true,
-                    hasReplayButton: true,
-                    hasFireworks: true,
-                    hasFloatingHearts: true,
-                    heartCount: 40
-                }
+                requiredFields: ['thankYouText', 'finalMessage', 'shareText'],
+                config: { hasShareButton: true, hasReplayButton: true, hasFireworks: true, hasFloatingHearts: true, heartCount: 40 }
             }
         ]
     },
+    // NEW TEMPLATES (Adding 1st one for now)
+    {
+        id: 22,
+        slug: 'happy-birthday-interaction',
+        title: 'Happy Birthday (Interactive)',
+        category: 'Birthday',
+        price: 149,
+        originalPrice: 1999,
+        icon: '🎂',
+        color: 'from-purple-500 to-pink-500',
+        tag: 'New',
+        isActive: true,
+        pages: [
+            {
+                id: 'p1',
+                type: 'loading',
+                title: 'Surprise Loading',
+                requiredFields: ['subtext'],
+                config: { style: 'minimal-purple', icon: 'cake' }
+            },
+            {
+                id: 'p2',
+                type: 'character',
+                title: 'Intro',
+                requiredFields: ['heading', 'subtext', 'buttonText'],
+                config: { animation: 'fade-scale' }
+            },
+            {
+                id: 'p3',
+                type: 'game',
+                title: 'Cake Decor',
+                requiredFields: ['congratsText'],
+                config: { gameType: 'cake-decor' }
+            },
+            {
+                id: 'p4',
+                type: 'game',
+                title: 'Balloon Pop',
+                requiredFields: ['w1', 'w2', 'w3', 'w4', 'finalMessage'],
+                config: { gameType: 'balloon-pop' }
+            },
+            {
+                id: 'p5',
+                type: 'photo',
+                title: 'Sweet Moments',
+                requiredFields: ['photos'],
+                config: { style: 'carousel-ghibli' }
+            },
+            {
+                id: 'p6',
+                type: 'letter',
+                title: 'Special Message',
+                requiredFields: ['message'],
+                config: { style: 'flip-card' }
+            },
+            {
+                id: 'p7',
+                type: 'celebration',
+                title: 'Final Gift',
+                requiredFields: ['finalText'],
+                config: { style: 'gift-box-pop' }
+            }
+        ]
+    }
 ];

@@ -21,6 +21,7 @@ import PuzzleLoveRenderer from './PuzzleLoveRenderer';
 import MemoryMapRenderer from './MemoryMapRenderer';
 import HeartbeatLoveRenderer from './HeartbeatLoveRenderer';
 import CelestialLoveRenderer from './CelestialLoveRenderer';
+import HappyBirthdayRenderer from './happy-birthday/HappyBirthdayRenderer';
 
 interface TemplateRendererProps {
     templateSlug: string;
@@ -59,6 +60,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
         'memory-map': MemoryMapRenderer,
         'heartbeat-love': HeartbeatLoveRenderer,
         'celestial-love': CelestialLoveRenderer,
+        'happy-birthday-interaction': HappyBirthdayRenderer,
     };
 
     const SpecificRenderer = renderers[templateSlug];
