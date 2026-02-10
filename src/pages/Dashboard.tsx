@@ -126,6 +126,7 @@ const Dashboard = () => {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <motion.div
           animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+          style={{ transform: 'translateZ(0)', willChange: 'transform', backfaceVisibility: 'hidden' }}
           transition={{ duration: 2, repeat: Infinity }}
           className="text-4xl"
         >
@@ -141,8 +142,14 @@ const Dashboard = () => {
       <div className="absolute inset-0 grid-paper-bg pointer-events-none" />
 
       {/* Background glow effects */}
-      <div className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
-      <div className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/20 blur-[120px] rounded-full pointer-events-none" />
+      <div
+        style={{ transform: 'translateZ(0)', willChange: 'opacity', backfaceVisibility: 'hidden' }}
+        className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full pointer-events-none"
+      />
+      <div
+        style={{ transform: 'translateZ(0)', willChange: 'opacity', backfaceVisibility: 'hidden' }}
+        className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/20 blur-[120px] rounded-full pointer-events-none"
+      />
 
       <header className="sticky top-0 z-50 glass-header px-6 py-4 flex items-center justify-between border-b border-white/5">
         <div className="flex items-center gap-3">
@@ -258,6 +265,7 @@ const Dashboard = () => {
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: i * 0.1 }}
                               className="group relative"
+                              style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
                             >
                               <div className={`glass-card flex flex-col h-full ${isLocked ? 'opacity-75' : 'cursor-pointer hover:border-primary/50'} transition-all duration-500 overflow-hidden shadow-2xl`}>
                                 {/* Locked Overlay */}
@@ -365,6 +373,7 @@ const Dashboard = () => {
                                     rotate: [0, 5, -5, 0],
                                     scale: [1, 1.1, 1]
                                   }}
+                                  style={{ transform: 'translateZ(0)', willChange: 'transform' }}
                                   transition={{ duration: 4, repeat: Infinity }}
                                 >
                                   {t.icon}

@@ -57,6 +57,7 @@ const TestimonialsSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
+              style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
             >
               <motion.div
                 whileHover={{ y: -6 }}
@@ -67,6 +68,7 @@ const TestimonialsSection = () => {
                     <motion.div
                       key={j}
                       animate={{ scale: [1, 1.2, 1] }}
+                      style={{ transform: 'translateZ(0)', willChange: 'transform' }}
                       transition={{ duration: 1.5, repeat: Infinity, delay: j * 0.1 }}
                     >
                       <Star className="w-4 h-4 fill-primary text-primary" />

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, CreditCard, Users, BarChart3, Settings, LogOut,
-  Check, X, Search, Bell, Calendar, Filter, FileText, ExternalLink, Image as ImageIcon
+  Check, X, Search, Bell, Calendar, Filter, FileText, ExternalLink, Image as ImageIcon, Plus
 } from "lucide-react";
 import { PaymentService } from "../lib/payments";
 import { TEMPLATES, TemplateDefinition } from "../lib/templates";
@@ -39,6 +39,17 @@ const AdminDashboard = () => {
   // Template CMS State
   const [templates, setTemplates] = useState<TemplateDefinition[]>(TEMPLATES);
   const [editingTemplate, setEditingTemplate] = useState<any>(null);
+
+  // Manual Purchase State
+  const [isAddingPurchase, setIsAddingPurchase] = useState(false);
+  const [newPurchaseData, setNewPurchaseData] = useState({
+    user_email: '',
+    template_id: '',
+    template_title: '',
+    amount_paid: 0,
+    transaction_id: 'MANUAL-' + Math.random().toString(36).substring(7).toUpperCase(),
+    status: 'approved'
+  });
 
   useEffect(() => {
     checkAuth();
@@ -77,6 +88,40 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error("Rejection failed:", error);
       toast({ title: "Error", description: "Failed to reject purchase.", variant: "destructive" });
+    }
+  };
+
+  const handleCreatePurchase = async () => {
+    try {
+      if (!newPurchaseData.user_email || !newPurchaseData.template_id) {
+        toast({ title: "Error", description: "Email and Template are required.", variant: "destructive" });
+        return;
+      }
+
+      await PurchaseService.createPurchase({
+        template_id: newPurchaseData.template_id,
+        template_title: newPurchaseData.template_title,
+        amount_paid: newPurchaseData.amount_paid,
+        transaction_id: newPurchaseData.transaction_id,
+      });
+
+      // Special handling: PurchaseService.createPurchase insertions are pending by default.
+      // If admin selected 'approved', we'd need to approve it separately or modify service.
+      // For now, let's just refresh the list.
+      await fetchPurchases();
+      setIsAddingPurchase(false);
+      setNewPurchaseData({
+        user_email: '',
+        template_id: '',
+        template_title: '',
+        amount_paid: 0,
+        transaction_id: 'MANUAL-' + Math.random().toString(36).substring(7).toUpperCase(),
+        status: 'approved'
+      });
+      toast({ title: "Success", description: "Manual purchase created!" });
+    } catch (error) {
+      console.error("Manual purchase creation failed:", error);
+      toast({ title: "Error", description: "Failed to create manual purchase.", variant: "destructive" });
     }
   };
 
@@ -157,9 +202,6 @@ const AdminDashboard = () => {
 
   // Derived Data
   const pendingPayments = paymentList.filter(p => p.status === 'pending');
-  const historyPayments = paymentList.filter(p => p.status !== 'pending');
-  const displayedPayments = paymentSubTab === 'pending' ? pendingPayments : historyPayments;
-
   const pendingCount = pendingPayments.length;
   const totalRevenue = paymentList.filter(p => p.status === 'approved').reduce((sum, p) => sum + p.amount, 0);
 
@@ -284,30 +326,38 @@ const AdminDashboard = () => {
 
             {/* Purchases Table */}
             <section className="glass-card rounded-2xl overflow-hidden border border-white/5">
-              <div className="p-6 border-b border-white/5">
-                <h3 className="text-xl font-bold text-white mb-4">Template Purchase Requests</h3>
-
-                {/* Sub-tabs for filtering */}
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => setPaymentSubTab("pending")}
-                    className={`text-sm font-bold pb-2 border-b-2 transition-colors ${paymentSubTab === 'pending' ? 'text-white border-primary' : 'text-white/40 border-transparent hover:text-white'}`}
-                  >
-                    Pending ({purchases.filter(p => p.status === 'pending').length})
-                  </button>
-                  <button
-                    onClick={() => setPaymentSubTab("approved")}
-                    className={`text-sm font-bold pb-2 border-b-2 transition-colors ${paymentSubTab === 'approved' ? 'text-white border-primary' : 'text-white/40 border-transparent hover:text-white'}`}
-                  >
-                    Approved ({purchases.filter(p => p.status === 'approved').length})
-                  </button>
-                  <button
-                    onClick={() => setPaymentSubTab("rejected")}
-                    className={`text-sm font-bold pb-2 border-b-2 transition-colors ${paymentSubTab === 'rejected' ? 'text-white border-primary' : 'text-white/40 border-transparent hover:text-white'}`}
-                  >
-                    Rejected ({purchases.filter(p => p.status === 'rejected').length})
-                  </button>
+              <div className="p-6 border-b border-white/5 flex justify-between items-center">
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-2">Template Purchase Requests</h3>
+                  {/* Sub-tabs for filtering */}
+                  <div className="flex gap-4">
+                    <button
+                      onClick={() => setPaymentSubTab("pending")}
+                      className={`text-sm font-bold pb-2 border-b-2 transition-colors ${paymentSubTab === 'pending' ? 'text-white border-primary' : 'text-white/40 border-transparent hover:text-white'}`}
+                    >
+                      Pending ({purchases.filter(p => p.status === 'pending').length})
+                    </button>
+                    <button
+                      onClick={() => setPaymentSubTab("approved")}
+                      className={`text-sm font-bold pb-2 border-b-2 transition-colors ${paymentSubTab === 'approved' ? 'text-white border-primary' : 'text-white/40 border-transparent hover:text-white'}`}
+                    >
+                      Approved ({purchases.filter(p => p.status === 'approved').length})
+                    </button>
+                    <button
+                      onClick={() => setPaymentSubTab("rejected")}
+                      className={`text-sm font-bold pb-2 border-b-2 transition-colors ${paymentSubTab === 'rejected' ? 'text-white border-primary' : 'text-white/40 border-transparent hover:text-white'}`}
+                    >
+                      Rejected ({purchases.filter(p => p.status === 'rejected').length})
+                    </button>
+                  </div>
                 </div>
+
+                <button
+                  onClick={() => setIsAddingPurchase(true)}
+                  className="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-primary/20 flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4" /> Manual Add
+                </button>
               </div>
 
               <div className="overflow-x-auto">
@@ -519,14 +569,27 @@ const AdminDashboard = () => {
                     <div className="absolute top-2 right-2 bg-black/50 backdrop-blur px-2 py-1 rounded text-[10px] font-bold uppercase">{template.category}</div>
                   </div>
                   <h3 className="text-lg font-bold mb-1">{template.title}</h3>
-                  <div className="flex justify-between items-center mt-auto pt-4 border-t border-white/5">
-                    <span className="font-mono font-bold text-primary">₹{template.price}</span>
-                    <button
-                      onClick={() => setEditingTemplate(template)}
-                      className="text-xs font-bold bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors"
-                    >
-                      Edit Details
-                    </button>
+                  <div className="flex flex-col gap-3 mt-auto pt-4 border-t border-white/5">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-mono font-bold text-primary">₹{template.price}</span>
+                      <span className="text-white/20 line-through">₹{template.originalPrice || 2499}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <a
+                        href={`/template/${template.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 text-center text-[10px] font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 px-3 py-2.5 rounded-lg transition-all border border-white/5"
+                      >
+                        Preview
+                      </a>
+                      <button
+                        onClick={() => setEditingTemplate(template)}
+                        className="flex-1 text-[10px] font-black uppercase tracking-widest bg-primary/20 text-primary hover:bg-primary hover:text-white px-3 py-2.5 rounded-lg transition-all border border-primary/20"
+                      >
+                        Edit
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -582,11 +645,18 @@ const AdminDashboard = () => {
 
                         <div className="space-y-2">
                           <label className="text-xs font-bold uppercase tracking-widest text-white/40">Category</label>
-                          <input
+                          <select
                             value={editingTemplate.category}
                             onChange={(e) => setEditingTemplate({ ...editingTemplate, category: e.target.value })}
-                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
-                          />
+                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors appearance-none"
+                          >
+                            <option value="valentine">Valentine</option>
+                            <option value="love">Love</option>
+                            <option value="birthday">Birthday</option>
+                            <option value="anniversary">Anniversary</option>
+                            <option value="friendship">Friendship</option>
+                            <option value="other">Other</option>
+                          </select>
                         </div>
 
                         <div className="space-y-2">
@@ -837,6 +907,118 @@ const AdminDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Manual Purchase Modal */}
+        <AnimatePresence>
+          {isAddingPurchase && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="glass-card-static w-full max-w-lg p-8 rounded-3xl border border-white/10 relative"
+              >
+                <button
+                  onClick={() => setIsAddingPurchase(false)}
+                  className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+
+                <h3 className="text-2xl font-black mb-6">Create Manual Purchase</h3>
+
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-white/40">User Email</label>
+                    <input
+                      value={newPurchaseData.user_email}
+                      onChange={(e) => setNewPurchaseData({ ...newPurchaseData, user_email: e.target.value })}
+                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50"
+                      placeholder="user@example.com"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-white/40">Template or Bundle</label>
+                    <select
+                      value={newPurchaseData.template_id}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        let title = "";
+                        let price = 0;
+
+                        if (val === "valentines") {
+                          title = "Valentine's Special Bundle (3 Templates)";
+                          price = 199;
+                        } else if (val === "all-access") {
+                          title = "All-Access Combo (19+ Templates)";
+                          price = 399;
+                        } else {
+                          const t = templates.find(t => t.id.toString() === val);
+                          title = t?.title || "";
+                          price = t?.price || 149;
+                        }
+
+                        setNewPurchaseData({
+                          ...newPurchaseData,
+                          template_id: val,
+                          template_title: title,
+                          amount_paid: price
+                        });
+                      }}
+                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 appearance-none"
+                    >
+                      <option value="" disabled>Select Template / Bundle</option>
+                      <optgroup label="Bundles">
+                        <option value="valentines">Valentine's Special Bundle (₹199)</option>
+                        <option value="all-access">All-Access Combo (₹399)</option>
+                      </optgroup>
+                      <optgroup label="Individual Templates">
+                        {templates.map(t => (
+                          <option key={t.id} value={t.id}>{t.title} (₹{t.price})</option>
+                        ))}
+                      </optgroup>
+                    </select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-widest text-white/40">Amount Paid (₹)</label>
+                      <input
+                        type="number"
+                        value={newPurchaseData.amount_paid}
+                        onChange={(e) => setNewPurchaseData({ ...newPurchaseData, amount_paid: parseInt(e.target.value) })}
+                        className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-widest text-white/40">Status</label>
+                      <div className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white">
+                        Approved (Manual)
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-white/40">Transaction ID</label>
+                    <input
+                      value={newPurchaseData.transaction_id}
+                      onChange={(e) => setNewPurchaseData({ ...newPurchaseData, transaction_id: e.target.value })}
+                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white/60 font-mono text-sm focus:outline-none focus:border-primary/50"
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleCreatePurchase}
+                    className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform mt-4"
+                  >
+                    Create & Approve Purchase
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
 
       </main>
     </div>

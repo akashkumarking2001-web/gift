@@ -88,8 +88,14 @@ const Register = () => {
       <FloatingHearts />
 
       {/* Background glows */}
-      <div className="fixed top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/20 blur-[150px] rounded-full animate-pulse pointer-events-none" />
-      <div className="fixed bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-secondary/20 blur-[150px] rounded-full animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
+      <div
+        style={{ transform: 'translateZ(0)', willChange: 'opacity', backfaceVisibility: 'hidden' }}
+        className="fixed top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/20 blur-[150px] rounded-full animate-pulse pointer-events-none"
+      />
+      <div
+        style={{ transform: 'translateZ(0)', willChange: 'opacity', backfaceVisibility: 'hidden', animationDelay: '2s' }}
+        className="fixed bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-secondary/20 blur-[150px] rounded-full animate-pulse pointer-events-none"
+      />
       <div className="absolute inset-0 grid-paper-bg opacity-20" />
 
       <div className="relative z-10 w-full max-w-xl px-6">
@@ -97,6 +103,7 @@ const Register = () => {
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
+          style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
           className="text-center mb-10"
         >
           <Link to="/" className="inline-flex flex-col items-center gap-4 group">
@@ -106,6 +113,7 @@ const Register = () => {
                 scale: [1, 1.2, 1],
                 y: [0, -5, 0]
               }}
+              style={{ transform: 'translateZ(0)', willChange: 'transform' }}
               transition={{ duration: 4, repeat: Infinity }}
               className="text-7xl filter drop-shadow-[0_0_20px_rgba(255,107,181,0.5)] group-hover:scale-125 transition-transform duration-500"
             >
@@ -126,6 +134,7 @@ const Register = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2, type: "spring", damping: 20 }}
+          style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
           className="glass-card p-10 md:p-14 border border-white/10 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] relative overflow-hidden"
         >
           {/* Decorative element */}

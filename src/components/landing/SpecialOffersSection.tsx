@@ -35,25 +35,28 @@ const SpecialOffersSection = () => {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         whileHover={{ y: -8 }}
+                        style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
                         className="glass-card p-8 md:p-10 border-2 border-primary/30 relative overflow-hidden group flex flex-col"
                     >
                         <div className="absolute top-0 right-0 bg-primary text-white text-xs font-black px-4 py-2 rounded-bl-xl uppercase tracking-widest">
-                            Best Value
+                            Most Popular
                         </div>
 
                         <div className="mb-6">
                             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-3xl mb-6 shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
                                 💝
                             </div>
-                            <h3 className="text-2xl font-black text-white mb-2">Valentine's Special Bundle</h3>
-                            <p className="text-muted-foreground">Get 3 Premium Templates for the price of one coffee!</p>
+                            <h3 className="text-2xl font-black text-white mb-2">Valentine's Bundle</h3>
+                            <p className="text-muted-foreground">Unlock 3 Premium Valentine's Templates for one low price!</p>
                         </div>
 
                         <div className="space-y-4 mb-8 flex-1">
                             {[
-                                "Interactive Love Letter Template",
-                                "Polaroid Memory Wall Template",
-                                "Our Love Radio Template"
+                                "Romantic Journey V2 (Super Animated)",
+                                "Interactive Love Question Template",
+                                "5 Things I Love About You",
+                                "Full HD Media Support",
+                                "Unique Shareable Link"
                             ].map((item, i) => (
                                 <div key={i} className="flex items-center gap-3">
                                     <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-primary">
@@ -66,42 +69,47 @@ const SpecialOffersSection = () => {
 
                         <div className="pt-6 border-t border-white/10">
                             <div className="flex items-end gap-3 mb-6">
-                                <span className="text-4xl font-black text-white">₹99</span>
-                                <span className="text-lg text-muted-foreground line-through mb-1">₹1,800</span>
-                                <span className="text-xs font-bold text-green-400 bg-green-400/10 px-2 py-1 rounded mb-2">95% OFF</span>
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-1">Bundle Price</span>
+                                    <span className="text-4xl font-black text-white">₹199</span>
+                                </div>
+                                <span className="text-lg text-muted-foreground line-through mb-1">₹2,499</span>
+                                <span className="text-xs font-bold text-green-400 bg-green-400/10 px-2 py-1 rounded mb-2">SAVE 92%</span>
                             </div>
 
-                            <Link to="/checkout" state={{ bundle: "valentines", price: 99 }}>
+                            <Link to="/checkout" state={{ bundle: "valentines", price: 199 }}>
                                 <button className="w-full gradient-primary text-white font-bold py-4 rounded-xl shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
-                                    Create Now
+                                    Get Bundle Now
                                     <ArrowRight className="w-4 h-4" />
                                 </button>
                             </Link>
                         </div>
                     </motion.div>
 
-                    {/* Combo Offer */}
+                    {/* Single Premium Template */}
                     <motion.div
                         initial={{ opacity: 0, x: 30 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         whileHover={{ y: -8 }}
+                        style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
                         className="glass-card p-8 md:p-10 border border-white/10 relative overflow-hidden group flex flex-col"
                     >
                         <div className="mb-6">
                             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-3xl mb-6 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
-                                🎁
+                                💎
                             </div>
-                            <h3 className="text-2xl font-black text-white mb-2">All-Access Combo</h3>
-                            <p className="text-muted-foreground">Unlock the entire library of magic for a lifetime.</p>
+                            <h3 className="text-2xl font-black text-white mb-2">Single Premium</h3>
+                            <p className="text-muted-foreground">Pick any one premium template and make it yours forever.</p>
                         </div>
 
                         <div className="space-y-4 mb-8 flex-1">
                             {[
-                                "Access to ALL 19+ Templates",
-                                "Birthday, Anniversary & Fun Categories",
-                                "Future Template Updates (1 Year)",
-                                "Priority Support"
+                                "Any Premium Template of Choice",
+                                "Rich Animations & Interactive elements",
+                                "HD Photo & Video Support",
+                                "Unlimited Edits",
+                                "Ad-Free Experience"
                             ].map((item, i) => (
                                 <div key={i} className="flex items-center gap-3">
                                     <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-white">
@@ -114,14 +122,16 @@ const SpecialOffersSection = () => {
 
                         <div className="pt-6 border-t border-white/10">
                             <div className="flex items-end gap-3 mb-6">
-                                <span className="text-4xl font-black text-white">₹399</span>
-                                <span className="text-lg text-muted-foreground line-through mb-1">₹5,000</span>
-                                <span className="text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded mb-2">92% OFF</span>
+                                <div className="flex flex-col">
+                                    <span className="text-xs font-bold text-white/40 uppercase tracking-[0.2em] mb-1">Single Template</span>
+                                    <span className="text-4xl font-black text-white">₹149</span>
+                                </div>
+                                <span className="text-lg text-muted-foreground line-through mb-1">₹1,299</span>
                             </div>
 
-                            <Link to="/checkout" state={{ bundle: "all-access", price: 399 }}>
+                            <Link to="/template/romantic-valentines-journey-v2">
                                 <button className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-4 rounded-xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
-                                    Get Full Access
+                                    Explore Library
                                     <Gift className="w-4 h-4" />
                                 </button>
                             </Link>

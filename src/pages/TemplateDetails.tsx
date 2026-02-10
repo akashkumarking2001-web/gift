@@ -32,7 +32,10 @@ const TemplateDetails = () => {
             <div className="min-h-screen bg-[#0a060a] flex items-center justify-center text-white">
                 <FloatingHearts />
                 <div className="animate-pulse flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                    <div
+                        style={{ transform: 'translateZ(0)', willChange: 'transform' }}
+                        className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"
+                    />
                     <p className="text-white/60 font-mono text-sm">Loading Magic...</p>
                 </div>
             </div>
@@ -53,7 +56,14 @@ const TemplateDetails = () => {
     }
 
     const handleBuyNow = () => {
-        navigate("/checkout", { state: { title: template.title, price: template.price, templateId: template.id } });
+        navigate("/checkout", {
+            state: {
+                title: template.title,
+                price: template.price,
+                templateId: template.id,
+                mrp: template.originalPrice
+            }
+        });
     };
 
     return (
@@ -78,6 +88,7 @@ const TemplateDetails = () => {
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
+                        style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
                         className="space-y-6"
                     >
                         <div className="relative aspect-video rounded-3xl overflow-hidden glass-card border border-white/10 shadow-2xl group">
@@ -158,6 +169,7 @@ const TemplateDetails = () => {
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
+                        style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
                         className="space-y-8"
                     >
                         <div>

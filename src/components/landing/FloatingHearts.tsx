@@ -36,10 +36,14 @@ const FloatingHearts = () => {
               left: `${heart.x}%`,
               fontSize: `${heart.size}px`,
               opacity: heart.opacity,
+              backfaceVisibility: 'hidden',
+              perspective: 1000,
+              transform: 'translateZ(0)',
+              willChange: 'transform, opacity'
             }}
             initial={{ y: "110vh", rotate: 0, scale: 0 }}
             animate={{
-              y: "-10vh",
+              y: ["110vh", "-10vh"],
               rotate: [0, 180, 360],
               scale: [0, 1, 1, 0.5],
               x: [0, Math.sin(heart.id) * 40, 0],

@@ -30,6 +30,36 @@ export interface TemplateDefinition {
 
 export const TEMPLATES: TemplateDefinition[] = [
     {
+        id: 0,
+        slug: 'simple-greeting-free',
+        title: 'Simple Heart Greeting (FREE)',
+        category: 'Free',
+        price: 0,
+        originalPrice: 0,
+        icon: '🤍',
+        color: 'from-gray-400 to-slate-500',
+        tag: 'Free',
+        pages: [
+            { id: 'p1', type: 'character', title: 'Welcome', requiredFields: ['greeting'] },
+            { id: 'p2', type: 'message', title: 'Heart Note', requiredFields: ['text'] },
+        ],
+    },
+    {
+        id: 101,
+        slug: 'simple-photo-free',
+        title: 'Your Single Memory (FREE)',
+        category: 'Free',
+        price: 0,
+        originalPrice: 0,
+        icon: '📸',
+        color: 'from-zinc-400 to-stone-500',
+        tag: 'Free',
+        pages: [
+            { id: 'p1', type: 'photo', title: 'Memory', requiredFields: ['photos'] },
+            { id: 'p2', type: 'message', title: 'Note', requiredFields: ['text'] },
+        ],
+    },
+    {
         id: 1,
         slug: 'birthday-countdown',
         title: 'Birthday Countdown Celebration',
@@ -69,7 +99,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'love-slider',
         title: 'Love Slider — Infinity',
         category: 'Romance',
-        price: 99,
+        price: 149,
         originalPrice: 899,
         icon: '💗',
         color: 'from-fuchsia-500 to-purple-600',
@@ -84,7 +114,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: '5-things-i-love',
         title: '5 Things I Love About You',
         category: 'Valentine\'s',
-        price: 99,
+        price: 149,
         originalPrice: 799,
         icon: '💕',
         color: 'from-rose-400 to-pink-500',
@@ -99,7 +129,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'panda-love',
         title: 'Panda Character Love',
         category: 'Cute',
-        price: 99,
+        price: 149,
         originalPrice: 899,
         icon: '🐼',
         color: 'from-violet-500 to-purple-600',
@@ -115,7 +145,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'anniversary-counter',
         title: 'Anniversary Counter',
         category: 'Anniversary',
-        price: 199,
+        price: 149,
         originalPrice: 1699,
         icon: '💍',
         color: 'from-amber-400 to-orange-500',
@@ -149,7 +179,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'apology-talk',
         title: 'Apology — Can We Talk?',
         category: 'Apology',
-        price: 99,
+        price: 149,
         originalPrice: 899,
         icon: '🥺',
         color: 'from-blue-400 to-indigo-500',
@@ -165,7 +195,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'soulmate-matcher',
         title: 'Soulmate Matcher',
         category: 'Fun',
-        price: 99,
+        price: 149,
         originalPrice: 799,
         icon: '🔮',
         color: 'from-purple-500 to-indigo-600',
@@ -182,7 +212,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'peace-treaty',
         title: 'Peace Treaty',
         category: 'Apology',
-        price: 99,
+        price: 149,
         originalPrice: 699,
         icon: '🏳️',
         color: 'from-green-400 to-teal-500',
@@ -197,7 +227,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'cuteness-scanner',
         title: 'Cuteness Scanner',
         category: 'Fun',
-        price: 99,
+        price: 149,
         originalPrice: 699,
         icon: '🔍',
         color: 'from-cyan-400 to-blue-500',
@@ -212,7 +242,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'new-year-start',
         title: 'New Year Fresh Start',
         category: 'Fun',
-        price: 99,
+        price: 149,
         originalPrice: 699,
         icon: '🎆',
         color: 'from-yellow-600 to-orange-700',
@@ -227,7 +257,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'friendship-game',
         title: 'Friendship Memory Game',
         category: 'Fun',
-        price: 99,
+        price: 149,
         originalPrice: 899,
         icon: '🤝',
         color: 'from-orange-400 to-red-500',
@@ -258,7 +288,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'extended-birthday',
         title: 'Ultimate Birthday Pack',
         category: 'Birthday',
-        price: 199,
+        price: 149,
         originalPrice: 2499,
         icon: '🎁',
         color: 'from-rose-500 to-pink-600',
@@ -274,7 +304,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'love-story',
         title: 'Our Love Story',
         category: 'Romance',
-        price: 199,
+        price: 149,
         originalPrice: 2800,
         icon: '📖',
         color: 'from-red-600 to-rose-700',
@@ -320,7 +350,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'message-bottle',
         title: 'Message in a Bottle',
         category: 'Romance',
-        price: 99,
+        price: 149,
         originalPrice: 899,
         icon: '🍾',
         color: 'from-blue-300 to-cyan-400',
@@ -335,7 +365,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         slug: 'romantic-valentines-journey',
         title: 'Romantic Valentine\'s Journey',
         category: 'Valentine\'s',
-        price: 199,
+        price: 149,
         originalPrice: 1999,
         icon: '💖',
         color: 'from-pink-500 via-rose-500 to-red-600',
@@ -425,6 +455,213 @@ export const TEMPLATES: TemplateDefinition[] = [
                     hasFloatingHearts: true,
                     characterAnimation: 'heart-float',
                     maxMessageLength: 500
+                }
+            }
+        ]
+    },
+    {
+        id: 21,
+        slug: 'romantic-valentines-journey-v2',
+        title: 'Romantic Valentine\'s Journey V2',
+        category: 'Valentine\'s Day',
+        price: 149,
+        originalPrice: 1499,
+        icon: '💖',
+        color: 'from-pink-600 to-rose-600',
+        tag: 'New',
+        isActive: true,
+        pages: [
+            {
+                id: 'p1',
+                type: 'character',
+                title: 'Greeting',
+                requiredFields: [
+                    'greeting',
+                    'recipientName',
+                    'subtext',
+                    'mainImage',
+                    'buttonText'
+                ],
+                config: {
+                    hasFloatingHearts: true,
+                    heartCount: 30,
+                    hasSparkles: true,
+                    sparkleCount: 10,
+                    animationType: 'polaroid-card'
+                }
+            },
+            {
+                id: 'p2',
+                type: 'flip-cards',
+                title: 'Why I Love You',
+                requiredFields: [
+                    'heading',
+                    'reason1',
+                    'reason2',
+                    'reason3',
+                    'reason4'
+                ],
+                config: {
+                    cardCount: 4,
+                    flipAnimation: '3d-rotate',
+                    hasFloatingHearts: true,
+                    heartCount: 15
+                }
+            },
+            {
+                id: 'p3',
+                type: 'photo',
+                title: 'Our Memories',
+                requiredFields: [
+                    'heading',
+                    'photos',
+                    'polaroidCaption'
+                ],
+                config: {
+                    maxPhotos: 5,
+                    layout: 'polaroid-grid',
+                    hasZoomModal: true,
+                    hasFloatingHearts: true
+                }
+            },
+            {
+                id: 'p4',
+                type: 'game',
+                title: 'The Question',
+                requiredFields: [
+                    'question',
+                    'characterImage',
+                    'yesText',
+                    'noText',
+                    'pleaseText'
+                ],
+                config: {
+                    gameType: 'moving-no-button',
+                    hasConfetti: true,
+                    noButtonBehavior: 'move-and-shrink',
+                    celebrationOnYes: true
+                }
+            },
+            {
+                id: 'p5',
+                type: 'celebration',
+                title: 'Celebration',
+                requiredFields: [
+                    'mainHeading',
+                    'characterImage',
+                    'loveMessage',
+                    'signature'
+                ],
+                config: {
+                    hasConfetti: true,
+                    confettiDuration: 5000,
+                    hasOrbitingHearts: true,
+                    hasFireworks: true
+                }
+            },
+            {
+                id: 'p6',
+                type: 'timeline',
+                title: 'Our Love Story',
+                requiredFields: [
+                    'heading',
+                    'milestone1Title',
+                    'milestone1Date',
+                    'milestone1Description',
+                    'milestone2Title',
+                    'milestone2Date',
+                    'milestone2Description',
+                    'milestone3Title',
+                    'milestone3Date',
+                    'milestone3Description',
+                    'milestone4Title',
+                    'milestone4Date',
+                    'milestone4Description'
+                ],
+                config: {
+                    layout: 'vertical-timeline',
+                    milestoneCount: 4,
+                    hasInteractiveHover: true
+                }
+            },
+            {
+                id: 'p7',
+                type: 'timeline',
+                title: 'Every Moment Counts',
+                requiredFields: [
+                    'heading',
+                    'moments'
+                ],
+                config: {
+                    layout: 'grid',
+                    defaultMomentCount: 6,
+                    hasGradientAccent: true
+                }
+            },
+            {
+                id: 'p8',
+                type: 'photo',
+                title: 'Photo Gallery',
+                requiredFields: [
+                    'heading',
+                    'galleryPhotos',
+                    'captions'
+                ],
+                config: {
+                    maxPhotos: 8,
+                    layout: 'masonry',
+                    hasLightbox: true,
+                    hasHoverEffects: true
+                }
+            },
+            {
+                id: 'p9',
+                type: 'letter',
+                title: 'A Letter From My Heart',
+                requiredFields: [
+                    'heading',
+                    'letterContent',
+                    'closingLine',
+                    'senderName'
+                ],
+                config: {
+                    maxLength: 1000,
+                    hasWaxSeal: true,
+                    hasDecorativeHearts: true,
+                    fontStyle: 'serif'
+                }
+            },
+            {
+                id: 'p10',
+                type: 'character',
+                title: 'Sealed With Love',
+                requiredFields: [
+                    'heading',
+                    'signatureText',
+                    'date',
+                    'sealText'
+                ],
+                config: {
+                    style: 'vintage-document',
+                    hasWaxSeal: true,
+                    hasDecorativeCorners: true
+                }
+            },
+            {
+                id: 'p11',
+                type: 'celebration',
+                title: 'Thank You',
+                requiredFields: [
+                    'thankYouText',
+                    'finalMessage',
+                    'shareText'
+                ],
+                config: {
+                    hasShareButton: true,
+                    hasReplayButton: true,
+                    hasFireworks: true,
+                    hasFloatingHearts: true,
+                    heartCount: 40
                 }
             }
         ]

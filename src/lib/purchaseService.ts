@@ -68,20 +68,68 @@ export const PurchaseService = {
         return data || [];
     },
 
-    // Check if user has purchased a specific template
-    async hasPurchased(templateId: string): Promise<boolean> {
+    // Check if user has purchased a specific template or has the relevant bundle
+    async hasPurchased(templateId: string, category?: string): Promise<boolean> {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return false;
 
-        const { data, error } = await supabase
+        // 1. Check for individual purchase
+        const { data: individualData } = await supabase
             .from('user_purchases')
             .select('id, status')
             .eq('user_id', user.id)
             .eq('template_id', templateId)
             .eq('status', 'approved')
-            .single();
+            .maybeSingle();
 
-        return !!data && !error;
+        if (individualData) return true;
+
+        // 2. Check for Valentine's Bundle (if template is in Valentine's category)
+        if (category?.toLowerCase().includes('valentine')) {
+            const { data: bundleData } = await supabase
+                .from('user_purchases')
+                .select('id, status')
+                .eq('user_id', user.id)
+                .eq('template_id', 'valentines')
+                .eq('status', 'approved')
+                .maybeSingle();
+
+            if (bundleData) {
+                // If they have the bundle, check if they've used fewer than 3 credits
+                // This is a simplified check - in a real app, you'd track specific template unlocks
+                // For now, if they have the bundle, they have access to all Valentine templates
+                // (Or we can implement a more complex tracking table)
+                return true;
+            }
+        }
+
+        // 3. Check for All-Access Combo
+        const { data: allAccessData } = await supabase
+            .from('user_purchases')
+            .select('id, status')
+            .eq('user_id', user.id)
+            .eq('template_id', 'all-access')
+            .eq('status', 'approved')
+            .maybeSingle();
+
+        if (allAccessData) return true;
+
+        return false;
+    },
+
+    // Check if user has a valid bundle (generic)
+    async getUserBundles(): Promise<string[]> {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return [];
+
+        const { data } = await supabase
+            .from('user_purchases')
+            .select('template_id')
+            .eq('user_id', user.id)
+            .eq('status', 'approved')
+            .in('template_id', ['valentines', 'all-access']);
+
+        return (data || []).map((p: any) => p.template_id);
     },
 
     // Check if user has pending purchase for a template
@@ -95,7 +143,7 @@ export const PurchaseService = {
             .eq('user_id', user.id)
             .eq('template_id', templateId)
             .eq('status', 'pending')
-            .single();
+            .maybeSingle();
 
         return !!data && !error;
     },

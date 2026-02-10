@@ -76,6 +76,7 @@ const FeaturesSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
+              style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
             >
               <motion.div
                 whileHover={{ y: -6, scale: 1.02 }}
@@ -84,6 +85,7 @@ const FeaturesSection = () => {
                 <div className="flex items-start gap-4">
                   <motion.div
                     animate={{ y: [0, -5, 0], rotate: [0, 5, -5, 0] }}
+                    style={{ transform: 'translateZ(0)', willChange: 'transform' }}
                     transition={{ duration: 3, repeat: Infinity, delay: i * 0.2 }}
                     className="text-3xl flex-shrink-0"
                   >

@@ -9,14 +9,15 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen bg-[#050505] relative overflow-hidden flex items-center justify-center font-outfit text-white">
-      <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 blur-[150px] rounded-full animate-pulse-slow pointer-events-none" />
-      <div className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary/20 blur-[150px] rounded-full animate-pulse-slow pointer-events-none" style={{ animationDelay: '2s' }} />
+      <div style={{ transform: 'translateZ(0)', willChange: 'opacity', backfaceVisibility: 'hidden' }} className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 blur-[150px] rounded-full animate-pulse-slow pointer-events-none" />
+      <div style={{ transform: 'translateZ(0)', willChange: 'opacity', backfaceVisibility: 'hidden' }} className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary/20 blur-[150px] rounded-full animate-pulse-slow pointer-events-none" />
       <div className="absolute inset-0 grid-paper-bg opacity-10" />
 
       <div className="relative z-10 text-center px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
+          style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
           className="glass-card p-16 md:p-24 border border-white/10 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)]"
         >
           <motion.h1
@@ -25,6 +26,7 @@ const NotFound = () => {
               rotateY: [0, 10, 0]
             }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            style={{ transform: 'translateZ(0)', willChange: 'transform', backfaceVisibility: 'hidden' }}
             className="text-9xl font-black mb-8 italic gradient-text tracking-tighter"
           >
             404

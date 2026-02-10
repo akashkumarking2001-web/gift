@@ -16,6 +16,7 @@ const Footer = () => {
         >
           <motion.span
             animate={{ scale: [1, 1.3, 1] }}
+            style={{ transform: 'translateZ(0)', willChange: 'transform', backfaceVisibility: 'hidden' }}
             transition={{ duration: 1.5, repeat: Infinity }}
             className="text-5xl inline-block mb-6"
           >
@@ -35,6 +36,7 @@ const Footer = () => {
           >
             <motion.span
               animate={{ scale: [1, 1.3, 1] }}
+              style={{ transform: 'translateZ(0)', willChange: 'transform' }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
               🎁
@@ -57,7 +59,14 @@ const Footer = () => {
               }}
             />
             <div id="footer-text-logo" style={{ display: 'none' }}>
-              <motion.span animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 3, repeat: Infinity }} className="text-xl">💝</motion.span>
+              <motion.span
+                animate={{ rotate: [0, 10, -10, 0] }}
+                style={{ transform: 'translateZ(0)', willChange: 'transform', display: 'inline-block' }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="text-xl"
+              >
+                💝
+              </motion.span>
               <span className="font-bold ml-2"><span className="gradient-text">Gift</span>Magic</span>
             </div>
           </div>

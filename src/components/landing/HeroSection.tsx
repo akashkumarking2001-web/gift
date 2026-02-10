@@ -203,6 +203,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
+            style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
             className="text-6xl lg:text-7xl font-black leading-tight text-white font-outfit"
           >
             Turn Memories <br />
@@ -264,6 +265,7 @@ const HeroSection = () => {
             initial={{ rotate: -10, x: -100, opacity: 0 }}
             animate={{ rotate: -10, x: -40, opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
+            style={{ transform: 'translateZ(0)', rotate: '-10deg', willChange: 'transform, opacity' }}
             className="absolute glass-card w-72 h-96 rounded-3xl border border-primary/40 p-4 shadow-2xl flex flex-col justify-between bg-gradient-to-t from-primary/20 to-transparent z-10 overflow-hidden"
           >
             {/* Enhanced Cover Image with Gradient Overlay */}
@@ -323,6 +325,7 @@ const HeroSection = () => {
             initial={{ rotate: 5, x: 100, y: 20, opacity: 0 }}
             animate={{ rotate: 5, x: 40, y: 20, opacity: 1 }}
             transition={{ duration: 1, delay: 0.4 }}
+            style={{ transform: 'translateZ(0)', rotate: '5deg', willChange: 'transform, opacity' }}
             className="absolute glass-card w-72 h-96 rounded-3xl border border-primary/20 p-6 shadow-2xl flex flex-col bg-gradient-to-br from-white/10 to-transparent z-20"
           >
             {/* Music Player Header */}
@@ -360,11 +363,17 @@ const HeroSection = () => {
                   <motion.div
                     key={i}
                     animate={isPlaying ? {
-                      height: [`${h}%`, `${h * 0.5}%`, `${h}%`],
+                      scaleY: [h / 100, (h * 0.5) / 100, h / 100],
                       opacity: [0.6, 1, 0.6]
                     } : {
-                      height: '20%',
+                      scaleY: 0.2,
                       opacity: 0.3
+                    }}
+                    style={{
+                      originY: 'bottom',
+                      backfaceVisibility: 'hidden',
+                      transform: 'translateZ(0)',
+                      willChange: 'transform, opacity'
                     }}
                     transition={{
                       duration: 0.6,
@@ -372,7 +381,7 @@ const HeroSection = () => {
                       delay: i * 0.08,
                       ease: "easeInOut"
                     }}
-                    className="w-1.5 bg-gradient-to-t from-primary to-primary/50 rounded-full shadow-lg shadow-primary/30"
+                    className="w-1.5 h-full bg-gradient-to-t from-primary to-primary/50 rounded-full shadow-lg shadow-primary/30"
                   />
                 ))}
               </div>
@@ -381,6 +390,7 @@ const HeroSection = () => {
               {isPlaying && (
                 <motion.div
                   className="absolute inset-0 bg-primary/10"
+                  style={{ backfaceVisibility: 'hidden', transform: 'translateZ(0)', willChange: 'opacity' }}
                   animate={{ opacity: [0.1, 0.3, 0.1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
@@ -435,9 +445,15 @@ const HeroSection = () => {
                 {/* Progress fill */}
                 <motion.div
                   className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/80 rounded-full"
-                  style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                  style={{
+                    width: '100%',
+                    originX: 0,
+                    backfaceVisibility: 'hidden',
+                    transform: 'translateZ(0)',
+                    willChange: 'transform'
+                  }}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: duration ? currentTime / duration : 0 }}
                   transition={{ duration: 0.1 }}
                 >
                   {/* Glow effect */}
@@ -467,6 +483,7 @@ const HeroSection = () => {
           {/* Floating Icons */}
           <motion.div
             animate={{ y: [-10, 10, -10], rotate: [0, 10, 0] }}
+            style={{ backfaceVisibility: 'hidden', transform: 'translateZ(0)', willChange: 'transform' }}
             transition={{ duration: 4, repeat: Infinity }}
             className="absolute top-10 left-10"
           >
@@ -475,6 +492,7 @@ const HeroSection = () => {
 
           <motion.div
             animate={{ y: [10, -10, 10], rotate: [0, -10, 0] }}
+            style={{ backfaceVisibility: 'hidden', transform: 'translateZ(0)', willChange: 'transform' }}
             transition={{ duration: 5, repeat: Infinity }}
             className="absolute bottom-10 right-10"
           >

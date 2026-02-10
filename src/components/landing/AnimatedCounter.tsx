@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface AnimatedCounterProps {
   end: number;
@@ -11,26 +11,30 @@ interface AnimatedCounterProps {
 
 const AnimatedCounter = ({ end, suffix = "", label, icon, duration = 2 }: AnimatedCounterProps) => {
   const [count, setCount] = useState(0);
+  const [hasEntered, setHasEntered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   useEffect(() => {
-    if (!isInView) return;
+    if (!hasEntered) return;
 
-    let start = 0;
-    const step = end / (duration * 60);
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= end) {
-        setCount(end);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(start));
+    let startTimestamp: number | null = null;
+    let animationFrameId: number;
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / (duration * 1000), 1);
+
+      setCount(Math.floor(progress * end));
+
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(step);
       }
-    }, 1000 / 60);
+    };
 
-    return () => clearInterval(timer);
-  }, [isInView, end, duration]);
+    animationFrameId = requestAnimationFrame(step);
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [hasEntered, end, duration]);
 
   return (
     <motion.div
@@ -38,7 +42,9 @@ const AnimatedCounter = ({ end, suffix = "", label, icon, duration = 2 }: Animat
       className="glass-card p-6 text-center"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
+      onViewportEnter={() => setHasEntered(true)}
       viewport={{ once: true }}
+      style={{ transform: 'translateZ(0)', willChange: 'transform, opacity', backfaceVisibility: 'hidden' }}
       transition={{ duration: 0.6 }}
       whileHover={{ scale: 1.05 }}
     >

@@ -20,6 +20,7 @@ const RevealSection = ({ children }: { children: React.ReactNode }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.8, ease: "easeOut" }}
+      style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
     >
       {children}
     </motion.div>
@@ -75,6 +76,7 @@ const Index = () => {
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           href={instaLink}
+          style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
           target="_blank"
           rel="noopener noreferrer"
           className="fixed right-6 bottom-6 z-50 bg-gradient-to-tr from-purple-500 to-pink-500 p-3 rounded-full shadow-lg shadow-pink-500/20 hover:scale-110 active:scale-95 transition-all text-white"

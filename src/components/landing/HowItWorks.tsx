@@ -57,6 +57,7 @@ const HowItWorks = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.2, duration: 0.6 }}
+              style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
               className="relative"
             >
               {/* Connector line */}
@@ -73,6 +74,7 @@ const HowItWorks = () => {
                     y: [0, -8, 0],
                     rotate: [0, 5, -5, 0]
                   }}
+                  style={{ transform: 'translateZ(0)', willChange: 'transform' }}
                   transition={{ duration: 3, repeat: Infinity, delay: i * 0.3 }}
                   className="text-5xl mb-5 inline-block"
                 >

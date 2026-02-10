@@ -124,6 +124,7 @@ const ShareModal = ({ isOpen, onClose, giftUrl, giftTitle = 'My Special Gift' }:
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
+                    style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
                     className="bg-gradient-to-br from-white to-pink-50 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
                 >
                     {/* Close Button */}
@@ -150,8 +151,8 @@ const ShareModal = ({ isOpen, onClose, giftUrl, giftTitle = 'My Special Gift' }:
                         <button
                             onClick={() => setActiveTab('link')}
                             className={`flex-1 py-4 px-6 font-bold transition-colors ${activeTab === 'link'
-                                    ? 'text-pink-600 border-b-4 border-pink-600'
-                                    : 'text-gray-500 hover:text-pink-500'
+                                ? 'text-pink-600 border-b-4 border-pink-600'
+                                : 'text-gray-500 hover:text-pink-500'
                                 }`}
                         >
                             <LinkIcon className="w-5 h-5 inline mr-2" />
@@ -160,8 +161,8 @@ const ShareModal = ({ isOpen, onClose, giftUrl, giftTitle = 'My Special Gift' }:
                         <button
                             onClick={() => setActiveTab('qr')}
                             className={`flex-1 py-4 px-6 font-bold transition-colors ${activeTab === 'qr'
-                                    ? 'text-pink-600 border-b-4 border-pink-600'
-                                    : 'text-gray-500 hover:text-pink-500'
+                                ? 'text-pink-600 border-b-4 border-pink-600'
+                                : 'text-gray-500 hover:text-pink-500'
                                 }`}
                         >
                             <QrCode className="w-5 h-5 inline mr-2" />
@@ -175,6 +176,7 @@ const ShareModal = ({ isOpen, onClose, giftUrl, giftTitle = 'My Special Gift' }:
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
+                                style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
                                 className="space-y-6"
                             >
                                 {/* URL Display */}
@@ -237,6 +239,7 @@ const ShareModal = ({ isOpen, onClose, giftUrl, giftTitle = 'My Special Gift' }:
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
+                                style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
                                 className="space-y-6"
                             >
                                 {/* QR Type Selection */}
@@ -244,8 +247,8 @@ const ShareModal = ({ isOpen, onClose, giftUrl, giftTitle = 'My Special Gift' }:
                                     <button
                                         onClick={() => setQRType('standard')}
                                         className={`flex-1 p-4 rounded-xl border-2 transition-all ${qrType === 'standard'
-                                                ? 'border-pink-500 bg-pink-50'
-                                                : 'border-gray-200 hover:border-pink-300'
+                                            ? 'border-pink-500 bg-pink-50'
+                                            : 'border-gray-200 hover:border-pink-300'
                                             }`}
                                     >
                                         <QrCode className="w-8 h-8 mx-auto mb-2 text-pink-600" />
@@ -255,8 +258,8 @@ const ShareModal = ({ isOpen, onClose, giftUrl, giftTitle = 'My Special Gift' }:
                                     <button
                                         onClick={() => setQRType('ai')}
                                         className={`flex-1 p-4 rounded-xl border-2 transition-all ${qrType === 'ai'
-                                                ? 'border-pink-500 bg-pink-50'
-                                                : 'border-gray-200 hover:border-pink-300'
+                                            ? 'border-pink-500 bg-pink-50'
+                                            : 'border-gray-200 hover:border-pink-300'
                                             }`}
                                     >
                                         <Sparkles className="w-8 h-8 mx-auto mb-2 text-pink-600" />

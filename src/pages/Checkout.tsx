@@ -27,41 +27,51 @@ const Checkout = () => {
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
 
-  // Template Info - Check location.state first (for bundles), then URL params (for individual templates)
+  // Template Info - Check location.state first, then URL params
   const location = useLocation();
-  const bundleState = location.state as { bundle?: string; price?: number; title?: string } | null;
+  const checkoutState = location.state as {
+    bundle?: string;
+    templateId?: string | number;
+    title?: string;
+    price?: number;
+    mrp?: number;
+  } | null;
 
   const urlParams = new URLSearchParams(window.location.search);
-  const paramId = urlParams.get('templateId') || '1';
 
-  // Find template matching paramId
-  const selectedTemplate = TEMPLATES.find(t => t.id.toString() === paramId);
+  // 1. Determine Template ID
+  const templateId = (checkoutState?.templateId || checkoutState?.bundle || urlParams.get('templateId') || '1').toString();
 
-  // Determine title, price, and MRP based on bundle or template
+  // 2. Find template matching id (fallback)
+  const selectedTemplate = TEMPLATES.find(t => t.id.toString() === templateId);
+
+  // 3. Determine Title, Price, and MRP
   let templateTitle: string;
   let templatePrice: number;
   let templateMrp: number;
-  let templateId: string;
 
-  if (bundleState?.bundle) {
-    // Bundle purchase
-    templateId = bundleState.bundle;
-    if (bundleState.bundle === "valentines") {
-      templateTitle = "Valentine's Special Bundle (3 Templates)";
-      templatePrice = 99;
+  if (checkoutState?.bundle) {
+    // Bundle logic (from state)
+    if (checkoutState.bundle === "valentines") {
+      templateTitle = checkoutState.title || "Valentine's Special Bundle (3 Templates)";
+      templatePrice = checkoutState.price || 199;
       templateMrp = 1800;
-    } else if (bundleState.bundle === "all-access") {
-      templateTitle = "All-Access Combo (19+ Templates)";
-      templatePrice = 399;
+    } else if (checkoutState.bundle === "all-access") {
+      templateTitle = checkoutState.title || "All-Access Combo (19+ Templates)";
+      templatePrice = checkoutState.price || 399;
       templateMrp = 5000;
     } else {
-      templateTitle = bundleState.title || "Special Bundle";
-      templatePrice = bundleState.price || 99;
-      templateMrp = 0;
+      templateTitle = checkoutState.title || "Special Bundle";
+      templatePrice = checkoutState.price || 149;
+      templateMrp = checkoutState.mrp || 0;
     }
+  } else if (checkoutState?.templateId) {
+    // Individual template (from state)
+    templateTitle = checkoutState.title || selectedTemplate?.title || 'Premium Template';
+    templatePrice = checkoutState.price || selectedTemplate?.price || 149;
+    templateMrp = checkoutState.mrp || selectedTemplate?.originalPrice || 0;
   } else {
-    // Individual template purchase
-    templateId = paramId;
+    // Fallback to URL Params or Defaults
     templateTitle = urlParams.get('title') || selectedTemplate?.title || 'Premium Template';
     templatePrice = parseInt(urlParams.get('price') || selectedTemplate?.price.toString() || '149');
     templateMrp = parseInt(urlParams.get('mrp') || selectedTemplate?.originalPrice.toString() || '0');
@@ -258,8 +268,19 @@ const Checkout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a060a] text-white font-sans selection:bg-primary/30">
+    <div className="min-h-screen bg-[#0a060a] text-white font-sans selection:bg-primary/30 relative overflow-x-hidden">
       <FloatingHearts />
+
+      {/* Background Glows */}
+      <div
+        style={{ transform: 'translateZ(0)', willChange: 'opacity', backfaceVisibility: 'hidden' }}
+        className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none"
+      />
+      <div
+        style={{ transform: 'translateZ(0)', willChange: 'opacity', backfaceVisibility: 'hidden' }}
+        className="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 blur-[120px] rounded-full pointer-events-none"
+      />
+
 
       {/* Navbar */}
       <nav className="w-full z-50 px-6 py-4 relative">
@@ -290,7 +311,10 @@ const Checkout = () => {
         <div className="grid lg:grid-cols-12 gap-12">
 
           {/* Left Column: Order Summary */}
-          <div className="lg:col-span-5 space-y-8">
+          <div
+            style={{ transform: 'translateZ(0)', willChange: 'transform' }}
+            className="lg:col-span-5 space-y-8"
+          >
             <div>
               <h2 className="text-3xl font-black mb-6">Order Summary</h2>
               <div className="glass-card rounded-2xl p-6 space-y-6">
@@ -372,7 +396,10 @@ const Checkout = () => {
           </div>
 
           {/* Right Column: Checkout Form */}
-          <div className="lg:col-span-7">
+          <div
+            style={{ transform: 'translateZ(0)', willChange: 'transform' }}
+            className="lg:col-span-7"
+          >
             <div className="glass-card rounded-3xl p-8 lg:p-10 space-y-10 border border-white/10">
               <div>
                 <h2 className="text-3xl font-black mb-2">Secure Checkout</h2>

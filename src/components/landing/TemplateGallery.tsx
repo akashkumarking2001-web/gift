@@ -92,6 +92,7 @@ const TemplateGallery = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
+                style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
                 onClick={() => handleTemplateClick(template.slug)}
               >
                 <motion.div
@@ -103,6 +104,7 @@ const TemplateGallery = () => {
                     <motion.span
                       className="text-6xl"
                       animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+                      style={{ transform: 'translateZ(0)', willChange: 'transform' }}
                       transition={{ duration: 3, repeat: Infinity }}
                     >
                       {template.icon}
@@ -114,7 +116,12 @@ const TemplateGallery = () => {
                         <motion.div
                           key={j}
                           className="absolute text-white/40"
-                          style={{ left: `${10 + j * 20}%`, top: `${10 + j * 15}%` }}
+                          style={{
+                            left: `${10 + j * 20}%`,
+                            top: `${10 + j * 15}%`,
+                            transform: 'translateZ(0)',
+                            willChange: 'transform, opacity'
+                          }}
                           animate={{ y: [-10, 10, -10], opacity: [0.1, 0.6, 0.1], scale: [1, 1.5, 1] }}
                           transition={{ duration: 2 + j, repeat: Infinity }}
                         >

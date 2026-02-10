@@ -52,12 +52,13 @@ const AdminLogin = () => {
             <div className="absolute inset-0 grid-paper-bg opacity-10" />
 
             {/* Darker, red-tinted backglow for Admin */}
-            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-900/10 blur-[150px] rounded-full pointer-events-none" />
+            <div style={{ transform: 'translateZ(0)', willChange: 'opacity', backfaceVisibility: 'hidden' }} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-900/10 blur-[150px] rounded-full pointer-events-none" />
 
             <div className="relative z-10 w-full max-w-md px-6">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
+                    style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
                     className="glass-card-static border border-red-500/10 p-10 relative overflow-hidden"
                 >
                     <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />

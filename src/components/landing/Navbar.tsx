@@ -11,6 +11,7 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      style={{ transform: 'translateZ(0)', willChange: 'transform' }}
       className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-white/5 bg-black/10"
     >
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
