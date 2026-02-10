@@ -1,10 +1,95 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Play, Pause, Sparkles, Star, Music, Heart } from "lucide-react";
+import { ArrowRight, Play, Pause, SkipForward, Sparkles, Star, Music, Heart } from "lucide-react";
+
+// Music playlist with your uploaded files
+const MUSIC_PLAYLIST = [
+  {
+    id: 1,
+    title: "Tamil Love Song",
+    file: "/src/Music file/1.mp3",
+    cover: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    id: 2,
+    title: "En Kannu Kulla",
+    file: "/src/Music file/En_Kannu_kulla_oru_sirikki_❣️_Appuchi_Gramam_❣️Vetkathukae_vetkam.mp3",
+    cover: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    id: 3,
+    title: "Enna Solla",
+    file: "/src/Music file/Enna_solla_Yedhu_solla_💕_Sollamal_Kollamal_💕_Dhnaush_💕_Samantha.mp3",
+    cover: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    id: 4,
+    title: "Iruvarum Mattum",
+    file: "/src/Music file/Iruvarum_mattum_vazha_❤️_7aum_Arivu_❤️_Harris_Jayaraj_❤️MP3_160K.mp3",
+    cover: "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    id: 5,
+    title: "Kadhal Cricket",
+    file: "/src/Music file/Kadhal_cricketu_❤️Thani_Oruvan_❤️_Jayam_Ravi_❤️_Nayanthara_❤️Hip.mp3",
+    cover: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    id: 6,
+    title: "Kangal Irandal",
+    file: "/src/Music file/Kangal_Irandal_❤️_Subramaniapuram_❤️_Jai_❤️_Swathi_Reddy_❤️MP3_160K.mp3",
+    cover: "https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    id: 7,
+    title: "Kannaana Kanne",
+    file: "/src/Music file/Kannaana_kanne_Nee_kalangadhadi_💕_Naanum_Rowdy_Dhaan_💕_Vjs_❤️Nayanthara.mp3",
+    cover: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    id: 8,
+    title: "Kannamma Unna",
+    file: "/src/Music file/Kannamma_unna_Manasil_💕_Ispade_Rajavum_Idhaya_Raniyum_💕_Harish_kalyan.mp3",
+    cover: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    id: 9,
+    title: "Sandakaari",
+    file: "/src/Music file/Sandakaari_needhaan_❤️_Anirudh_❤️_Sangathamizhan_❤️_Vijay_Sethupathi.mp3",
+    cover: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    id: 10,
+    title: "Thangamey",
+    file: "/src/Music file/Thangamey_onnathaan 💕_Anirudh_💕_Vijay_Sethupathi_💕_Nayanthara_💕.mp3",
+    cover: "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?q=80&w=1000&auto=format&fit=crop"
+  }
+];
 
 const HeroSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [playlist, setPlaylist] = useState<typeof MUSIC_PLAYLIST>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Initialize playlist: First song is "1", rest are randomized
+  useEffect(() => {
+    const firstSong = MUSIC_PLAYLIST[0]; // File named "1"
+    const otherSongs = MUSIC_PLAYLIST.slice(1);
+
+    // Shuffle other songs
+    const shuffled = [...otherSongs].sort(() => Math.random() - 0.5);
+
+    // Set playlist: first song + shuffled rest
+    setPlaylist([firstSong, ...shuffled]);
+  }, []);
+
+  // Set volume to 70% when audio is loaded
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.7; // 70% volume
+    }
+  }, []);
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -17,6 +102,25 @@ const HeroSection = () => {
     }
   };
 
+  const playNext = () => {
+    const nextIndex = (currentTrackIndex + 1) % playlist.length;
+    setCurrentTrackIndex(nextIndex);
+    setIsPlaying(false);
+
+    // Auto-play next song after a brief delay
+    setTimeout(() => {
+      if (audioRef.current) {
+        audioRef.current.play();
+        setIsPlaying(true);
+      }
+    }, 100);
+  };
+
+  // Auto-play next song when current ends
+  const handleSongEnd = () => {
+    playNext();
+  };
+
   const scrollToTemplates = () => {
     const element = document.getElementById('templates-gallery');
     if (element) {
@@ -24,10 +128,16 @@ const HeroSection = () => {
     }
   };
 
+  const currentTrack = playlist[currentTrackIndex] || MUSIC_PLAYLIST[0];
+
   return (
     <section className="relative pt-32 pb-20 px-6 overflow-hidden min-h-screen flex items-center">
-      {/* Background audio element - using a placeholder for now */}
-      <audio ref={audioRef} loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
+      {/* Background audio element */}
+      <audio
+        ref={audioRef}
+        src={currentTrack.file}
+        onEnded={handleSongEnd}
+      />
 
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center w-full">
         {/* Left Content */}
@@ -103,87 +213,168 @@ const HeroSection = () => {
           {/* Decorative Elements */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 blur-[120px] rounded-full pointer-events-none" />
 
+          {/* Left Card - Enhanced Cover Image */}
           <motion.div
             initial={{ rotate: -10, x: -100, opacity: 0 }}
             animate={{ rotate: -10, x: -40, opacity: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="absolute glass-card w-72 h-96 rounded-3xl border border-primary/40 p-4 shadow-2xl flex flex-col justify-end bg-gradient-to-t from-primary/20 to-transparent z-10"
+            className="absolute glass-card w-72 h-96 rounded-3xl border border-primary/40 p-4 shadow-2xl flex flex-col justify-between bg-gradient-to-t from-primary/20 to-transparent z-10 overflow-hidden"
           >
-            <div className="h-48 w-full rounded-2xl bg-white/5 mb-4 overflow-hidden relative group cursor-pointer">
-              <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Couple" />
-              <div className="absolute top-3 right-3 glass-card p-2 rounded-full"><Star className="w-3 h-3 text-primary fill-primary" /></div>
-            </div>
-            <div className="space-y-2">
-              <div className="h-2 w-24 bg-white/20 rounded-full" />
-              <div className="h-2 w-16 bg-white/10 rounded-full" />
+            {/* Enhanced Cover Image with Gradient Overlay */}
+            <div className="relative h-full w-full rounded-2xl overflow-hidden group cursor-pointer">
+              <img
+                src={currentTrack.cover}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                alt="Album Cover"
+              />
+
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+              {/* Floating Music Icon */}
+              <motion.div
+                animate={{
+                  y: [0, -10, 0],
+                  rotate: [0, 5, -5, 0]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="absolute top-4 right-4 glass-card p-3 rounded-full backdrop-blur-md border border-white/20"
+              >
+                <Music className="w-5 h-5 text-primary" />
+              </motion.div>
+
+              {/* Song Info at Bottom */}
+              <div className="absolute bottom-0 left-0 right-0 p-4 space-y-2">
+                <motion.div
+                  animate={isPlaying ? { opacity: [0.5, 1, 0.5] } : { opacity: 0.5 }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="flex items-center gap-2"
+                >
+                  <div className="w-2 h-2 bg-primary rounded-full" />
+                  <span className="text-white/80 text-xs font-bold uppercase tracking-wider">Now Playing</span>
+                </motion.div>
+                <h4 className="text-white font-bold text-sm line-clamp-2">{currentTrack.title}</h4>
+                <p className="text-white/60 text-xs">Tamil Love Songs</p>
+              </div>
+
+              {/* Animated Border Glow */}
+              {isPlaying && (
+                <motion.div
+                  className="absolute inset-0 border-2 border-primary/50 rounded-2xl"
+                  animate={{ opacity: [0.3, 0.8, 0.3] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              )}
             </div>
           </motion.div>
 
+          {/* Right Card - Music Player (Simplified) */}
           <motion.div
             initial={{ rotate: 5, x: 100, y: 20, opacity: 0 }}
             animate={{ rotate: 5, x: 40, y: 20, opacity: 1 }}
             transition={{ duration: 1, delay: 0.4 }}
-            className="absolute glass-card w-72 h-96 rounded-3xl border border-primary/20 p-4 shadow-2xl flex flex-col bg-gradient-to-br from-white/10 to-transparent z-20"
+            className="absolute glass-card w-72 h-96 rounded-3xl border border-primary/20 p-6 shadow-2xl flex flex-col bg-gradient-to-br from-white/10 to-transparent z-20"
           >
             {/* Music Player Header */}
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center animate-spin-slow">
-                <Music className="w-5 h-5 text-primary" />
-              </div>
+              <motion.div
+                animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center border border-primary/30"
+              >
+                <Music className="w-6 h-6 text-primary" />
+              </motion.div>
               <div className="space-y-1">
-                <h3 className="text-white font-bold text-sm leading-none font-outfit">Tamil Hit Love Songs</h3>
-                <p className="text-white/50 text-xs font-inter">Valentine's Special Playlist</p>
+                <h3 className="text-white font-bold text-base leading-none font-outfit">Tamil Love Songs</h3>
+                <p className="text-white/50 text-xs font-inter">Valentine's Special</p>
               </div>
             </div>
 
-            <div className="flex-1 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 overflow-hidden relative group">
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-50" />
+            {/* Visualizer - Enhanced */}
+            <div className="flex-1 rounded-2xl bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center border border-white/10 overflow-hidden relative group">
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-primary/10" />
 
-              {/* Visualizer bars simulation */}
-              <div className={`flex gap-1 h-12 items-end ${isPlaying ? 'opacity-100' : 'opacity-30'}`}>
-                {[40, 70, 40, 100, 60, 30, 80, 50].map((h, i) => (
+              {/* Visualizer bars */}
+              <div className={`flex gap-1.5 h-16 items-end relative z-10 ${isPlaying ? 'opacity-100' : 'opacity-30'}`}>
+                {[40, 70, 40, 100, 60, 30, 80, 50, 65, 45].map((h, i) => (
                   <motion.div
                     key={i}
-                    animate={isPlaying ? { height: [h + '%', (h * 0.5) + '%', h + '%'] } : { height: '20%' }}
-                    transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.1 }}
-                    className="w-1 bg-primary rounded-full transition-all duration-300"
-                    style={{ height: isPlaying ? `${h}%` : '20%' }}
+                    animate={isPlaying ? {
+                      height: [`${h}%`, `${h * 0.5}%`, `${h}%`],
+                      opacity: [0.6, 1, 0.6]
+                    } : {
+                      height: '20%',
+                      opacity: 0.3
+                    }}
+                    transition={{
+                      duration: 0.6,
+                      repeat: Infinity,
+                      delay: i * 0.08,
+                      ease: "easeInOut"
+                    }}
+                    className="w-1.5 bg-gradient-to-t from-primary to-primary/50 rounded-full shadow-lg shadow-primary/30"
                   />
                 ))}
               </div>
+
+              {/* Pulsing Background Effect */}
+              {isPlaying && (
+                <motion.div
+                  className="absolute inset-0 bg-primary/10"
+                  animate={{ opacity: [0.1, 0.3, 0.1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                />
+              )}
             </div>
 
-            <div className="mt-4 flex justify-between items-center px-2">
-              <button
+            {/* Controls - Only Play and Next buttons */}
+            <div className="mt-6 flex justify-center items-center gap-4">
+              <motion.button
                 onClick={togglePlay}
-                className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center hover:scale-105 transition-transform shadow-lg shadow-primary/30"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 text-white flex items-center justify-center shadow-xl shadow-primary/40 hover:shadow-primary/60 transition-all"
               >
-                {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-1" />}
-              </button>
+                {isPlaying ? <Pause className="w-7 h-7 fill-current" /> : <Play className="w-7 h-7 fill-current ml-1" />}
+              </motion.button>
 
-              <div className="flex-1 ml-4 space-y-2">
-                <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
-                  <motion.div
-                    className="h-full bg-primary"
-                    animate={isPlaying ? { width: ["0%", "100%"] } : { width: "0%" }}
-                    transition={isPlaying ? { duration: 30, ease: "linear", repeat: Infinity } : { duration: 0 }}
-                  />
-                </div>
-                <div className="flex justify-between text-[10px] text-white/40 font-mono">
-                  <span>{isPlaying ? "0:12" : "0:00"}</span>
-                  <span>3:45</span>
-                </div>
-              </div>
+              <motion.button
+                onClick={playNext}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-14 h-14 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-all backdrop-blur-sm"
+              >
+                <SkipForward className="w-6 h-6" />
+              </motion.button>
+            </div>
+
+            {/* Track Counter */}
+            <div className="mt-4 text-center">
+              <p className="text-white/40 text-xs font-mono">
+                Track {currentTrackIndex + 1} of {playlist.length}
+              </p>
             </div>
           </motion.div>
 
           {/* Floating Icons */}
           <motion.div
-            animate={{ y: [-10, 10, -10] }}
+            animate={{ y: [-10, 10, -10], rotate: [0, 10, 0] }}
             transition={{ duration: 4, repeat: Infinity }}
             className="absolute top-10 left-10"
           >
             <Star className="w-8 h-8 text-primary fill-primary animate-pulse" />
+          </motion.div>
+
+          <motion.div
+            animate={{ y: [10, -10, 10], rotate: [0, -10, 0] }}
+            transition={{ duration: 5, repeat: Infinity }}
+            className="absolute bottom-10 right-10"
+          >
+            <Heart className="w-10 h-10 text-pink-500 fill-pink-500/50" />
           </motion.div>
         </div>
       </div>
