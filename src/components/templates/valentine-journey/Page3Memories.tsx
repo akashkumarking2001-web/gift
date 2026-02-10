@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Photo {
@@ -153,7 +153,7 @@ const Page3Memories = ({ data, onNext, isEditing = false, onUpdate }: Page3Memor
                                     x: { type: 'spring', stiffness: 300, damping: 30 },
                                     opacity: { duration: 0.2 }
                                 }}
-                                onError={(e) => {
+                                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
                                     e.currentTarget.src = 'https://via.placeholder.com/800x600/FFC0CB/DC143C?text=Memory';
                                 }}
                             />
@@ -228,8 +228,8 @@ const Page3Memories = ({ data, onNext, isEditing = false, onUpdate }: Page3Memor
                                 setCurrentPhotoIndex(index);
                             }}
                             className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentPhotoIndex
-                                    ? 'bg-pink-600 w-8'
-                                    : 'bg-pink-300 hover:bg-pink-400'
+                                ? 'bg-pink-600 w-8'
+                                : 'bg-pink-300 hover:bg-pink-400'
                                 }`}
                             disabled={isEditing}
                         />

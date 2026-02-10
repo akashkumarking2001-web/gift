@@ -70,6 +70,8 @@ const HeroSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [playlist, setPlaylist] = useState<typeof MUSIC_PLAYLIST>([]);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Initialize playlist: First song is "1", rest are randomized
@@ -91,14 +93,39 @@ const HeroSection = () => {
     }
   }, []);
 
+  // Handle time updates
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  // Handle metadata loaded
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
   const togglePlay = () => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
+        setIsPlaying(false);
       } else {
-        audioRef.current.play();
+        // Play and handle promise to catch autoplay restrictions
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true);
+            })
+            .catch((error) => {
+              console.error("Audio playback failed:", error);
+              setIsPlaying(false);
+            });
+        }
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
@@ -106,12 +133,22 @@ const HeroSection = () => {
     const nextIndex = (currentTrackIndex + 1) % playlist.length;
     setCurrentTrackIndex(nextIndex);
     setIsPlaying(false);
+    setCurrentTime(0);
 
     // Auto-play next song after a brief delay
     setTimeout(() => {
       if (audioRef.current) {
-        audioRef.current.play();
-        setIsPlaying(true);
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true);
+            })
+            .catch((error) => {
+              console.error("Auto-play failed:", error);
+              setIsPlaying(false);
+            });
+        }
       }
     }, 100);
   };
@@ -137,6 +174,8 @@ const HeroSection = () => {
         ref={audioRef}
         src={currentTrack.file}
         onEnded={handleSongEnd}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
       />
 
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center w-full">
@@ -352,8 +391,47 @@ const HeroSection = () => {
               </motion.button>
             </div>
 
+            {/* Compact Progress Bar */}
+            <div className="mt-4 space-y-1.5">
+              {/* Progress bar */}
+              <div className="relative h-1.5 bg-white/10 rounded-full overflow-hidden group cursor-pointer"
+                onClick={(e) => {
+                  if (audioRef.current && duration) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const percentage = x / rect.width;
+                    const newTime = percentage * duration;
+                    audioRef.current.currentTime = newTime;
+                    setCurrentTime(newTime);
+                  }
+                }}
+              >
+                {/* Progress fill */}
+                <motion.div
+                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/80 rounded-full"
+                  style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                  transition={{ duration: 0.1 }}
+                >
+                  {/* Glow effect */}
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-lg shadow-primary/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </motion.div>
+              </div>
+
+              {/* Time display */}
+              <div className="flex justify-between items-center px-0.5">
+                <span className="text-white/40 text-[10px] font-mono">
+                  {Math.floor(currentTime / 60)}:{String(Math.floor(currentTime % 60)).padStart(2, '0')}
+                </span>
+                <span className="text-white/40 text-[10px] font-mono">
+                  {duration ? `${Math.floor(duration / 60)}:${String(Math.floor(duration % 60)).padStart(2, '0')}` : '0:00'}
+                </span>
+              </div>
+            </div>
+
             {/* Track Counter */}
-            <div className="mt-4 text-center">
+            <div className="mt-2 text-center">
               <p className="text-white/40 text-xs font-mono">
                 Track {currentTrackIndex + 1} of {playlist.length}
               </p>
