@@ -1,3 +1,8 @@
+import React from 'react';
+import UniversalTemplateRenderer from './UniversalTemplateRenderer';
+import { TEMPLATES } from '../../lib/templates';
+
+// Specific Renderers
 import ValentineJourneyV2Renderer from './ValentineJourneyV2Renderer';
 import ValentineQuestionRenderer from './ValentineQuestionRenderer';
 import BirthdayCountdownRenderer from './BirthdayCountdownRenderer';
@@ -34,29 +39,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
     isEditing = false,
     onUpdate
 }) => {
-    // Standard Terminal/Mock Renderer for non-integrated templates
-    const DefaultRenderer = () => (
-        <div className="min-h-screen bg-[#050505] flex items-center justify-center p-8">
-            <div className="max-w-md w-full glass-card p-12 text-center border-white/5">
-                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-8">
-                    <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                </div>
-                <h2 className="text-xl font-black text-white uppercase tracking-[0.3em] mb-4">Module Initialized</h2>
-                <p className="text-xs text-white/40 uppercase tracking-widest leading-loose mb-12">
-                    Template: <span className="text-primary">{templateSlug}</span><br />
-                    Page: {pageId}<br />
-                    Status: Pending Premium Revamp
-                </p>
-                <button
-                    onClick={onNext}
-                    className="w-full py-4 bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.4em] hover:bg-white/10 transition-all rounded-2xl"
-                >
-                    Continue to Next →
-                </button>
-            </div>
-        </div>
-    );
-
+    // Determine the specific renderer for this template
     const renderers: Record<string, React.ComponentType<any>> = {
         'romantic-valentines-journey-v2': ValentineJourneyV2Renderer,
         'valentines-question': ValentineQuestionRenderer,
@@ -76,7 +59,6 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
         'memory-map': MemoryMapRenderer,
         'heartbeat-love': HeartbeatLoveRenderer,
         'celestial-love': CelestialLoveRenderer,
-        // Future templates will be added here
     };
 
     const SpecificRenderer = renderers[templateSlug];
@@ -93,7 +75,28 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
         );
     }
 
-    return <DefaultRenderer />;
+    // --- Fallback Mechanism: Universal Renderer ---
+
+    // 1. Look up the page type definition from the static TEMPLATES config
+    const templateDef = TEMPLATES.find(t => t.slug === templateSlug);
+    const pageDef = templateDef?.pages.find(p => p.id === pageId);
+
+    // 2. Inject the type into the data so UniversalRenderer knows what to render
+    const enrichedData = {
+        ...data,
+        _type: pageDef?.type || 'message' // Fallback to message if type not found
+    };
+
+    // 3. Render the universal component
+    return (
+        <UniversalTemplateRenderer
+            pageId={pageId}
+            data={enrichedData}
+            onNext={onNext}
+            isEditing={isEditing}
+        // onUpdate isn't fully supported by Universal yet, but could be added later
+        />
+    );
 };
 
 export default TemplateRenderer;

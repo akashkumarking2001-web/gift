@@ -104,9 +104,11 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '💗',
         color: 'from-fuchsia-500 to-purple-600',
         pages: [
-            { id: 'p1', type: 'message', title: 'Build-up', requiredFields: ['text'] },
-            { id: 'p2', type: 'slider', title: 'Interactive Slider', requiredFields: ['m1', 'm2', 'm3', 'm4', 'm5'] },
-            { id: 'p3', type: 'message', title: 'Final Word', requiredFields: ['text'] },
+            { id: 'p1', type: 'character', title: 'Intro', requiredFields: ['greeting'] },
+            { id: 'p2', type: 'message', title: 'Build-up', requiredFields: ['text'] },
+            { id: 'p3', type: 'slider', title: 'Interactive Slider', requiredFields: ['m1', 'm2', 'm3', 'm4', 'm5'] },
+            { id: 'p4', type: 'photo', title: 'Our Moments', requiredFields: ['photos'], config: { maxPhotos: 5 } },
+            { id: 'p5', type: 'message', title: 'Final Word', requiredFields: ['text'] },
         ],
     },
     {
@@ -136,8 +138,11 @@ export const TEMPLATES: TemplateDefinition[] = [
         tag: 'Cute',
         pages: [
             { id: 'p1', type: 'character', title: 'Panda Hello', requiredFields: ['greeting'] },
-            { id: 'p2', type: 'celebration', title: 'Gift Reveal', requiredFields: ['text'] },
-            { id: 'p3', type: 'message', title: 'Secret Note', requiredFields: ['text'] },
+            { id: 'p2', type: 'photo', title: 'Cute Memories', requiredFields: ['photos'] },
+            { id: 'p3', type: 'celebration', title: 'Gift Reveal', requiredFields: ['text'] },
+            { id: 'p4', type: 'message', title: 'Secret Note', requiredFields: ['text'] },
+            { id: 'p5', type: 'game', title: 'Panda Hug', requiredFields: ['hugText'], config: { gameType: 'hug' } },
+            { id: 'p6', type: 'celebration', title: 'Love You', requiredFields: ['finalText'] },
         ],
     },
     {
@@ -355,9 +360,11 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '🍾',
         color: 'from-blue-300 to-cyan-400',
         pages: [
-            { id: 'p1', type: 'message', title: 'Floating...', requiredFields: ['text'] },
-            { id: 'p2', type: 'game', title: 'Open Bottle', requiredFields: ['wish'], config: { gameType: 'bottle' } },
-            { id: 'p3', type: 'letter', title: 'The Note', requiredFields: ['message'] },
+            { id: 'p1', type: 'character', title: 'Start Journey', requiredFields: ['greeting', 'subtext'] },
+            { id: 'p2', type: 'message', title: 'Floating...', requiredFields: ['text'] },
+            { id: 'p3', type: 'game', title: 'Open Bottle', requiredFields: ['wish'], config: { gameType: 'bottle' } },
+            { id: 'p4', type: 'letter', title: 'The Note', requiredFields: ['message'] },
+            { id: 'p5', type: 'photo', title: 'Memories', requiredFields: ['photos'], config: { maxPhotos: 5 } },
         ],
     },
     {
