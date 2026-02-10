@@ -164,6 +164,12 @@ export const useTemplateAudio = ({ bgMusicUrl, isEditor = false }: AudioOptions)
         playClick: () => playSFX('click'),
         playTransition: () => playSFX('transition'),
         playReveal: () => playSFX('reveal'),
+        playSFX: (type: string) => {
+            // Support custom SFX or map new types to existing ones
+            if (type === 'pop') playSFX('reveal');
+            else if (type === 'celebration') playSFX('transition'); // or add specific celebration sound
+            else playSFX('click');
+        },
         playBGM,
         pauseBGM,
         toggleMute,

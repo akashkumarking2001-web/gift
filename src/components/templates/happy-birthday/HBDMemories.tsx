@@ -72,7 +72,7 @@ const HBDMemories = ({ data, onNext }: any) => {
 
             {/* Pagination Dots */}
             <div className="flex gap-2 mt-8 z-10">
-                {photos.map((_, i) => (
+                {photos.map((_: string, i: number) => (
                     <div
                         key={i}
                         className={`w-2 h-2 rounded-full transition-all duration-300 ${i === idx ? 'w-8 bg-blue-500 shadow-[0_0_10px_#3b82f6]' : 'bg-slate-600'}`}

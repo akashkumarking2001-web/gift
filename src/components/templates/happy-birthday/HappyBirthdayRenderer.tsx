@@ -21,7 +21,7 @@ export default function HappyBirthdayRenderer({
     onNext: () => void
 }) {
     // Audio Hook integration
-    const { playBGM, playSFX } = useTemplateAudio();
+    const { playBGM, playSFX } = useTemplateAudio({});
 
     // Map page IDs to components
     const pageMapping: Record<string, React.ComponentType<any>> = {
