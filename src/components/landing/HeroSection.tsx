@@ -7,61 +7,61 @@ const MUSIC_PLAYLIST = [
   {
     id: 1,
     title: "Tamil Love Song",
-    file: "/src/Music file/1.mp3",
+    file: "/music/1.mp3",
     cover: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1000&auto=format&fit=crop"
   },
   {
     id: 2,
     title: "En Kannu Kulla",
-    file: "/src/Music file/En_Kannu_kulla_oru_sirikki_❣️_Appuchi_Gramam_❣️Vetkathukae_vetkam.mp3",
+    file: "/music/En_Kannu_kulla_oru_sirikki_❣️_Appuchi_Gramam_❣️Vetkathukae_vetkam.mp3",
     cover: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1000&auto=format&fit=crop"
   },
   {
     id: 3,
     title: "Enna Solla",
-    file: "/src/Music file/Enna_solla_Yedhu_solla_💕_Sollamal_Kollamal_💕_Dhnaush_💕_Samantha.mp3",
+    file: "/music/Enna_solla_Yedhu_solla_💕_Sollamal_Kollamal_💕_Dhnaush_💕_Samantha.mp3",
     cover: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1000&auto=format&fit=crop"
   },
   {
     id: 4,
     title: "Iruvarum Mattum",
-    file: "/src/Music file/Iruvarum_mattum_vazha_❤️_7aum_Arivu_❤️_Harris_Jayaraj_❤️MP3_160K.mp3",
+    file: "/music/Iruvarum_mattum_vazha_❤️_7aum_Arivu_❤️_Harris_Jayaraj_❤️MP3_160K.mp3",
     cover: "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?q=80&w=1000&auto=format&fit=crop"
   },
   {
     id: 5,
     title: "Kadhal Cricket",
-    file: "/src/Music file/Kadhal_cricketu_❤️Thani_Oruvan_❤️_Jayam_Ravi_❤️_Nayanthara_❤️Hip.mp3",
+    file: "/music/Kadhal_cricketu_❤️Thani_Oruvan_❤️_Jayam_Ravi_❤️_Nayanthara_❤️Hip.mp3",
     cover: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?q=80&w=1000&auto=format&fit=crop"
   },
   {
     id: 6,
     title: "Kangal Irandal",
-    file: "/src/Music file/Kangal_Irandal_❤️_Subramaniapuram_❤️_Jai_❤️_Swathi_Reddy_❤️MP3_160K.mp3",
+    file: "/music/Kangal_Irandal_❤️_Subramaniapuram_❤️_Jai_❤️_Swathi_Reddy_❤️MP3_160K.mp3",
     cover: "https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?q=80&w=1000&auto=format&fit=crop"
   },
   {
     id: 7,
     title: "Kannaana Kanne",
-    file: "/src/Music file/Kannaana_kanne_Nee_kalangadhadi_💕_Naanum_Rowdy_Dhaan_💕_Vjs_❤️Nayanthara.mp3",
+    file: "/music/Kannaana_kanne_Nee_kalangadhadi_💕_Naanum_Rowdy_Dhaan_💕_Vjs_❤️Nayanthara.mp3",
     cover: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=1000&auto=format&fit=crop"
   },
   {
     id: 8,
     title: "Kannamma Unna",
-    file: "/src/Music file/Kannamma_unna_Manasil_💕_Ispade_Rajavum_Idhaya_Raniyum_💕_Harish_kalyan.mp3",
+    file: "/music/Kannamma_unna_Manasil_💕_Ispade_Rajavum_Idhaya_Raniyum_💕_Harish_kalyan.mp3",
     cover: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1000&auto=format&fit=crop"
   },
   {
     id: 9,
     title: "Sandakaari",
-    file: "/src/Music file/Sandakaari_needhaan_❤️_Anirudh_❤️_Sangathamizhan_❤️_Vijay_Sethupathi.mp3",
+    file: "/music/Sandakaari_needhaan_❤️_Anirudh_❤️_Sangathamizhan_❤️_Vijay_Sethupathi.mp3",
     cover: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1000&auto=format&fit=crop"
   },
   {
     id: 10,
     title: "Thangamey",
-    file: "/src/Music file/Thangamey_onnathaan 💕_Anirudh_💕_Vijay_Sethupathi_💕_Nayanthara_💕.mp3",
+    file: "/music/Thangamey_onnathaan 💕_Anirudh_💕_Vijay_Sethupathi_💕_Nayanthara_💕.mp3",
     cover: "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?q=80&w=1000&auto=format&fit=crop"
   }
 ];
