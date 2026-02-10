@@ -107,18 +107,29 @@ const HeroSection = () => {
     }
   };
 
+  const handleAudioError = (e: any) => {
+    console.error("Audio error occurred:", e);
+    setIsPlaying(false);
+  };
+
   const togglePlay = () => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
+        // Pause event will handle state
       } else {
+        // Optimistic update
+        setIsPlaying(true);
         const playPromise = audioRef.current.play();
         if (playPromise !== undefined) {
           playPromise.catch((error) => {
             console.error("Audio playback failed:", error);
+            setIsPlaying(false);
           });
         }
       }
+    } else {
+      console.error("Audio reference is missing");
     }
   };
 
@@ -166,6 +177,7 @@ const HeroSection = () => {
         onLoadedMetadata={handleLoadedMetadata}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onError={handleAudioError}
       />
 
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center w-full">
