@@ -69,7 +69,7 @@ const MUSIC_PLAYLIST = [
 const HeroSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [playlist, setPlaylist] = useState<typeof MUSIC_PLAYLIST>([]);
+  const [playlist, setPlaylist] = useState<typeof MUSIC_PLAYLIST>(MUSIC_PLAYLIST);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -111,28 +111,21 @@ const HeroSection = () => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
-        setIsPlaying(false);
       } else {
-        // Play and handle promise to catch autoplay restrictions
         const playPromise = audioRef.current.play();
         if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              setIsPlaying(true);
-            })
-            .catch((error) => {
-              console.error("Audio playback failed:", error);
-              setIsPlaying(false);
-            });
+          playPromise.catch((error) => {
+            console.error("Audio playback failed:", error);
+          });
         }
       }
     }
   };
 
   const playNext = () => {
+    if (playlist.length === 0) return;
     const nextIndex = (currentTrackIndex + 1) % playlist.length;
     setCurrentTrackIndex(nextIndex);
-    setIsPlaying(false);
     setCurrentTime(0);
 
     // Auto-play next song after a brief delay
@@ -140,14 +133,9 @@ const HeroSection = () => {
       if (audioRef.current) {
         const playPromise = audioRef.current.play();
         if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              setIsPlaying(true);
-            })
-            .catch((error) => {
-              console.error("Auto-play failed:", error);
-              setIsPlaying(false);
-            });
+          playPromise.catch((error) => {
+            console.error("Auto-play failed:", error);
+          });
         }
       }
     }, 100);
@@ -176,6 +164,8 @@ const HeroSection = () => {
         onEnded={handleSongEnd}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
       />
 
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center w-full">
@@ -335,7 +325,17 @@ const HeroSection = () => {
 
             {/* Visualizer - Enhanced */}
             <div className="flex-1 rounded-2xl bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center border border-white/10 overflow-hidden relative group">
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-primary/10" />
+              {/* Background Image in Visualizer */}
+              <div className="absolute inset-0 z-0">
+                <img
+                  src={currentTrack.cover}
+                  alt="Track BG"
+                  className="w-full h-full object-cover opacity-40 blur-sm scale-110"
+                />
+                <div className="absolute inset-0 bg-black/40" />
+              </div>
+
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-primary/10 z-10" />
 
               {/* Visualizer bars */}
               <div className={`flex gap-1.5 h-16 items-end relative z-10 ${isPlaying ? 'opacity-100' : 'opacity-30'}`}>
