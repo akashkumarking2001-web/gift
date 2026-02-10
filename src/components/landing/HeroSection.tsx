@@ -72,6 +72,7 @@ const HeroSection = () => {
   const [playlist, setPlaylist] = useState<typeof MUSIC_PLAYLIST>(MUSIC_PLAYLIST);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Initialize playlist: First song is "1", rest are randomized
@@ -110,9 +111,11 @@ const HeroSection = () => {
   const handleAudioError = (e: any) => {
     console.error("Audio error occurred:", e);
     setIsPlaying(false);
+    setError("Unable to play track");
   };
 
   const togglePlay = () => {
+    setError(null); // Clear previous errors
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
@@ -171,7 +174,9 @@ const HeroSection = () => {
       {/* Background audio element */}
       <audio
         ref={audioRef}
+        key={currentTrack.file} // Force reload on track change
         src={currentTrack.file}
+        preload="auto"
         onEnded={handleSongEnd}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
@@ -383,24 +388,33 @@ const HeroSection = () => {
             </div>
 
             {/* Controls - Only Play and Next buttons */}
-            <div className="mt-6 flex justify-center items-center gap-4">
-              <motion.button
-                onClick={togglePlay}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 text-white flex items-center justify-center shadow-xl shadow-primary/40 hover:shadow-primary/60 transition-all"
-              >
-                {isPlaying ? <Pause className="w-7 h-7 fill-current" /> : <Play className="w-7 h-7 fill-current ml-1" />}
-              </motion.button>
+            <div className="mt-6 flex flex-col items-center gap-2">
+              {error && (
+                <span className="text-red-400 text-xs font-mono bg-red-900/20 px-2 py-0.5 rounded border border-red-500/20 mb-2">
+                  {error}
+                </span>
+              )}
+              <div className="flex justify-center items-center gap-4">
+                <motion.button
+                  onClick={togglePlay}
+                  aria-label={isPlaying ? "Pause" : "Play"}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 text-white flex items-center justify-center shadow-xl shadow-primary/40 hover:shadow-primary/60 transition-all"
+                >
+                  {isPlaying ? <Pause className="w-7 h-7 fill-current" /> : <Play className="w-7 h-7 fill-current ml-1" />}
+                </motion.button>
 
-              <motion.button
-                onClick={playNext}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-14 h-14 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-all backdrop-blur-sm"
-              >
-                <SkipForward className="w-6 h-6" />
-              </motion.button>
+                <motion.button
+                  onClick={playNext}
+                  aria-label="Next Track"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-14 h-14 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-white/20 transition-all backdrop-blur-sm"
+                >
+                  <SkipForward className="w-6 h-6" />
+                </motion.button>
+              </div>
             </div>
 
             {/* Compact Progress Bar */}
