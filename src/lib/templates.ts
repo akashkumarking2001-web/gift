@@ -21,6 +21,11 @@ export interface TemplateDefinition {
     pages: TemplatePage[];
     tag?: string;
     isActive?: boolean;
+    // Media fields for admin panel
+    thumbnail_url?: string;
+    cover_image_url?: string;
+    demo_video_url?: string;
+    preview_images?: string[]; // Array of image URLs
 }
 
 export const TEMPLATES: TemplateDefinition[] = [
@@ -324,5 +329,104 @@ export const TEMPLATES: TemplateDefinition[] = [
             { id: 'p2', type: 'game', title: 'Open Bottle', requiredFields: ['wish'], config: { gameType: 'bottle' } },
             { id: 'p3', type: 'letter', title: 'The Note', requiredFields: ['message'] },
         ],
+    },
+    {
+        id: 20,
+        slug: 'romantic-valentines-journey',
+        title: 'Romantic Valentine\'s Journey',
+        category: 'Valentine\'s',
+        price: 199,
+        originalPrice: 1999,
+        icon: '💖',
+        color: 'from-pink-500 via-rose-500 to-red-600',
+        tag: 'Premium',
+        pages: [
+            {
+                id: 'p1',
+                type: 'character',
+                title: 'Greeting',
+                requiredFields: [
+                    'greeting',
+                    'subtext',
+                    'mainImage',
+                    'buttonText'
+                ],
+                config: {
+                    style: 'polaroid',
+                    backgroundColor: 'gradient-pink-orange',
+                    hasFloatingHearts: true
+                }
+            },
+            {
+                id: 'p2',
+                type: 'flip-cards',
+                title: 'Why You?',
+                requiredFields: [
+                    'heading',
+                    'reason1',
+                    'reason2',
+                    'reason3',
+                    'reason4'
+                ],
+                config: {
+                    cardShape: 'heart',
+                    cardCount: 4,
+                    colors: ['#f04299', '#fb923c', '#f04299', '#a855f7']
+                }
+            },
+            {
+                id: 'p3',
+                type: 'photo',
+                title: 'Memories',
+                requiredFields: [
+                    'heading',
+                    'photos',
+                    'polaroidCaption'
+                ],
+                config: {
+                    style: 'polaroid',
+                    minPhotos: 5,
+                    maxPhotos: 10,
+                    layout: 'single-focus',
+                    allowCaptions: true
+                }
+            },
+            {
+                id: 'p4',
+                type: 'game',
+                title: 'The Question',
+                requiredFields: [
+                    'question',
+                    'characterImage',
+                    'yesText',
+                    'notSureText',
+                    'pleaseText'
+                ],
+                config: {
+                    gameType: 'valentine-question',
+                    noButtonBehavior: 'shrink-and-hide',
+                    celebrationOnYes: true
+                }
+            },
+            {
+                id: 'p5',
+                type: 'celebration',
+                title: 'Final Message',
+                requiredFields: [
+                    'mainHeading',
+                    'characterImage',
+                    'loveMessage',
+                    'signature',
+                    'shareButtonText',
+                    'backButtonText'
+                ],
+                config: {
+                    hasConfetti: true,
+                    hasFloatingHearts: true,
+                    characterAnimation: 'heart-float',
+                    maxMessageLength: 500
+                }
+            }
+        ]
     },
 ];

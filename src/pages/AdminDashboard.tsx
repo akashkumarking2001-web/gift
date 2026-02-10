@@ -535,73 +535,147 @@ const AdminDashboard = () => {
             {/* Edit Modal */}
             <AnimatePresence>
               {editingTemplate && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="glass-card-static w-full max-w-lg p-8 rounded-3xl border border-white/10 relative"
+                    className="glass-card-static w-full max-w-2xl p-8 rounded-3xl border border-white/10 relative my-8"
                   >
                     <button onClick={() => setEditingTemplate(null)} className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-full transition-colors"><X className="w-5 h-5" /></button>
                     <h3 className="text-2xl font-black mb-6">Edit Template</h3>
 
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase tracking-widest text-white/40">Title</label>
-                        <input
-                          value={editingTemplate.title}
-                          onChange={(e) => setEditingTemplate({ ...editingTemplate, title: e.target.value })}
-                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
+                      {/* Basic Info Section */}
+                      <div className="space-y-4 pb-6 border-b border-white/10">
+                        <h4 className="text-sm font-bold text-primary uppercase tracking-widest">Basic Information</h4>
+
                         <div className="space-y-2">
-                          <label className="text-xs font-bold uppercase tracking-widest text-white/40">Price (₹)</label>
+                          <label className="text-xs font-bold uppercase tracking-widest text-white/40">Title</label>
                           <input
-                            type="number"
-                            value={editingTemplate.price}
-                            onChange={(e) => setEditingTemplate({ ...editingTemplate, price: parseInt(e.target.value) })}
+                            value={editingTemplate.title}
+                            onChange={(e) => setEditingTemplate({ ...editingTemplate, title: e.target.value })}
                             className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
                           />
                         </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase tracking-widest text-white/40">Price (₹)</label>
+                            <input
+                              type="number"
+                              value={editingTemplate.price}
+                              onChange={(e) => setEditingTemplate({ ...editingTemplate, price: parseInt(e.target.value) })}
+                              className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase tracking-widest text-white/40">Original Price (₹)</label>
+                            <input
+                              type="number"
+                              value={editingTemplate.originalPrice || editingTemplate.price}
+                              onChange={(e) => setEditingTemplate({ ...editingTemplate, originalPrice: parseInt(e.target.value) })}
+                              className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                            />
+                          </div>
+                        </div>
+
                         <div className="space-y-2">
-                          <label className="text-xs font-bold uppercase tracking-widest text-white/40">Markdown MRP (₹)</label>
+                          <label className="text-xs font-bold uppercase tracking-widest text-white/40">Category</label>
                           <input
-                            type="number"
-                            value={editingTemplate.originalPrice || editingTemplate.price}
-                            onChange={(e) => setEditingTemplate({ ...editingTemplate, originalPrice: parseInt(e.target.value) })}
+                            value={editingTemplate.category}
+                            onChange={(e) => setEditingTemplate({ ...editingTemplate, category: e.target.value })}
                             className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-xs font-bold uppercase tracking-widest text-white/40">Icon (Emoji or URL)</label>
+                          <input
+                            value={editingTemplate.icon}
+                            onChange={(e) => setEditingTemplate({ ...editingTemplate, icon: e.target.value })}
+                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                            placeholder="💖 or https://..."
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-xs font-bold uppercase tracking-widest text-white/40">Theme Color (Tailwind)</label>
+                          <input
+                            value={editingTemplate.color}
+                            onChange={(e) => setEditingTemplate({ ...editingTemplate, color: e.target.value })}
+                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                            placeholder="from-pink-500 to-rose-500"
                           />
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase tracking-widest text-white/40">Category</label>
-                        <input
-                          value={editingTemplate.category}
-                          onChange={(e) => setEditingTemplate({ ...editingTemplate, category: e.target.value })}
-                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
-                        />
-                      </div>
+                      {/* Media Section */}
+                      <div className="space-y-4 pb-6 border-b border-white/10">
+                        <h4 className="text-sm font-bold text-primary uppercase tracking-widest flex items-center gap-2">
+                          <ImageIcon className="w-4 h-4" />
+                          Media Assets
+                        </h4>
 
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase tracking-widest text-white/40">Icon URL / Image</label>
-                        <input
-                          value={editingTemplate.icon}
-                          onChange={(e) => setEditingTemplate({ ...editingTemplate, icon: e.target.value })}
-                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
-                          placeholder="Emoji (✨) or https://..."
-                        />
-                      </div>
+                        <div className="space-y-2">
+                          <label className="text-xs font-bold uppercase tracking-widest text-white/40">Thumbnail / Cover Image URL</label>
+                          <input
+                            value={editingTemplate.thumbnail_url || editingTemplate.cover_image_url || ''}
+                            onChange={(e) => setEditingTemplate({ ...editingTemplate, thumbnail_url: e.target.value, cover_image_url: e.target.value })}
+                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                            placeholder="https://example.com/thumbnail.jpg"
+                          />
+                          {(editingTemplate.thumbnail_url || editingTemplate.cover_image_url) && (
+                            <div className="mt-2 p-2 bg-white/5 rounded-lg">
+                              <img
+                                src={editingTemplate.thumbnail_url || editingTemplate.cover_image_url}
+                                alt="Thumbnail preview"
+                                className="w-full h-32 object-cover rounded-lg"
+                                onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Invalid+Image'; }}
+                              />
+                            </div>
+                          )}
+                          <p className="text-[10px] text-white/30">This image appears on the template card</p>
+                        </div>
 
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold uppercase tracking-widest text-white/40">Theme Color (Tailwind Class)</label>
-                        <input
-                          value={editingTemplate.color}
-                          onChange={(e) => setEditingTemplate({ ...editingTemplate, color: e.target.value })}
-                          className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
-                          placeholder="from-pink-500 to-rose-500"
-                        />
+                        <div className="space-y-2">
+                          <label className="text-xs font-bold uppercase tracking-widest text-white/40">Demo Video URL</label>
+                          <input
+                            value={editingTemplate.demo_video_url || ''}
+                            onChange={(e) => setEditingTemplate({ ...editingTemplate, demo_video_url: e.target.value })}
+                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                            placeholder="https://example.com/demo.mp4"
+                          />
+                          <p className="text-[10px] text-white/30">Video shown on template details page</p>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-xs font-bold uppercase tracking-widest text-white/40">Preview Images (4-5 URLs, comma-separated)</label>
+                          <textarea
+                            value={(editingTemplate.preview_images || []).join(', ')}
+                            onChange={(e) => {
+                              const urls = e.target.value.split(',').map(url => url.trim()).filter(url => url);
+                              setEditingTemplate({ ...editingTemplate, preview_images: urls });
+                            }}
+                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors min-h-[80px]"
+                            placeholder="https://img1.jpg, https://img2.jpg, https://img3.jpg"
+                          />
+                          {editingTemplate.preview_images && editingTemplate.preview_images.length > 0 && (
+                            <div className="grid grid-cols-3 gap-2 mt-2">
+                              {editingTemplate.preview_images.slice(0, 6).map((url: string, idx: number) => (
+                                <div key={idx} className="aspect-video bg-white/5 rounded-lg overflow-hidden">
+                                  <img
+                                    src={url}
+                                    alt={`Preview ${idx + 1}`}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/200x150?text=Invalid'; }}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          <p className="text-[10px] text-white/30">Images shown below the demo video on details page</p>
+                        </div>
                       </div>
 
                       <button
@@ -610,14 +684,14 @@ const AdminDashboard = () => {
                             setTemplates(templates.map(t => t.id === editingTemplate.id ? editingTemplate : t));
                             await TemplateService.updateTemplate(editingTemplate.id, editingTemplate);
                             setEditingTemplate(null);
-                            toast({ title: "Success", description: "Template updated." });
+                            toast({ title: "Success", description: "Template updated successfully." });
                           } catch (e) {
                             console.error(e);
-                            toast({ title: "Error", description: "Failed to update.", variant: "destructive" });
+                            toast({ title: "Error", description: "Failed to update template.", variant: "destructive" });
                             fetchTemplates();
                           }
                         }}
-                        className="w-full bg-primary text-white font-bold py-4 rounded-xl mt-6 shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform"
+                        className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform"
                       >
                         Save Changes
                       </button>

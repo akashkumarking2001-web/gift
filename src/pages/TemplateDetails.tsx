@@ -74,38 +74,82 @@ const TemplateDetails = () => {
             <main className="container mx-auto px-4 py-24 relative z-10">
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
 
-                    {/* Left: Video Preview placeholder */}
+                    {/* Left: Video Preview */}
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         className="space-y-6"
                     >
                         <div className="relative aspect-video rounded-3xl overflow-hidden glass-card border border-white/10 shadow-2xl group">
-                            {/* Placeholder for Video - Using a gradient and icon for now */}
-                            <div className={`absolute inset-0 bg-gradient-to-br ${template.color} opacity-20`} />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:scale-110 transition-transform cursor-pointer">
-                                    <Play className="w-8 h-8 text-white fill-white" />
-                                </div>
-                            </div>
-                            <img
-                                src={`https://source.unsplash.com/random/800x600?${template.category},gift`}
-                                alt={template.title}
-                                className="w-full h-full object-cover opacity-60 mix-blend-overlay"
-                            />
-
-                            <div className="absolute bottom-4 left-4 glass-card-static px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-                                <Play className="w-3 h-3 fill-current" />
-                                Video Preview
-                            </div>
+                            {template.demo_video_url ? (
+                                <>
+                                    {/* Actual Demo Video */}
+                                    <video
+                                        src={template.demo_video_url}
+                                        className="w-full h-full object-cover"
+                                        controls
+                                        poster={template.thumbnail_url || template.cover_image_url}
+                                    >
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div className="absolute bottom-4 left-4 glass-card-static px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                                        <Play className="w-3 h-3 fill-current" />
+                                        Demo Video
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    {/* Placeholder if no video */}
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${template.color} opacity-20`} />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:scale-110 transition-transform cursor-pointer">
+                                            <Play className="w-8 h-8 text-white fill-white" />
+                                        </div>
+                                    </div>
+                                    {template.thumbnail_url || template.cover_image_url ? (
+                                        <img
+                                            src={template.thumbnail_url || template.cover_image_url}
+                                            alt={template.title}
+                                            className="w-full h-full object-cover opacity-60 mix-blend-overlay"
+                                        />
+                                    ) : (
+                                        <img
+                                            src={`https://source.unsplash.com/random/800x600?${template.category},gift`}
+                                            alt={template.title}
+                                            className="w-full h-full object-cover opacity-60 mix-blend-overlay"
+                                        />
+                                    )}
+                                    <div className="absolute bottom-4 left-4 glass-card-static px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                                        <Play className="w-3 h-3 fill-current" />
+                                        Video Preview
+                                    </div>
+                                </>
+                            )}
                         </div>
 
+                        {/* Preview Images Grid */}
                         <div className="grid grid-cols-3 gap-4">
-                            {[1, 2, 3].map((i) => (
-                                <div key={i} className="aspect-video rounded-xl glass-card border border-white/10 overflow-hidden relative cursor-pointer hover:border-primary/50 transition-colors">
-                                    <div className={`absolute inset-0 bg-gradient-to-br ${template.color} opacity-20`} />
-                                </div>
-                            ))}
+                            {template.preview_images && template.preview_images.length > 0 ? (
+                                template.preview_images.slice(0, 3).map((imgUrl: string, i: number) => (
+                                    <div key={i} className="aspect-video rounded-xl glass-card border border-white/10 overflow-hidden relative cursor-pointer hover:border-primary/50 transition-colors group">
+                                        <img
+                                            src={imgUrl}
+                                            alt={`${template.title} preview ${i + 1}`}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                            onError={(e) => {
+                                                e.currentTarget.src = `https://source.unsplash.com/random/400x300?${template.category},${i}`;
+                                            }}
+                                        />
+                                        <div className={`absolute inset-0 bg-gradient-to-br ${template.color} opacity-0 group-hover:opacity-20 transition-opacity`} />
+                                    </div>
+                                ))
+                            ) : (
+                                [1, 2, 3].map((i) => (
+                                    <div key={i} className="aspect-video rounded-xl glass-card border border-white/10 overflow-hidden relative cursor-pointer hover:border-primary/50 transition-colors">
+                                        <div className={`absolute inset-0 bg-gradient-to-br ${template.color} opacity-20`} />
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </motion.div>
 
