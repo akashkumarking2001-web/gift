@@ -10,23 +10,38 @@ const HBDMemories = ({ data, onNext }: any) => {
     const prevPhoto = () => setIdx((prev) => (prev - 1 + photos.length) % photos.length);
 
     return (
-        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-br from-rose-400 via-pink-400 to-fuchsia-500 flex flex-col items-center justify-center p-6 relative overflow-hidden">
             {/* Background Effects */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900 via-slate-900 to-black opacity-80" />
+            <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="heart-grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                            <text x="15" y="35" fontSize="20" fill="white">💝</text>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#heart-grid)" />
+                </svg>
+            </div>
 
-            <div className="text-center z-10 mb-8">
-                <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-indigo-200 to-white drop-shadow-lg">
+            <motion.div
+                className="text-center z-10 mb-8"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+            >
+                <h2 className="text-4xl md:text-5xl font-black text-white drop-shadow-md font-romantic tracking-tight">
                     Cherished Moments ✨
                 </h2>
-                <p className="text-blue-300/60 text-sm mt-2">Tap arrows to relive memories</p>
-            </div>
+                <p className="text-white/80 font-bold bg-white/20 px-4 py-1 rounded-full inline-block mt-3 text-sm backdrop-blur-sm">
+                    Tap arrows to relive memories
+                </p>
+            </motion.div>
 
             {/* Cinematic 3D Carousel Container */}
             <div className="relative w-full max-w-lg aspect-[3/4] md:aspect-[4/3] perspective-[1500px] flex items-center justify-center">
                 <AnimatePresence mode="popLayout" initial={false}>
                     <motion.div
                         key={idx}
-                        className="absolute w-full h-full bg-slate-800 rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-700/50"
+                        className="absolute w-full h-full bg-white rounded-3xl overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] border-[8px] border-white"
                         initial={{ opacity: 0, rotateY: 90, x: 300, scale: 0.8 }}
                         animate={{ opacity: 1, rotateY: 0, x: 0, scale: 1 }}
                         exit={{ opacity: 0, rotateY: -90, x: -300, scale: 0.8 }}
@@ -37,17 +52,17 @@ const HBDMemories = ({ data, onNext }: any) => {
                             <img
                                 src={photos[idx]}
                                 alt={`Memory ${idx}`}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
-                            {/* Overlay Vignette */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+                            {/* Overlay Gradient for Text */}
+                            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
 
                             {/* Caption/Info */}
-                            <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                                <div className="flex items-center gap-2 text-white/90 font-bold tracking-widest text-xs uppercase mb-2">
-                                    <ImageIcon className="w-4 h-4 text-blue-400" /> Memory #{idx + 1}
+                            <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                                <div className="flex items-center gap-2 text-white/90 font-black tracking-widest text-[10px] uppercase mb-1 bg-rose-500/80 w-fit px-2 py-1 rounded-md">
+                                    <ImageIcon className="w-3 h-3" /> Memory #{idx + 1}
                                 </div>
-                                <p className="text-white text-lg font-medium leading-snug drop-shadow-md">
+                                <p className="text-white text-lg font-bold leading-snug drop-shadow-md font-romantic">
                                     "A moment frozen in time..."
                                 </p>
                             </div>
@@ -58,36 +73,36 @@ const HBDMemories = ({ data, onNext }: any) => {
                 {/* Side Controls */}
                 <button
                     onClick={prevPhoto}
-                    className="absolute -left-4 md:-left-12 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all hover:scale-110 z-20 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                    className="absolute -left-4 md:-left-16 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white text-rose-500 hover:scale-110 hover:shadow-xl transition-all z-20 shadow-lg border-4 border-rose-50"
                 >
-                    <ChevronLeft className="w-6 h-6" />
+                    <ChevronLeft className="w-6 h-6 stroke-[3]" />
                 </button>
                 <button
                     onClick={nextPhoto}
-                    className="absolute -right-4 md:-right-12 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all hover:scale-110 z-20 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                    className="absolute -right-4 md:-right-16 top-1/2 -translate-y-1/2 p-4 rounded-full bg-white text-rose-500 hover:scale-110 hover:shadow-xl transition-all z-20 shadow-lg border-4 border-rose-50"
                 >
-                    <ChevronRight className="w-6 h-6" />
+                    <ChevronRight className="w-6 h-6 stroke-[3]" />
                 </button>
             </div>
 
             {/* Pagination Dots */}
-            <div className="flex gap-2 mt-8 z-10">
+            <div className="flex gap-2 mt-8 z-10 glass-card-static px-4 py-2 rounded-full">
                 {photos.map((_: string, i: number) => (
                     <div
                         key={i}
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${i === idx ? 'w-8 bg-blue-500 shadow-[0_0_10px_#3b82f6]' : 'bg-slate-600'}`}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${i === idx ? 'w-8 bg-rose-500 shadow-md' : 'bg-white/50'}`}
                     />
                 ))}
             </div>
 
             <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onNext}
-                className="mt-12 px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full font-bold shadow-lg shadow-blue-900/40 relative overflow-hidden group"
+                className="mt-10 px-12 py-5 bg-white text-rose-600 rounded-[2rem] font-black text-sm uppercase tracking-[0.2em] shadow-xl hover:shadow-2xl transition-all relative overflow-hidden group"
             >
-                <span className="relative z-10">Read Special Note 💌</span>
-                <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                <span className="relative z-10 flex items-center gap-2">Read Special Note 💌</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-rose-50 to-pink-100 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
             </motion.button>
         </div>
     );

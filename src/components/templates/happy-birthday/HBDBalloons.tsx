@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
 const HBDBalloons = ({ data, onNext }: any) => {
     const [poppedCount, setPoppedCount] = useState(0);
     const [balloons, setBalloons] = useState<any[]>([]);
 
     const words = [data.w1 || "You", data.w2 || "Are", data.w3 || "A", data.w4 || "Cutie"];
-    const colors = ['#f472b6', '#c084fc', '#818cf8', '#60a5fa', '#34d399'];
+    // Vibrant, romantic colors
+    const colors = ['#ec4899', '#f472b6', '#fb7185', '#fcd34d', '#a78bfa'];
 
     useEffect(() => {
         // Generate initial balloon positions
@@ -18,13 +20,29 @@ const HBDBalloons = ({ data, onNext }: any) => {
             x: Math.random() * 60 + 20, // 20-80% width
             y: Math.random() * 40 + 30, // 30-70% height
             delay: i * 0.2,
-            scale: Math.random() * 0.2 + 0.9
+            scale: Math.random() * 0.2 + 0.9,
+            // Random sway parameters
+            durationX: 3 + Math.random() * 2,
+            durationY: 4 + Math.random() * 2
         }));
         setBalloons(newBalloons);
     }, []);
 
     const handlePop = (id: number) => {
         setBalloons(prev => prev.map(b => b.id === id ? { ...b, popped: true } : b));
+
+        // Explosion Effect
+        const balloon = balloons.find(b => b.id === id);
+        if (balloon) {
+            confetti({
+                particleCount: 50,
+                spread: 60,
+                origin: { x: balloon.x / 100, y: balloon.y / 100 },
+                colors: [balloon.color, '#fff'],
+                zIndex: 100
+            });
+        }
+
         setPoppedCount(c => {
             const newCount = c + 1;
             if (newCount === words.length) {
@@ -35,34 +53,22 @@ const HBDBalloons = ({ data, onNext }: any) => {
     };
 
     return (
-        <div className="relative min-h-screen bg-sky-100 overflow-hidden cursor-crosshair">
-            {/* Cinematic Sky BG */}
-            <div className="absolute inset-0 bg-gradient-to-b from-sky-300 via-sky-100 to-white" />
-
-            {/* Moving Clouds */}
-            {[...Array(5)].map((_, i) => (
-                <motion.div
-                    key={i}
-                    className="absolute bg-white/60 rounded-full blur-xl"
-                    initial={{ x: -200 }}
-                    animate={{ x: window.innerWidth + 200 }}
-                    transition={{
-                        duration: 20 + Math.random() * 20,
-                        repeat: Infinity,
-                        ease: "linear",
-                        delay: i * 5
-                    }}
-                    style={{
-                        top: `${Math.random() * 60}%`,
-                        width: Math.random() * 200 + 100,
-                        height: Math.random() * 100 + 50,
-                    }}
-                />
-            ))}
+        <div className="relative min-h-screen bg-gradient-to-br from-rose-400 via-pink-400 to-fuchsia-500 overflow-hidden cursor-crosshair">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="balloon-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                            <circle cx="40" cy="40" r="2" fill="white" />
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#balloon-pattern)" />
+                </svg>
+            </div>
 
             <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                <h2 className="text-4xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.2)]">
-                    {poppedCount < words.length ? "Pop 'em All! 🎈" : (data.finalMessage || "Woohoo! Amazing! ⭐")}
+                <h2 className="text-5xl md:text-7xl font-black text-white drop-shadow-xl font-romantic opacity-20 animate-pulse">
+                    {poppedCount < words.length ? "Pop 'em!" : (data.finalMessage || "Woohoo! ⭐")}
                 </h2>
             </div>
 
@@ -81,13 +87,15 @@ const HBDBalloons = ({ data, onNext }: any) => {
                                 key={`pop-${b.id}`}
                                 initial={{ scale: 1.5, opacity: 1, x: b.x + '%', y: b.y + '%' }}
                                 animate={{ scale: 2, opacity: 0 }}
-                                className="absolute text-center font-black text-rose-500 text-3xl z-30 pointer-events-none"
+                                className="absolute text-center z-30 pointer-events-none"
                                 style={{ left: b.x + '%', top: b.y + '%' }}
                             >
-                                <span className="block drop-shadow-md">{b.word}</span>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <Star className="w-12 h-12 text-yellow-400 fill-current animate-spin" />
-                                </div>
+                                <motion.div
+                                    className="font-black text-white text-4xl drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)] bg-rose-500/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/50"
+                                    animate={{ y: -50 }}
+                                >
+                                    {b.word}
+                                </motion.div>
                             </motion.div>
                         )
                     ))}
@@ -97,51 +105,52 @@ const HBDBalloons = ({ data, onNext }: any) => {
     );
 };
 
-const Balloon = ({ id, color, x, y, delay, scale, onClick }: any) => {
+const Balloon = ({ id, color, x, y, delay, scale, durationX, durationY, onClick }: any) => {
     return (
         <motion.div
-            className="absolute cursor-pointer flex flex-col items-center justify-center group"
+            className="absolute cursor-pointer flex flex-col items-center justify-center group touch-manipulation"
             style={{
                 left: `${x}%`,
                 top: `${y}%`,
             }}
-            initial={{ y: '100vh' }}
+            initial={{ y: '110vh' }}
             animate={{
-                y: [0, -20, 0],
-                x: [-10, 10, -10],
+                y: [0, -30, 0],
+                x: [-15, 15, -15],
                 rotate: [-5, 5, -5]
             }}
             transition={{
-                y: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-                x: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+                y: { duration: durationY, repeat: Infinity, ease: "easeInOut" },
+                x: { duration: durationX, repeat: Infinity, ease: "easeInOut" },
+                rotate: { duration: 6, repeat: Infinity, ease: "easeInOut" },
                 delay: delay
             }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={onClick}
         >
-            {/* Balloon Body - CSS Shape for Realistic Look */}
-            <div className="relative w-24 h-32 md:w-32 md:h-40">
+            {/* Balloon Body - Realistic 3D Look */}
+            <div className="relative w-32 h-40 md:w-36 md:h-44">
                 <div
-                    className="absolute inset-0 rounded-[50%_50%_50%_50%_/_40%_40%_60%_60%] shadow-[inset_-10px_-10px_20px_rgba(0,0,0,0.1),_5px_5px_15px_rgba(255,255,255,0.4)] transition-all duration-300"
+                    className="absolute inset-0 rounded-[50%_50%_50%_50%_/_40%_40%_60%_60%] shadow-[inset_-15px_-15px_30px_rgba(0,0,0,0.2),_10px_10px_30px_rgba(255,255,255,0.4),_0_20px_40px_rgba(0,0,0,0.2)] transition-all duration-300 border-t border-white/30"
                     style={{
                         backgroundColor: color,
-                        boxShadow: `inset -10px -10px 30px rgba(0,0,0,0.1), inset 10px 10px 30px rgba(255,255,255,0.4), 5px 10px 20px rgba(0,0,0,0.1)`
                     }}
                 >
-                    {/* Reflection Highlight */}
-                    <div className="absolute top-4 left-4 w-6 h-10 bg-white/40 rounded-full rotate-[15deg] blur-[2px]" />
-                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-black/10 blur-sm rounded-full" />
+                    {/* Strong Reflection Highlight */}
+                    <div className="absolute top-6 left-6 w-8 h-12 bg-gradient-to-br from-white to-transparent opacity-80 rounded-full rotate-[-20deg] blur-[2px]" />
+                    <div className="absolute top-6 left-6 w-4 h-6 bg-white rounded-full blur-[1px]" />
                 </div>
+
                 {/* String */}
-                <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[2px] h-16 bg-white/60 origin-top animate-[wave_3s_ease-in-out_infinite]" />
+                <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-[2px] h-24 bg-white/80 origin-top animate-[wave_2s_ease-in-out_infinite] shadow-sm" />
+
                 {/* Knot */}
-                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-2" style={{ backgroundColor: color, borderRadius: '2px' }} />
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-3 rounded-sm shadow-sm" style={{ backgroundColor: color }} />
             </div>
 
-            <div className="mt-20 opacity-0 group-hover:opacity-100 transition-opacity text-white font-bold bg-black/30 px-2 rounded backdrop-blur-sm text-xs">
-                POP ME!
+            <div className="mt-28 opacity-0 group-hover:opacity-100 transition-opacity text-white font-black uppercase tracking-widest text-[10px] bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm">
+                Pop Me!
             </div>
         </motion.div>
     );
