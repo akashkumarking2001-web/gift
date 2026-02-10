@@ -53,7 +53,16 @@ const Dashboard = () => {
 
       // Fetch all templates
       try {
-        const templates = await TemplateService.getAll();
+        let templates = await TemplateService.getAll();
+
+        // AUTO-SYNC FIX: Check if new template (ID 22) is missing. If so, sync and refetch.
+        const hasNewTemplate = templates.some(t => t.id === 22);
+        if (!hasNewTemplate) {
+          console.log("New template missing in DB. Syncing...");
+          await TemplateService.syncFromLocal();
+          templates = await TemplateService.getAll();
+        }
+
         setAllTemplates(templates.length > 0 ? templates : TEMPLATES);
       } catch (e) {
         console.error("Failed to load templates", e);
