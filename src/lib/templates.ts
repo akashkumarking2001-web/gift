@@ -804,6 +804,11 @@ export const TEMPLATES: TemplateDefinition[] = [
             { id: 'p9', type: 'photo', title: 'Art Gallery Deluxe', requiredFields: ['photos'] },
             { id: 'p10', type: 'flip-cards', title: 'Future Vision Board', requiredFields: ['dreams'] },
             { id: 'p11', type: 'celebration', title: 'Pure Eternity', requiredFields: ['signature'] },
+            { id: 'p12', type: 'game', title: 'Interactive Proposal', requiredFields: ['recipientName', 'question'] },
+            { id: 'p13', type: 'photo', title: 'Whispers of Us Gallery', requiredFields: ['photos', 'heading'] },
+            { id: 'p14', type: 'game', title: 'Soulmate Challenge', requiredFields: ['recipientName', 'question'] },
+            { id: 'p15', type: 'photo', title: 'Enchanted Memories', requiredFields: ['photos', 'heading'] },
+            { id: 'p16', type: 'game', title: 'Universal Connection', requiredFields: ['recipientName', 'question'] },
         ],
     },
 ];

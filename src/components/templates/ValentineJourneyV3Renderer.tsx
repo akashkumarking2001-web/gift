@@ -11,7 +11,12 @@ import {
     Page8SecretMessage,
     Page9Gallery,
     Page10Future,
-    Page11Final
+    Page11Final,
+    Page12InteractiveProposal,
+    Page13WhispersOfUs,
+    Page14SoulmateChallenge,
+    Page15EnchantedMemories,
+    Page16UniversalConnection
 } from './valentine-journey-v3/pages';
 
 interface ValentineJourneyV3RendererProps {
@@ -40,7 +45,12 @@ const ValentineJourneyV3Renderer: React.FC<ValentineJourneyV3RendererProps> = ({
         'p8': Page8SecretMessage,
         'p9': Page9Gallery,
         'p10': Page10Future,
-        'p11': Page11Final
+        'p11': Page11Final,
+        'p12': Page12InteractiveProposal,
+        'p13': Page13WhispersOfUs,
+        'p14': Page14SoulmateChallenge,
+        'p15': Page15EnchantedMemories,
+        'p16': Page16UniversalConnection
     };
 
     const PageComponent = pageComponents[pageId];

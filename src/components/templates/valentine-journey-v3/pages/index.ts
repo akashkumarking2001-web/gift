@@ -9,6 +9,11 @@ import Page8SecretMessage from './Page8SecretMessage';
 import Page9Gallery from './Page9Gallery';
 import Page10Future from './Page10Future';
 import Page11Final from './Page11Final';
+import Page12InteractiveProposal from './Page12InteractiveProposal';
+import Page13WhispersOfUs from './Page13WhispersOfUs';
+import Page14SoulmateChallenge from './Page14SoulmateChallenge';
+import Page15EnchantedMemories from './Page15EnchantedMemories';
+import Page16UniversalConnection from './Page16UniversalConnection';
 
 export {
     Page1Cover,
@@ -21,5 +26,10 @@ export {
     Page8SecretMessage,
     Page9Gallery,
     Page10Future,
-    Page11Final
+    Page11Final,
+    Page12InteractiveProposal,
+    Page13WhispersOfUs,
+    Page14SoulmateChallenge,
+    Page15EnchantedMemories,
+    Page16UniversalConnection
 };
