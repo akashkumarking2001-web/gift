@@ -1,153 +1,168 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Gift, RotateCcw, Share2, Heart, Sparkles } from 'lucide-react';
+import { Gift, RotateCcw, Heart, Sparkles, Star } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 const HBDFinal = ({ data }: any) => {
-    const [phase, setPhase] = useState<'closed' | 'shaking' | 'open'>('closed');
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleOpen = () => {
-        if (phase === 'closed') {
-            setPhase('shaking');
-            setTimeout(() => {
-                setPhase('open');
-                fireConfetti();
-            }, 1000);
-        }
-    };
-
-    const fireConfetti = () => {
-        const duration = 5000;
-        const animationEnd = Date.now() + duration;
-        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
-
-        const interval: any = setInterval(function () {
-            const timeLeft = animationEnd - Date.now();
-
-            if (timeLeft <= 0) {
-                return clearInterval(interval);
-            }
-
-            const particleCount = 50 * (timeLeft / duration);
-            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
-            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
-        }, 250);
+        setIsOpen(true);
+        confetti({
+            particleCount: 150,
+            spread: 90,
+            origin: { y: 0.6 },
+            colors: ['#A855F7', '#EC4899', '#ffffff', '#FFD700']
+        });
     };
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-br from-rose-400 via-pink-400 to-fuchsia-500 flex flex-col items-center justify-center overflow-hidden">
-            {/* Background Floating Elements */}
-            {[...Array(20)].map((_, i) => (
+        <div className="relative min-h-screen bg-[#fdfaff] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
+
+            {/* SOFT PASTEL BACKGROUND */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
                 <motion.div
-                    key={i}
-                    className="absolute text-5xl opacity-10 pointer-events-none"
-                    style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 10 + Math.random() * 10, repeat: Infinity, ease: 'linear' }}
-                >
-                    ✨
-                </motion.div>
-            ))}
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.4, 0.3] }}
+                    transition={{ duration: 15, repeat: Infinity }}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-purple-100 blur-[130px] rounded-full"
+                />
 
-            <div className="z-10 text-center relative max-w-2xl px-4">
+                {/* Floating Hearts */}
+                {[...Array(15)].map((_, i) => (
+                    <motion.div
+                        key={i}
+                        className="absolute text-pink-200"
+                        style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
+                        animate={{
+                            y: [0, -60, 0],
+                            scale: [1, 1.2, 1],
+                            rotate: [0, 20, -20, 0]
+                        }}
+                        transition={{ duration: 4 + Math.random() * 4, repeat: Infinity }}
+                    >
+                        <Heart size={Math.random() * 20 + 20} fill="currentColor" opacity={0.3} />
+                    </motion.div>
+                ))}
+            </div>
+
+            <div className="relative z-10 w-full max-w-lg text-center">
                 <AnimatePresence mode="wait">
-                    {phase === 'closed' || phase === 'shaking' ? (
+                    {!isOpen ? (
                         <motion.div
-                            key="gift-box"
-                            className="cursor-pointer group perspective-[1000px]"
-                            onClick={handleOpen}
-                            animate={phase === 'shaking' ? {
-                                x: [-5, 5, -5, 5, 0],
-                                rotate: [-2, 2, -1, 1, 0]
-                            } : {
-                                y: [0, -20, 0]
-                            }}
-                            transition={phase === 'shaking' ? { duration: 0.4, repeat: 2 } : { duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                            key="closed"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            className="flex flex-col items-center gap-8"
                         >
-                            <div className="relative w-72 h-72 mx-auto">
-                                {/* Gift Box - White and Gold Style */}
-                                <div className="absolute inset-x-4 bottom-0 h-56 bg-white rounded-3xl shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] border-4 border-rose-100/50">
-                                    <div className="absolute inset-x-0 top-0 h-16 bg-white rounded-t-3xl shadow-sm border-b border-rose-100" /> {/* Lid */}
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-full bg-gradient-to-b from-yellow-300 to-yellow-500 shadow-sm" /> {/* Ribbon Vertical */}
-                                    <div className="absolute top-1/2 left-0 right-0 h-12 bg-gradient-to-r from-yellow-300 to-yellow-500 -translate-y-1/2 shadow-sm" /> {/* Ribbon Horizontal */}
-
-                                    {/* Bow */}
-                                    <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-16">
-                                        <div className="absolute left-0 w-16 h-16 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-full border-4 border-yellow-200 transform -rotate-12 shadow-md" />
-                                        <div className="absolute right-0 w-16 h-16 bg-gradient-to-bl from-yellow-300 to-yellow-500 rounded-full border-4 border-yellow-200 transform rotate-12 shadow-md" />
-                                        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-yellow-400 rounded-full shadow-inner border-2 border-yellow-200" />
-                                    </div>
-                                </div>
+                            <div className="space-y-4">
+                                <motion.div
+                                    className="bg-white px-6 py-2 rounded-full border border-purple-100 shadow-sm text-purple-400 font-bold uppercase tracking-[0.3em] text-[10px] inline-flex items-center gap-2"
+                                    animate={{ y: [0, -5, 0] }}
+                                    transition={{ duration: 3, repeat: Infinity }}
+                                >
+                                    <Sparkles size={12} />
+                                    One Last Thing...
+                                </motion.div>
+                                <h1 className="text-4xl md:text-6xl font-black text-purple-900 font-romantic">
+                                    Ready for your gift?
+                                </h1>
                             </div>
 
+                            {/* 3D Gift Box */}
                             <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                className="mt-12 inline-block bg-white text-rose-600 font-black text-xl uppercase tracking-[0.3em] px-8 py-3 rounded-full shadow-lg animate-bounce"
+                                whileHover={{ scale: 1.05, rotate: 2 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={handleOpen}
+                                className="relative cursor-pointer py-10"
                             >
-                                Tap to Open
+                                <div className="w-64 h-64 md:w-80 md:h-80 bg-rose-500 rounded-[2rem] shadow-[0_25px_60px_-10px_rgba(244,63,94,0.4)] relative flex items-center justify-center border-b-8 border-rose-700">
+                                    {/* Ribbons */}
+                                    <div className="absolute top-0 bottom-0 w-8 bg-white/20 shadow-inner" />
+                                    <div className="absolute left-0 right-0 h-8 bg-white/20 shadow-inner" />
+
+                                    {/* Central Lid Detail */}
+                                    <div className="absolute -top-4 w-full h-10 bg-rose-400 rounded-t-3xl border-b-4 border-rose-600 shadow-lg" />
+
+                                    <Gift size={80} className="text-white drop-shadow-md animate-bounce" />
+
+                                    <div className="absolute -bottom-12 font-bold text-rose-400 uppercase tracking-widest text-[10px] animate-pulse">
+                                        Tap to open the box
+                                    </div>
+                                </div>
                             </motion.div>
                         </motion.div>
                     ) : (
                         <motion.div
-                            key="reveal"
+                            key="opened"
                             initial={{ scale: 0.5, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            transition={{ type: "spring", stiffness: 120, damping: 15 }}
-                            className="relative"
+                            className="flex flex-col items-center gap-10"
                         >
-                            {/* Card Background for Final Message */}
-                            <div className="bg-white/90 backdrop-blur-xl border-4 border-white p-10 md:p-14 rounded-[3rem] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] relative overflow-hidden">
-                                <div className="absolute -right-10 -top-10 w-40 h-40 bg-gradient-to-br from-rose-200 to-pink-200 rounded-full blur-3xl opacity-50" />
-                                <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-gradient-to-tr from-yellow-200 to-orange-200 rounded-full blur-3xl opacity-50" />
+                            {/* The Reward Card */}
+                            <div className="w-full bg-white rounded-[3rem] p-10 md:p-16 shadow-[0_40px_100px_rgba(168,85,247,0.15)] border border-purple-50 flex flex-col items-center">
 
-                                {/* Avatar */}
-                                <div className="relative mb-8 inline-block shadow-2xl rounded-full">
+                                {/* Character Circle */}
+                                <div className="relative mb-10">
                                     <motion.div
-                                        animate={{ rotate: [0, 5, -5, 0] }}
-                                        transition={{ repeat: Infinity, duration: 2 }}
-                                        className="relative z-10 p-1 bg-white rounded-full"
+                                        initial={{ scale: 0, rotate: -45 }}
+                                        animate={{ scale: 1, rotate: 0 }}
+                                        transition={{ type: "spring", bounce: 0.5, delay: 0.2 }}
+                                        className="w-48 h-48 md:w-64 md:h-64 rounded-full bg-purple-50 p-2 border-4 border-white shadow-xl overflow-hidden relative"
                                     >
                                         <img
-                                            src={data.characterImage || "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzhvMXMwZnV4aHdvM3ZwOHV4aHdvM3ZwOHV4aHdvM3ZwOHV4aHdvMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/MeIucAjPKoA1j0zZX/giphy.gif"}
-                                            className="w-48 h-48 object-cover rounded-full border-4 border-rose-200"
-                                            alt="Character"
+                                            src={data.finalImage || "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZkNXhndm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4mZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PXM/MeIucAjPKoA1j0zZX/giphy.gif"}
+                                            alt="Happy Cat"
+                                            className="w-full h-full object-cover rounded-full scale-125 translate-y-2"
                                         />
                                     </motion.div>
-                                    <div className="absolute top-0 right-0 bg-yellow-400 text-white p-3 rounded-full shadow-lg border-2 border-white transform translate-x-1/4 -translate-y-1/4 z-20">
-                                        <Sparkles className="w-6 h-6 fill-current animate-pulse" />
-                                    </div>
+
+                                    {/* Decorative Sparkles */}
+                                    <motion.div
+                                        animate={{ y: [0, -10, 0] }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                        className="absolute -top-4 -right-4 p-4 bg-white rounded-2xl shadow-lg border border-purple-50"
+                                    >
+                                        <Heart className="text-pink-500" fill="currentColor" />
+                                    </motion.div>
                                 </div>
 
-                                <motion.h1
-                                    initial={{ y: 20, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    transition={{ delay: 0.5 }}
-                                    className="text-5xl md:text-7xl font-black text-rose-600 mb-6 drop-shadow-sm font-romantic leading-tight"
-                                >
-                                    {data.finalText || "Happy Birthday!!"}
-                                </motion.h1>
+                                <div className="space-y-6">
+                                    <h2 className="text-3xl md:text-5xl font-black text-purple-900 font-romantic leading-tight">
+                                        Happy Birthday! ❤️
+                                    </h2>
+                                    <p className="text-slate-500 font-medium leading-relaxed max-w-sm">
+                                        {data.finalText || "Lots of love for you. Once again, Happy Birthday! Hope you loved your surprise."}
+                                    </p>
+                                </div>
 
-                                <motion.div
-                                    initial={{ y: 20, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    transition={{ delay: 0.8 }}
-                                    className="flex gap-4 justify-center"
-                                >
-                                    <button onClick={() => window.location.reload()} className="flex items-center gap-2 px-8 py-4 bg-rose-100 text-rose-600 rounded-[2rem] hover:bg-rose-200 transition-all font-black text-xs uppercase tracking-widest">
-                                        <RotateCcw className="w-4 h-4" /> Replay
-                                    </button>
-                                    <button className="flex items-center gap-2 px-8 py-4 bg-rose-600 text-white rounded-[2rem] hover:bg-rose-700 transition-all font-black text-xs uppercase tracking-widest shadow-lg shadow-rose-200">
-                                        <Share2 className="w-4 h-4" /> Share
-                                    </button>
-                                </motion.div>
+                                {/* Controls */}
+                                <div className="flex flex-col w-full gap-4 mt-12">
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={() => window.location.reload()}
+                                        className="w-full py-5 bg-purple-50 text-purple-600 font-black rounded-2xl text-[10px] uppercase tracking-[0.4em] flex items-center justify-center gap-3 transition-colors hover:bg-purple-100"
+                                    >
+                                        <RotateCcw size={16} /> Replay Surprise
+                                    </motion.button>
+                                    <div className="text-[9px] text-purple-200 uppercase font-black tracking-widest mt-4">
+                                        Made with love for you
+                                    </div>
+                                </div>
                             </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
             </div>
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,800&display=swap');
+                }
+            `}} />
         </div>
     );
 };

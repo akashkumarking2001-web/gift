@@ -1,87 +1,115 @@
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, Sparkles } from 'lucide-react';
 
-interface Page1BuildUpProps {
-    data: {
-        text?: string;
+const Page1BuildUp = ({ data, onNext }: any) => {
+    const [holdProgress, setHoldProgress] = useState(0);
+    const [isHolding, setIsHolding] = useState(false);
+    const [isExiting, setIsExiting] = useState(false);
+    const requestRef = useRef<number>();
+
+    const handleHoldStart = () => setIsHolding(true);
+    const handleHoldEnd = () => {
+        setIsHolding(false);
+        if (holdProgress < 100) setHoldProgress(0);
     };
-    onNext: () => void;
-    isEditing?: boolean;
-    onUpdate?: (field: string, value: string) => void;
-}
 
-const Page1BuildUp = ({ data, onNext, isEditing = false, onUpdate }: Page1BuildUpProps) => {
-    const defaultData = {
-        text: data.text || "Do you know how much I love you?"
-    };
+    useEffect(() => {
+        const update = () => {
+            if (isHolding && holdProgress < 100) {
+                setHoldProgress(prev => Math.min(prev + 1.5, 100));
+            } else if (!isHolding && holdProgress > 0) {
+                setHoldProgress(prev => Math.max(prev - 2, 0));
+            }
+            requestRef.current = requestAnimationFrame(update);
+        };
+        requestRef.current = requestAnimationFrame(update);
+        return () => { if (requestRef.current) cancelAnimationFrame(requestRef.current); };
+    }, [isHolding, holdProgress]);
 
-    const words = defaultData.text.split(" ");
+    useEffect(() => {
+        if (holdProgress === 100 && !isExiting) {
+            setIsExiting(true);
+            setTimeout(onNext, 800);
+        }
+    }, [holdProgress, isExiting, onNext]);
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-[#0a0510] flex flex-col items-center justify-center p-8">
-            {/* Background Glows */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.1)_0%,transparent_70%)]" />
+        <div className="relative min-h-screen bg-[#fdfaff] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
 
-            <div className="relative z-10 max-w-2xl text-center">
-                <div
-                    className={`relative group ${isEditing ? 'cursor-pointer hover:bg-white/5 px-8 py-4 rounded-3xl transition-all' : ''}`}
-                    onDoubleClick={() => {
-                        if (isEditing) {
-                            const val = prompt("Edit Build-up Text:", defaultData.text);
-                            if (val !== null) onUpdate?.('text', val);
-                        }
-                    }}
-                >
-                    <div className="flex flex-wrap justify-center gap-x-4 gap-y-2">
-                        {words.map((word, wordIndex) => (
-                            <motion.span
-                                key={wordIndex}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: wordIndex * 0.2, duration: 0.8 }}
-                                className="text-4xl md:text-6xl font-black text-white font-lovely"
-                            >
-                                {word}
-                            </motion.span>
-                        ))}
-                    </div>
-                    {isEditing && (
-                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                            <span className="text-[8px] font-black text-white/40 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">Double Click to Edit</span>
-                        </div>
-                    )}
-                </div>
-
-                <motion.button
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: words.length * 0.2 + 0.5 }}
-                    onClick={onNext}
-                    className="mt-20 group relative px-12 py-5 bg-white/5 border border-white/10 hover:border-purple-500/50 hover:bg-purple-500/10 transition-all rounded-full text-white/40 hover:text-white font-black text-[10px] uppercase tracking-[0.4em]"
-                >
-                    Discover the Truth →
-                </motion.button>
+            {/* AMBIENT SOFT FLOW */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-pink-100/50 blur-[130px] rounded-full" />
             </div>
 
-            {/* Subtle background animations */}
-            {[...Array(20)].map((_, i) => (
-                <motion.div
-                    key={i}
-                    className="absolute w-1 h-1 bg-purple-500 rounded-full"
-                    style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`
-                    }}
-                    animate={{
-                        scale: [1, 2, 1],
-                        opacity: [0.1, 0.3, 0.1]
-                    }}
-                    transition={{
-                        duration: 3 + Math.random() * 2,
-                        repeat: Infinity,
-                        delay: Math.random() * 5
-                    }}
-                />
-            ))}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={isExiting ? { opacity: 0, scale: 1.2, filter: 'blur(20px)' } : { opacity: 1, scale: 1 }}
+                className="relative z-10 w-full max-w-sm"
+            >
+                {/* INTERACTIVE INTRO CARD */}
+                <div className="bg-white rounded-[3rem] p-12 text-center shadow-[0_40px_100px_rgba(236,72,153,0.1)] border border-pink-50">
+                    <div className="space-y-4 mb-12">
+                        <motion.h2
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="text-pink-900 text-3xl font-romantic font-black tracking-tight"
+                        >
+                            {data.heading || "Ready to see something?"}
+                        </motion.h2>
+                        <p className="text-pink-400 font-bold text-[10px] uppercase tracking-[0.4em]">
+                            Hold the heart to begin
+                        </p>
+                    </div>
+
+                    {/* HEART INTERACTION */}
+                    <div className="flex justify-center">
+                        <div
+                            className="relative w-36 h-36 flex items-center justify-center cursor-pointer touch-none"
+                            onMouseDown={handleHoldStart}
+                            onMouseUp={handleHoldEnd}
+                            onMouseLeave={handleHoldEnd}
+                            onTouchStart={handleHoldStart}
+                            onTouchEnd={handleHoldEnd}
+                        >
+                            <svg className="absolute inset-0 w-full h-full -rotate-90">
+                                <circle cx="72" cy="72" r="68" className="stroke-pink-50 fill-none" strokeWidth="4" />
+                                <motion.circle
+                                    cx="72"
+                                    cy="72"
+                                    r="68"
+                                    className="stroke-pink-500 fill-none"
+                                    strokeWidth="4"
+                                    strokeDasharray="427"
+                                    animate={{ strokeDashoffset: 427 - (427 * holdProgress) / 100 }}
+                                />
+                            </svg>
+
+                            <motion.div
+                                animate={isHolding ? { scale: 0.9 } : { scale: 1 }}
+                                className={`w-24 h-24 rounded-full flex items-center justify-center shadow-lg transition-colors duration-500 ${holdProgress === 100 ? 'bg-pink-500' : 'bg-pink-100'}`}
+                            >
+                                <Heart
+                                    className={`w-12 h-12 transition-colors duration-500 ${holdProgress === 100 ? 'text-white' : 'text-pink-500'}`}
+                                    fill={holdProgress > 0 ? "currentColor" : "none"}
+                                />
+                            </motion.div>
+                        </div>
+                    </div>
+
+                    <div className="mt-12">
+                        <Sparkles className="mx-auto text-pink-200 animate-pulse" />
+                    </div>
+                </div>
+            </motion.div>
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
+                }
+            `}} />
         </div>
     );
 };

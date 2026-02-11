@@ -65,7 +65,7 @@ const Register = () => {
 
         toast({
           title: "Registration Successful",
-          description: "Welcome to GiftMagic!",
+          description: "Welcome to Gift Magic!",
         });
         navigate("/dashboard");
       }

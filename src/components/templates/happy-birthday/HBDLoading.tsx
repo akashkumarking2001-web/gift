@@ -1,102 +1,132 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Cake, Gift, Sparkles } from 'lucide-react';
+import { Cake, Star, Heart } from 'lucide-react';
 
 const HBDLoading = ({ data, onNext }: any) => {
     useEffect(() => {
-        const timer = setTimeout(onNext, 4500);
+        const timer = setTimeout(onNext, 4000);
         return () => clearTimeout(timer);
     }, [onNext]);
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-br from-rose-400 via-pink-400 to-fuchsia-500 overflow-hidden flex flex-col items-center justify-center p-4">
-            {/* Animated Background Pattern */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <pattern id="party-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                            <text x="10" y="30" fontSize="40" fill="white">🧁</text>
-                            <text x="60" y="80" fontSize="30" fill="white">🎈</text>
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#party-pattern)" />
-                </svg>
+        <div className="relative min-h-screen bg-[#fdfaff] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
+
+            {/* SOFT LAVENDER ATMOSPHERE */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-purple-200/30 blur-[120px] rounded-full mix-blend-multiply animate-pulse-slow" />
+                <div className="absolute top-0 right-0 w-[40vw] h-[40vw] bg-pink-100/40 blur-[100px] rounded-full mix-blend-multiply" />
             </div>
 
-            {/* Floating Elements */}
-            {[...Array(15)].map((_, i) => (
-                <motion.div
-                    key={i}
-                    className="absolute text-4xl opacity-30 pointer-events-none"
-                    style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`
-                    }}
-                    animate={{
-                        y: [0, -40, 0],
-                        rotate: [0, 360],
-                        scale: [0.8, 1.2, 0.8]
-                    }}
-                    transition={{
-                        duration: 4 + Math.random() * 4,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: Math.random() * 2
-                    }}
-                >
-                    {['🎁', '✨', '🎂', '🥳'][i % 4]}
-                </motion.div>
-            ))}
-
-            <motion.div
-                className="z-10 flex flex-col items-center"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1 }}
-            >
-                {/* 3D-ish Glowing Gift Box */}
-                <div className="relative w-40 h-40 mb-12">
+            {/* FLOATING DECORATIONS */}
+            <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
+                {[...Array(12)].map((_, i) => (
                     <motion.div
+                        key={i}
+                        className="absolute"
+                        initial={{
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                            scale: Math.random() * 0.5 + 0.5,
+                            opacity: 0
+                        }}
                         animate={{
-                            rotateY: [0, 360],
-                            y: [0, -15, 0]
+                            y: [0, -40, 0],
+                            x: [0, 20, 0],
+                            rotate: [0, 15, -15, 0],
+                            opacity: [0, 0.6, 0]
                         }}
                         transition={{
-                            rotateY: { duration: 6, repeat: Infinity, ease: "linear" },
-                            y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                            duration: 4 + Math.random() * 4,
+                            repeat: Infinity,
+                            delay: Math.random() * 2
                         }}
-                        className="relative z-10 drop-shadow-2xl"
                     >
-                        {/* Using Lucide Gift as base but adding glow */}
-                        <Gift className="w-40 h-40 text-white fill-white/20 stroke-[1.5]" />
+                        {i % 2 === 0 ? (
+                            <Star className="text-purple-300 w-6 h-6 fill-current" />
+                        ) : (
+                            <div className="w-4 h-6 border-2 border-pink-200 rounded-t-full relative">
+                                <div className="absolute -top-1 left-1.5 w-0.5 h-2 bg-pink-200" />
+                            </div>
+                        )}
+                    </motion.div>
+                ))}
+            </div>
+
+            <motion.div
+                className="z-10 flex flex-col items-center max-w-lg w-full"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
+            >
+                {/* Minimalist 3D-styled Cake Icon */}
+                <div className="relative w-32 h-32 mb-12 flex items-center justify-center">
+                    <motion.div
+                        animate={{
+                            rotate: [0, 5, -5, 0],
+                            y: [0, -5, 0]
+                        }}
+                        transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                        }}
+                        className="relative z-10 p-5 bg-white rounded-full shadow-[0_15px_40px_rgba(168,85,247,0.15)] border border-purple-50"
+                    >
+                        <Cake className="w-12 h-12 text-purple-400 stroke-[1.5]" />
+
+                        {/* Soft Glow */}
+                        <div className="absolute inset-0 bg-purple-400/10 blur-xl rounded-full -z-10" />
                     </motion.div>
 
-                    {/* Floor Glow */}
-                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-24 h-6 bg-white/40 blur-xl rounded-full animate-pulse" />
+                    {/* Orbiting particles */}
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                        className="absolute inset-0 pointer-events-none"
+                    >
+                        <Heart className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 text-pink-300 fill-current" />
+                    </motion.div>
                 </div>
 
-                <div className="text-center space-y-6">
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 }}
-                        className="text-3xl md:text-5xl font-black text-white drop-shadow-lg tracking-tight font-romantic"
-                    >
-                        {data.subtext || "Preparing Your Surprise..."}
-                    </motion.h2>
+                <div className="text-center space-y-8 flex flex-col items-center w-full">
+                    <div className="space-y-4">
+                        <motion.h2
+                            className="text-2xl md:text-3xl font-medium text-purple-900/80 tracking-tight"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.5 }}
+                        >
+                            {data.subtext || "Loading your birthday surprise..."}
+                        </motion.h2>
+                    </div>
 
-                    {/* Premium Progress Bar */}
-                    <div className="w-64 h-3 bg-black/10 rounded-full overflow-hidden backdrop-blur-sm border border-white/20 mx-auto shadow-inner">
+                    {/* Minimalist Purple Progress Bar */}
+                    <div className="w-64 h-2 bg-purple-100 rounded-full overflow-hidden relative shadow-inner">
                         <motion.div
                             initial={{ width: "0%" }}
                             animate={{ width: "100%" }}
-                            transition={{ duration: 4, ease: "easeInOut" }}
-                            className="h-full bg-white relative"
+                            transition={{ duration: 3.5, ease: "easeInOut" }}
+                            className="h-full bg-gradient-to-r from-purple-300 via-purple-400 to-pink-300 relative"
                         >
-                            <div className="absolute inset-0 bg-white/50 animate-[shimmer_1s_infinite]" />
+                            {/* Animated Shine Effect */}
+                            <motion.div
+                                animate={{ x: ["-100%", "200%"] }}
+                                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                                className="absolute inset-0 w-1/2 bg-white/30 skew-x-[45deg]"
+                            />
                         </motion.div>
                     </div>
                 </div>
+            </motion.div>
+
+            {/* Typography Decoration */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.3 }}
+                transition={{ delay: 1 }}
+                className="absolute bottom-10 text-[10px] uppercase font-bold tracking-[0.5em] text-purple-400"
+            >
+                Birthday Experience V4.0
             </motion.div>
         </div>
     );

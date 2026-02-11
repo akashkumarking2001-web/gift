@@ -22,6 +22,9 @@ import MemoryMapRenderer from './MemoryMapRenderer';
 import HeartbeatLoveRenderer from './HeartbeatLoveRenderer';
 import CelestialLoveRenderer from './CelestialLoveRenderer';
 import HappyBirthdayRenderer from './happy-birthday/HappyBirthdayRenderer';
+import HappyNewYearRenderer from './happy-new-year/HappyNewYearRenderer';
+import SmallSurpriseRenderer from './small-surprise/SmallSurpriseRenderer';
+import CutenessScannerRenderer from './CutenessScannerRenderer';
 
 interface TemplateRendererProps {
     templateSlug: string;
@@ -61,19 +64,26 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
         'heartbeat-love': HeartbeatLoveRenderer,
         'celestial-love': CelestialLoveRenderer,
         'happy-birthday-interaction': HappyBirthdayRenderer,
+        'new-year-start': HappyNewYearRenderer,
+        'small-surprise': SmallSurpriseRenderer,
+        'cuteness-scanner': CutenessScannerRenderer,
     };
 
     const SpecificRenderer = renderers[templateSlug];
+    console.log("Rendering Template:", templateSlug, !!SpecificRenderer);
 
     if (SpecificRenderer) {
         return (
-            <SpecificRenderer
-                pageId={pageId}
-                data={data}
-                onNext={onNext}
-                isEditing={isEditing}
-                onUpdate={onUpdate}
-            />
+            <>
+                <div className="fixed top-0 left-0 bg-white text-black text-[8px] z-[100] px-2">Renderer: {templateSlug}</div>
+                <SpecificRenderer
+                    pageId={pageId}
+                    data={data}
+                    onNext={onNext}
+                    isEditing={isEditing}
+                    onUpdate={onUpdate}
+                />
+            </>
         );
     }
 

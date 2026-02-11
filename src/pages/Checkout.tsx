@@ -18,7 +18,7 @@ const Checkout = () => {
   const [copied, setCopied] = useState(false);
 
   // System Settings State
-  const [upiId, setUpiId] = useState("payments@giftly.upi");
+  const [upiId, setUpiId] = useState("payments@giftmagic.upi");
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [instagramUrl, setInstagramUrl] = useState("");
 
@@ -288,7 +288,7 @@ const Checkout = () => {
           <Link to="/" className="flex items-center gap-2 group">
             <img
               src="/logo.png"
-              alt="GiftMagic"
+              alt="Gift Magic"
               className="h-10 w-auto object-contain group-hover:scale-105 transition-transform"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
@@ -572,8 +572,8 @@ const Checkout = () => {
       <footer className="py-12 px-6 border-t border-white/5 mt-12 relative z-10 glass-card-static">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-white/20 text-xs text-center md:text-left">
-            © 2024 Gift Magic Interactive Marketplace. All rights reserved. <br className="md:hidden" />
-            For support: help@giftly.upi
+            © 2026 Gift Magic Interactive Marketplace. All rights reserved. <br className="md:hidden" />
+            For support: help@giftmagic.com
           </p>
           <div className="flex gap-4">
             {instagramUrl && (

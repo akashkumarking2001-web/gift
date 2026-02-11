@@ -1,107 +1,93 @@
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart } from 'lucide-react';
+import { Heart, Sparkles } from 'lucide-react';
 
-interface Page1HelloProps {
-    data: {
-        greeting?: string;
-    };
-    onNext: () => void;
-    isEditing?: boolean;
-    onUpdate?: (field: string, value: string) => void;
-}
-
-const Page1Hello = ({ data, onNext, isEditing = false, onUpdate }: Page1HelloProps) => {
-    const defaultData = {
-        greeting: data.greeting || "Hello there! I have a secret for you..."
-    };
-
+const Page1Hello = ({ data, onNext }: any) => {
     return (
-        <div className="min-h-screen relative overflow-hidden bg-[#0a0515] flex flex-col items-center justify-center p-8 text-center">
-            {/* Background Glows */}
-            <div className="absolute top-0 right-0 w-[60%] h-[60%] bg-violet-900/10 blur-[150px] rounded-full" />
+        <div className="relative min-h-screen bg-gradient-to-b from-[#1a0b3e] to-[#0a0515] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
 
-            <div className="relative z-10 max-w-2xl">
-                {/* Cute Animated Panda Mascot (SVG + Motion) */}
-                <motion.div
-                    animate={{
-                        y: [0, -20, 0],
-                        rotate: [0, 2, -2, 0]
-                    }}
-                    style={{ transform: 'translateZ(0)', willChange: 'transform', backfaceVisibility: 'hidden' }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="mb-12 flex justify-center relative"
-                >
-                    <div className="relative w-48 h-48 md:w-64 md:h-64">
-                        {/* Simple Cute Character Shape */}
-                        <div className="absolute inset-0 bg-white rounded-[3rem] shadow-2xl overflow-hidden border-8 border-violet-500/20">
-                            {/* Eyes */}
-                            <motion.div
-                                animate={{ scaleY: [1, 0.1, 1] }}
-                                transition={{ duration: 4, repeat: Infinity, times: [0, 0.95, 1] }}
-                                className="absolute top-1/3 left-1/4 w-4 h-4 bg-[#1a1a1a] rounded-full"
-                            />
-                            <motion.div
-                                animate={{ scaleY: [1, 0.1, 1] }}
-                                transition={{ duration: 4, repeat: Infinity, times: [0, 0.95, 1] }}
-                                className="absolute top-1/3 right-1/4 w-4 h-4 bg-[#1a1a1a] rounded-full"
-                            />
-                            {/* Blush */}
-                            <div className="absolute top-1/2 left-1/4 -translate-x-1/2 w-6 h-3 bg-pink-200 blur-sm rounded-full" />
-                            <div className="absolute top-1/2 right-1/4 translate-x-1/2 w-6 h-3 bg-pink-200 blur-sm rounded-full" />
-                            {/* Mouth */}
-                            <div className="absolute top-[55%] left-1/2 -translate-x-1/2 w-8 h-4 border-b-4 border-[#1a1a1a] rounded-full" />
-                            {/* Panda Ears */}
-                            <div className="absolute -top-4 -left-4 w-16 h-16 bg-[#1a1a1a] rounded-full -z-10" />
-                            <div className="absolute -top-4 -right-4 w-16 h-16 bg-[#1a1a1a] rounded-full -z-10" />
-                        </div>
-                        <motion.div
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="absolute -bottom-4 -right-4 bg-purple-600 p-4 rounded-2xl text-white shadow-xl"
-                        >
-                            <Heart size={24} fill="white" />
-                        </motion.div>
-                    </div>
-                </motion.div>
+            {/* AMBIENT PURPLE HAZE */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-violet-600/10 blur-[120px] rounded-full animate-pulse-slow" />
+            </div>
 
-                {/* Greeting Bubble */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="relative"
-                >
-                    {/* Speech Bubble Tail */}
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-white/5 border-l border-t border-white/10 rotate-45" />
-
-                    <div
-                        className={`bg-white/5 backdrop-blur-3xl border border-white/10 p-10 md:p-12 rounded-[3rem] relative group ${isEditing ? 'cursor-pointer' : ''}`}
-                        onDoubleClick={() => {
-                            if (isEditing) {
-                                const val = prompt("Edit Greeting:", defaultData.greeting);
-                                if (val !== null) onUpdate?.('greeting', val);
-                            }
-                        }}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1 }}
+                className="relative z-10 flex flex-col items-center text-center space-y-12"
+            >
+                {/* CIRCULAR PANDA WINDOW */}
+                <div className="relative">
+                    <motion.div
+                        animate={{ y: [0, -12, 0] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        className="w-56 h-56 md:w-64 md:h-64 rounded-full bg-white/5 border-2 border-violet-500/20 p-2 shadow-[0_0_60px_rgba(139,92,246,0.1)] relative overflow-hidden flex items-center justify-center"
                     >
-                        <h1 className="text-3xl md:text-5xl font-black text-white font-lovely leading-tight">
-                            {defaultData.greeting}
-                        </h1>
-                        {isEditing && (
-                            <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                <span className="text-[10px] font-black text-white/40 uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full">Double Click to Edit Hello</span>
-                            </div>
-                        )}
-                    </div>
-                </motion.div>
+                        <img
+                            src={data.characterImage || "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZkNXhndm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4mZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PXM/IeX1uMpk8XyR906t0D/giphy.gif"}
+                            alt="Cute Panda"
+                            className="w-full h-full object-contain scale-125"
+                        />
+
+                        {/* Shimmer overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
+                    </motion.div>
+
+                    {/* Floating Heart */}
+                    <motion.div
+                        animate={{ scale: [1, 1.2, 1], y: [0, -5, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="absolute -top-2 -right-2 text-violet-400 drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]"
+                    >
+                        <Heart fill="currentColor" size={32} />
+                    </motion.div>
+                </div>
+
+                <div className="space-y-6">
+                    <motion.h1
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                        className="text-white text-5xl md:text-7xl font-black font-romantic tracking-tight leading-tight"
+                    >
+                        {data.greeting || "Sending You Love"}
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.7 }}
+                        className="text-violet-300/80 font-medium text-lg md:text-xl max-w-xs mx-auto"
+                    >
+                        {data.subtext || "I'm sending you something special... are you ready?"}
+                    </motion.p>
+                </div>
 
                 <motion.button
-                    whileHover={{ scale: 1.05, y: -5 }}
+                    whileHover={{ scale: 1.05, boxShadow: "0 20px 40px -10px rgba(139,92,246,0.3)" }}
                     whileTap={{ scale: 0.95 }}
                     onClick={onNext}
-                    className="mt-16 group relative px-10 py-5 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full text-white font-black text-xs uppercase tracking-[0.4em] shadow-2xl shadow-violet-600/30"
+                    className="px-14 py-5 bg-gradient-to-r from-violet-600 to-purple-800 text-white font-black text-[10px] uppercase tracking-[0.4em] rounded-full group flex items-center gap-3 shadow-xl"
                 >
-                    What's the secret? ✨
+                    <span>Open It 🐼</span>
+                    <Sparkles size={14} className="group-hover:rotate-12 transition-transform" />
                 </motion.button>
+            </motion.div>
+
+            {/* TYPOGRAPHY DECOR */}
+            <div className="absolute bottom-10 left-10 flex gap-4 opacity-10 text-[8px] font-black uppercase tracking-[0.5em] text-white">
+                <span>Panda Love Edition</span>
+                <span>•</span>
+                <span>2026</span>
             </div>
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
+                }
+            `}} />
         </div>
     );
 };

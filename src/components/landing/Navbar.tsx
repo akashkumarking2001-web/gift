@@ -33,7 +33,8 @@ const Navbar = () => {
               }}
             />
             <div id="navbar-text-logo" style={{ display: 'none' }} className="flex-col leading-none">
-              <span className="text-xl font-black tracking-tight">
+              <span className="text-xl font-black tracking-tight flex items-center gap-1">
+                <span className="text-2xl">💝</span>
                 <span className="gradient-text">Gift </span>
                 <span className="text-white">Magic</span>
               </span>

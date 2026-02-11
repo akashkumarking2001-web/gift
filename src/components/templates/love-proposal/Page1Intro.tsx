@@ -1,96 +1,123 @@
-import { motion } from 'framer-motion';
-import { Heart } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, Sparkles } from 'lucide-react';
 
-interface Page1IntroProps {
-    data: {
-        text?: string;
-    };
-    onNext: () => void;
-    isEditing?: boolean;
-    onUpdate?: (field: string, value: string) => void;
-}
+const Page1Intro = ({ data, onNext }: any) => {
+    const [holdProgress, setHoldProgress] = useState(0);
+    const [isHolding, setIsHolding] = useState(false);
+    const [isExiting, setIsExiting] = useState(false);
+    const requestRef = useRef<number>();
 
-const Page1Intro = ({ data, onNext, isEditing = false, onUpdate }: Page1IntroProps) => {
-    const defaultData = {
-        text: data.text || "I've been waiting for the perfect moment to tell you something..."
+    const handleHoldStart = () => setIsHolding(true);
+    const handleHoldEnd = () => {
+        setIsHolding(false);
+        if (holdProgress < 100) setHoldProgress(0);
     };
+
+    useEffect(() => {
+        const update = () => {
+            if (isHolding && holdProgress < 100) {
+                setHoldProgress(prev => Math.min(prev + 1.2, 100));
+            } else if (!isHolding && holdProgress > 0) {
+                setHoldProgress(prev => Math.max(prev - 2, 0));
+            }
+            requestRef.current = requestAnimationFrame(update);
+        };
+        requestRef.current = requestAnimationFrame(update);
+        return () => { if (requestRef.current) cancelAnimationFrame(requestRef.current); };
+    }, [isHolding, holdProgress]);
+
+    useEffect(() => {
+        if (holdProgress === 100 && !isExiting) {
+            setIsExiting(true);
+            setTimeout(onNext, 800);
+        }
+    }, [holdProgress, isExiting, onNext]);
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-[#0d0202] flex flex-col items-center justify-center p-8 text-center">
-            {/* Royal Red Background Glows */}
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_left,rgba(220,38,38,0.15),transparent_50%)]" />
-            <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_bottom_right,rgba(153,27,27,0.15),transparent_50%)]" />
+        <div className="relative min-h-screen bg-[#fffafa] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
 
-            <div className="relative z-10 max-w-4xl">
-                {/* Floating Elegant Heart */}
-                <motion.div
-                    initial={{ scale: 0, rotate: -45 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: "spring", damping: 12, stiffness: 100 }}
-                    className="mb-16 flex justify-center"
-                >
-                    <div className="p-10 bg-gradient-to-br from-red-600 to-red-900 rounded-[3rem] shadow-[0_30px_60px_-15px_rgba(220,38,38,0.5)] border border-red-500/30">
-                        <Heart size={80} fill="white" className="text-white drop-shadow-lg" />
-                    </div>
-                </motion.div>
-
-                {/* Intro Text */}
-                <div
-                    className={`relative group ${isEditing ? 'cursor-pointer hover:bg-white/5 px-10 py-6 rounded-[2.5rem] transition-all' : ''}`}
-                    onDoubleClick={() => {
-                        if (isEditing) {
-                            const val = prompt("Edit Intro Text:", defaultData.text);
-                            if (val !== null) onUpdate?.('text', val);
-                        }
-                    }}
-                >
-                    <motion.h1
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-4xl md:text-7xl font-black text-white font-romantic leading-tight tracking-tight shadow-red-900/20 drop-shadow-xl"
-                    >
-                        {defaultData.text}
-                    </motion.h1>
-                    {isEditing && (
-                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                            <span className="text-[10px] font-black text-white/40 uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full">Double Click to Edit Intro</span>
-                        </div>
-                    )}
-                </div>
-
-                <motion.button
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={onNext}
-                    className="mt-24 group relative px-16 py-6 bg-white text-red-600 font-black text-sm uppercase tracking-[0.5em] rounded-full shadow-[0_30px_60px_-15px_rgba(255,255,255,0.4)]"
-                >
-                    Continue →
-                </motion.button>
+            {/* AMBIENT SOFT RED GLOW */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-rose-100/50 blur-[130px] rounded-full" />
             </div>
 
-            {/* Subtle background particles (Red) */}
-            {[...Array(20)].map((_, i) => (
-                <motion.div
-                    key={i}
-                    className="absolute w-1 h-1 bg-red-600 rounded-full opacity-20"
-                    style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        transform: 'translateZ(0)',
-                        willChange: 'transform, opacity',
-                        backfaceVisibility: 'hidden'
-                    }}
-                    animate={{
-                        opacity: [0.1, 0.4, 0.1],
-                        scale: [1, 2, 1]
-                    }}
-                    transition={{
-                        duration: 3 + Math.random() * 2,
-                        repeat: Infinity,
-                        delay: Math.random() * 5
-                    }}
-                />
-            ))}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={isExiting ? { opacity: 0, scale: 1.2, filter: 'blur(20px)' } : { opacity: 1, scale: 1 }}
+                className="relative z-10 w-full max-w-sm"
+            >
+                {/* ELEGANT INTRO CARD */}
+                <div className="bg-white rounded-[3.5rem] p-12 text-center shadow-[0_40px_100px_rgba(225,29,72,0.08)] border border-rose-50">
+                    <div className="space-y-6 mb-16">
+                        <motion.div
+                            animate={{ y: [0, -8, 0] }}
+                            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                            <Heart className="w-16 h-16 text-rose-500 mx-auto drop-shadow-lg" fill="currentColor" />
+                        </motion.div>
+
+                        <div className="space-y-2">
+                            <motion.h1
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="text-rose-950 text-3xl md:text-4xl font-romantic font-black tracking-tight"
+                            >
+                                {data.heading || "A Special Proposal"}
+                            </motion.h1>
+                            <p className="text-rose-400 font-bold text-[10px] uppercase tracking-[0.4em]">
+                                Hold to unseal my heart
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* INTERACTIVE HOLD */}
+                    <div className="flex justify-center">
+                        <div
+                            className="relative w-40 h-40 flex items-center justify-center cursor-pointer touch-none"
+                            onMouseDown={handleHoldStart}
+                            onMouseUp={handleHoldEnd}
+                            onMouseLeave={handleHoldEnd}
+                            onTouchStart={handleHoldStart}
+                            onTouchEnd={handleHoldEnd}
+                        >
+                            <svg className="absolute inset-0 w-full h-full -rotate-90">
+                                <circle cx="80" cy="80" r="76" className="stroke-rose-50 fill-none" strokeWidth="4" />
+                                <motion.circle
+                                    cx="80"
+                                    cy="80"
+                                    r="76"
+                                    className="stroke-rose-500 fill-none"
+                                    strokeWidth="4"
+                                    strokeDasharray="477"
+                                    animate={{ strokeDashoffset: 477 - (477 * holdProgress) / 100 }}
+                                />
+                            </svg>
+
+                            <motion.div
+                                animate={isHolding ? { scale: 0.9 } : { scale: 1 }}
+                                className={`w-28 h-28 rounded-full flex items-center justify-center shadow-lg transition-colors duration-500 ${holdProgress === 100 ? 'bg-rose-500' : 'bg-rose-50'}`}
+                            >
+                                <Sparkles
+                                    className={`w-12 h-12 transition-colors duration-500 ${holdProgress === 100 ? 'text-white' : 'text-rose-300'}`}
+                                />
+                            </motion.div>
+                        </div>
+                    </div>
+
+                    <div className="mt-16 text-rose-200 uppercase font-black tracking-[0.6em] text-[8px]">
+                        Confidential // For Her Eyes Only
+                    </div>
+                </div>
+            </motion.div>
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
+                }
+            `}} />
         </div>
     );
 };

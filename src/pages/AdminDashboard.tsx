@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, CreditCard, Users, BarChart3, Settings, LogOut,
-  Check, X, Search, Bell, Calendar, Filter, FileText, ExternalLink, Image as ImageIcon, Plus
+  Check, X, Search, Bell, Calendar, Filter, FileText, ExternalLink, Image as ImageIcon, Plus, Gift, Save
 } from "lucide-react";
 import { PaymentService } from "../lib/payments";
 import { TEMPLATES, TemplateDefinition } from "../lib/templates";
@@ -40,6 +40,25 @@ const AdminDashboard = () => {
   const [templates, setTemplates] = useState<TemplateDefinition[]>(TEMPLATES);
   const [editingTemplate, setEditingTemplate] = useState<any>(null);
 
+  // Bundle State
+  const [bundles, setBundles] = useState<any>({
+    valentines: {
+      id: 'valentines',
+      title: "Valentine's Bundle",
+      price: 199,
+      originalPrice: 2499,
+      templates: ["romantic-valentines-journey-v2", "love-question-v1", "5-things-love"],
+      isActive: true
+    },
+    premium: {
+      id: 'premium',
+      title: "Single Premium Template",
+      price: 149,
+      originalPrice: 1299,
+      isActive: true
+    }
+  });
+
   // Manual Purchase State
   const [isAddingPurchase, setIsAddingPurchase] = useState(false);
   const [newPurchaseData, setNewPurchaseData] = useState({
@@ -55,7 +74,17 @@ const AdminDashboard = () => {
     checkAuth();
     fetchPayments();
     fetchPurchases();
-    SettingsService.getSettings().then((s: any) => setSettings(s));
+    SettingsService.getSettings().then((s: any) => {
+      setSettings(s);
+      if (s.bundle_config) {
+        try {
+          const loadedBundles = JSON.parse(s.bundle_config);
+          setBundles({ ...bundles, ...loadedBundles });
+        } catch (e) {
+          console.error("Failed to parse bundle config", e);
+        }
+      }
+    });
     fetchTemplates();
   }, []);
 
@@ -142,6 +171,16 @@ const AdminDashboard = () => {
       toast({ title: "Error", description: "Failed to save settings.", variant: "destructive" });
     }
   };
+
+  const handleSaveBundles = async () => {
+    try {
+      await SettingsService.updateSetting('bundle_config', JSON.stringify(bundles));
+      toast({ title: "Success", description: "Bundle configuration updated." });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to save bundles.", variant: "destructive" });
+    }
+  };
+
 
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -256,6 +295,13 @@ const AdminDashboard = () => {
           >
             <BarChart3 className="w-5 h-5" />
             Analytics
+          </button>
+          <button
+            onClick={() => setActiveTab('bundles')}
+            className={`w-full flex items-center gap-3 px-6 py-3.5 text-sm font-medium transition-colors ${activeTab === 'bundles' ? 'bg-primary/10 text-primary border-r-2 border-primary' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+          >
+            <Gift className="w-5 h-5" />
+            Bundles & Pricing
           </button>
           <div className="px-4 py-6 mt-4 text-[10px] font-bold text-white/30 uppercase tracking-widest">Settings</div>
           <button
@@ -855,6 +901,127 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Bundles Tab */}
+        {activeTab === 'bundles' && (
+          <div className="space-y-8">
+            <h3 className="text-2xl font-black mb-6">Manage Bundles & Pricing</h3>
+
+            {/* Valentine's Bundle */}
+            <div className="glass-card p-8 rounded-3xl border border-white/10">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-pink-500/20 flex items-center justify-center text-2xl">💝</div>
+                <div>
+                  <h4 className="text-xl font-bold">Valentine's Special Bundle</h4>
+                  <p className="text-sm text-white/40">Configuration for the exclusive Valentine's package</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest text-white/40">Title</label>
+                  <input
+                    value={bundles.valentines.title}
+                    onChange={(e) => setBundles({ ...bundles, valentines: { ...bundles.valentines, title: e.target.value } })}
+                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-white/40">Price (₹)</label>
+                    <input
+                      type="number"
+                      value={bundles.valentines.price}
+                      onChange={(e) => setBundles({ ...bundles, valentines: { ...bundles.valentines, price: parseInt(e.target.value) } })}
+                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-white/40">Original (₹)</label>
+                    <input
+                      type="number"
+                      value={bundles.valentines.originalPrice}
+                      onChange={(e) => setBundles({ ...bundles, valentines: { ...bundles.valentines, originalPrice: parseInt(e.target.value) } })}
+                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2 mb-6">
+                <label className="text-xs font-bold uppercase tracking-widest text-white/40">Included Templates (Slug IDs)</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-40 overflow-y-auto pr-2">
+                  {templates.map(t => (
+                    <label key={t.id} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 cursor-pointer transition-colors border border-white/5">
+                      <input
+                        type="checkbox"
+                        checked={bundles.valentines.templates.includes(t.slug)}
+                        onChange={(e) => {
+                          const current = bundles.valentines.templates;
+                          const newTemplates = e.target.checked
+                            ? [...current, t.slug]
+                            : current.filter((slug: string) => slug !== t.slug);
+                          setBundles({ ...bundles, valentines: { ...bundles.valentines, templates: newTemplates } });
+                        }}
+                        className="w-4 h-4 rounded border-white/20 bg-white/5 text-primary focus:ring-primary"
+                      />
+                      <span className="text-sm font-medium">{t.title}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Premium Single Bundle */}
+            <div className="glass-card p-8 rounded-3xl border border-white/10">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center text-2xl">💎</div>
+                <div>
+                  <h4 className="text-xl font-bold">Single Premium Details</h4>
+                  <p className="text-sm text-white/40">Pricing for single template purchases</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-widest text-white/40">Display Title</label>
+                  <input
+                    value={bundles.premium.title}
+                    onChange={(e) => setBundles({ ...bundles, premium: { ...bundles.premium, title: e.target.value } })}
+                    className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-white/40">Price (₹)</label>
+                    <input
+                      type="number"
+                      value={bundles.premium.price}
+                      onChange={(e) => setBundles({ ...bundles, premium: { ...bundles.premium, price: parseInt(e.target.value) } })}
+                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-white/40">Original (₹)</label>
+                    <input
+                      type="number"
+                      value={bundles.premium.originalPrice}
+                      onChange={(e) => setBundles({ ...bundles, premium: { ...bundles.premium, originalPrice: parseInt(e.target.value) } })}
+                      className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={handleSaveBundles}
+              className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform fixed bottom-8 right-8 max-w-xs z-50 flex items-center justify-center gap-2"
+            >
+              <Save className="w-4 h-4" /> Save Pricing Changes
+            </button>
           </div>
         )}
 

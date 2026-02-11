@@ -1,35 +1,21 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { Heart } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-interface Page2QuestionProps {
-    data: {
-        question?: string;
-        yesText?: string;
-        noText?: string;
-    };
-    onNext: () => void;
-    isEditing?: boolean;
-    onUpdate?: (field: string, value: string) => void;
-}
-
-const Page2Question = ({ data, onNext, isEditing = false, onUpdate }: Page2QuestionProps) => {
-    const [noPosition, setNoPosition] = useState({ x: 0, y: 0 });
+const Page2Question = ({ data, onNext }: any) => {
     const [noCount, setNoCount] = useState(0);
-
-    const defaultData = {
-        question: data.question || "Will you be my Valentine forever?",
-        yesText: data.yesText || "Yes!",
-        noText: data.noText || "No"
-    };
+    const [noButtonPos, setNoButtonPos] = useState({ x: 0, y: 0 });
+    const [showFinalPlease, setShowFinalPlease] = useState(false);
 
     const handleNoHover = () => {
-        if (!isEditing) {
+        if (noCount < 5) {
             const newX = (Math.random() - 0.5) * 300;
             const newY = (Math.random() - 0.5) * 300;
-            setNoPosition({ x: newX, y: newY });
+            setNoButtonPos({ x: newX, y: newY });
             setNoCount(prev => prev + 1);
+        } else {
+            setShowFinalPlease(true);
         }
     };
 
@@ -38,115 +24,113 @@ const Page2Question = ({ data, onNext, isEditing = false, onUpdate }: Page2Quest
             particleCount: 150,
             spread: 70,
             origin: { y: 0.6 },
-            colors: ['#dc2626', '#ffffff', '#991b1b']
+            colors: ['#e11d48', '#ffffff', '#fb7185']
         });
-        setTimeout(onNext, 1500);
+        setTimeout(onNext, 1000);
     };
 
-    const noTexts = [
-        defaultData.noText,
-        "Are you sure?",
-        "Think again!",
-        "Really?",
-        "Don't do this!",
-        "You're making a mistake!",
-        "Click the other one!",
-        "Pleaseee",
-        "Fine, try and catch me!"
-    ];
+    const getNoText = () => {
+        const phrases = [
+            data.noText || "No",
+            "Are you sure?",
+            "Really sure?",
+            "Think again!",
+            "Last chance!",
+            "Please? 🥺"
+        ];
+        return phrases[Math.min(noCount, phrases.length - 1)];
+    };
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-[#0d0202] flex flex-col items-center justify-center p-8 text-center">
-            {/* Background reactive glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.1)_0%,transparent_70%)]" />
+        <div className="relative min-h-screen bg-[#fffafa] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
 
-            <div className="relative z-10 w-full max-w-4xl">
-                {/* Question */}
-                <div
-                    className={`mb-24 relative group ${isEditing ? 'cursor-pointer hover:bg-white/5 px-10 py-6 rounded-[3rem] transition-all' : ''}`}
-                    onDoubleClick={() => {
-                        if (isEditing) {
-                            const val = prompt("Edit Question:", defaultData.question);
-                            if (val !== null) onUpdate?.('question', val);
-                        }
-                    }}
-                >
-                    <motion.h2
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="text-4xl md:text-8xl font-black text-white font-lovely leading-tight"
-                    >
-                        {defaultData.question}
-                    </motion.h2>
-                    {isEditing && (
-                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                            <span className="text-[10px] font-black text-white/40 uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full">Double Click to Edit Question</span>
-                        </div>
-                    )}
-                </div>
-
-                {/* Buttons Container */}
-                <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
-                    {/* YES Button */}
-                    <div className="relative group/yes">
-                        <div className="absolute -inset-4 bg-red-600 rounded-full blur-xl opacity-0 group-hover/yes:opacity-30 transition-opacity" />
-                        <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={handleYes}
-                            className={`relative px-16 py-6 bg-red-600 text-white font-black text-xl uppercase tracking-[0.4em] rounded-full shadow-2xl ${isEditing ? 'cursor-default' : ''}`}
-                            onDoubleClick={() => {
-                                if (isEditing) {
-                                    const val = prompt("Edit Yes Text:", defaultData.yesText);
-                                    if (val !== null) onUpdate?.('yesText', val);
-                                }
-                            }}
-                        >
-                            {defaultData.yesText}
-                            {isEditing && (
-                                <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/yes:opacity-100 transition-opacity whitespace-nowrap">
-                                    <span className="text-[8px] font-black text-white/40 uppercase tracking-widest bg-black/20 px-2 py-1 rounded-full">Double Click to Edit Yes</span>
-                                </div>
-                            )}
-                        </motion.button>
-                    </div>
-
-                    {/* NO Button (Evasive) */}
-                    <motion.div
-                        animate={{ x: noPosition.x, y: noPosition.y }}
-                        transition={{ type: "spring", damping: 15, stiffness: 150 }}
-                        className="relative group/no"
-                    >
-                        <motion.button
-                            onMouseEnter={handleNoHover}
-                            onClick={handleNoHover}
-                            className={`px-12 py-5 bg-white/5 border border-white/10 text-white/40 hover:text-white font-black text-sm uppercase tracking-[0.3em] rounded-full transition-all ${isEditing ? 'cursor-default' : ''}`}
-                            onDoubleClick={() => {
-                                if (isEditing) {
-                                    const val = prompt("Edit No Text:", defaultData.noText);
-                                    if (val !== null) onUpdate?.('noText', val);
-                                }
-                            }}
-                        >
-                            {noTexts[Math.min(noCount, noTexts.length - 1)]}
-                            {isEditing && (
-                                <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover/no:opacity-100 transition-opacity whitespace-nowrap">
-                                    <span className="text-[8px] font-black text-white/40 uppercase tracking-widest bg-black/20 px-2 py-1 rounded-full">Double Click to Edit No</span>
-                                </div>
-                            )}
-                        </motion.button>
-                    </motion.div>
-                </div>
+            {/* AMBIENT SOFT FLOW */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] bg-rose-100/30 blur-[150px] rounded-full" />
             </div>
 
-            {/* Pulsing Red Heart in background */}
             <motion.div
-                animate={{ scale: [1, 1.2, 1], opacity: [0.05, 0.1, 0.05] }}
-                transition={{ duration: 4, repeat: Infinity }}
-                className="absolute -bottom-20 -right-20 pointer-events-none"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="relative z-10 w-full max-w-lg flex flex-col items-center"
             >
-                <Heart size={400} fill="red" className="text-red-900" />
+                {/* CHARACTER WINDOW */}
+                <div className="relative mb-12">
+                    <motion.div
+                        animate={{ y: [0, -10, 0] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        className="w-56 h-56 rounded-full bg-white border-4 border-rose-100 p-2 shadow-2xl overflow-hidden flex items-center justify-center"
+                    >
+                        <img
+                            src={data.characterImage || "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZkNXhndm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4mZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PXM/IeX1uMpk8XyR906t0D/giphy.gif"}
+                            alt="Proposal Character"
+                            className="w-full h-full object-contain scale-110"
+                        />
+                    </motion.div>
+
+                    <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="absolute -top-2 -right-2 text-rose-500"
+                    >
+                        <Heart fill="currentColor" size={32} />
+                    </motion.div>
+                </div>
+
+                {/* THE QUESTION */}
+                <div className="text-center space-y-8 mb-16">
+                    <motion.h2
+                        key={noCount}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-rose-950 text-4xl md:text-5xl font-romantic font-black tracking-tight leading-tight"
+                    >
+                        {showFinalPlease ? "Okay, final answer?" : (data.question || "Will you be mine forever?")}
+                    </motion.h2>
+                </div>
+
+                {/* ACTIONS */}
+                <div className="relative w-full flex flex-col md:flex-row items-center justify-center gap-6">
+                    <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={handleYes}
+                        style={{ scale: 1 + noCount * 0.1 }}
+                        className="px-16 py-6 bg-rose-500 text-white rounded-[2rem] font-black text-[12px] uppercase tracking-[0.4em] shadow-[0_20px_40px_rgba(225,29,72,0.3)] z-20"
+                    >
+                        {data.yesText || "Yes"}
+                    </motion.button>
+
+                    <motion.button
+                        animate={{ x: noButtonPos.x, y: noButtonPos.y }}
+                        onMouseEnter={handleNoHover}
+                        onClick={handleNoHover}
+                        className={`px-12 py-6 bg-white text-rose-900 border-2 border-rose-100 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.4em] transition-all hover:bg-rose-50 ${showFinalPlease ? 'hidden' : 'block'}`}
+                    >
+                        {getNoText()}
+                    </motion.button>
+                </div>
+
+                <AnimatePresence>
+                    {noCount > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 0.4 }}
+                            className="mt-12 text-rose-300 font-bold text-[9px] uppercase tracking-widest"
+                        >
+                            Hint: There is only one right answer
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </motion.div>
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
+                }
+            `}} />
         </div>
     );
 };

@@ -61,7 +61,7 @@ const FeaturesSection = () => {
             💎
           </motion.span>
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            Why Choose <span className="gradient-text">GiftMagic</span>?
+            Why Choose <span className="gradient-text">Gift Magic</span>?
           </h2>
           <p className="text-muted-foreground text-lg max-w-lg mx-auto">
             Everything you need to create unforgettable digital gifts

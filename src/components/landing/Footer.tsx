@@ -50,7 +50,7 @@ const Footer = () => {
           <div className="flex items-center gap-2">
             <img
               src="/logo.png"
-              alt="GiftMagic"
+              alt="Gift Magic"
               className="h-8 w-auto object-contain hover:scale-105 transition-transform"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
@@ -67,7 +67,7 @@ const Footer = () => {
               >
                 💝
               </motion.span>
-              <span className="font-bold ml-2"><span className="gradient-text">Gift</span>Magic</span>
+              <span className="font-bold ml-2"><span className="gradient-text">Gift</span> Magic</span>
             </div>
           </div>
 

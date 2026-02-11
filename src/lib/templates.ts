@@ -107,7 +107,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 899,
         icon: '💗',
         color: 'from-fuchsia-500 to-purple-600',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'character', title: 'Intro', requiredFields: ['greeting'] },
             { id: 'p2', type: 'message', title: 'Build-up', requiredFields: ['text'] },
@@ -125,7 +125,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 799,
         icon: '💕',
         color: 'from-rose-400 to-pink-500',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'message', title: 'Intro', requiredFields: ['text'] },
             { id: 'p2', type: 'flip-cards', title: 'Reasons List', requiredFields: ['r1', 'r2', 'r3', 'r4', 'r5'] },
@@ -142,14 +142,12 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '🐼',
         color: 'from-violet-500 to-purple-600',
         tag: 'Cute',
-        isActive: false,
+        isActive: true,
         pages: [
-            { id: 'p1', type: 'character', title: 'Panda Hello', requiredFields: ['greeting'] },
-            { id: 'p2', type: 'photo', title: 'Cute Memories', requiredFields: ['photos'] },
-            { id: 'p3', type: 'celebration', title: 'Gift Reveal', requiredFields: ['text'] },
-            { id: 'p4', type: 'message', title: 'Secret Note', requiredFields: ['text'] },
-            { id: 'p5', type: 'game', title: 'Panda Hug', requiredFields: ['hugText'], config: { gameType: 'hug' } },
-            { id: 'p6', type: 'celebration', title: 'Love You', requiredFields: ['finalText'] },
+            { id: 'p1', type: 'character', title: 'Panda Hello', requiredFields: ['greeting', 'subtext', 'characterImage'] },
+            { id: 'p2', type: 'photo', title: 'Memories', requiredFields: ['photos', 'heading'] },
+            { id: 'p3', type: 'celebration', title: 'Gift Reveal', requiredFields: ['giftHeading', 'revealedHeading', 'giftCharacter'] },
+            { id: 'p4', type: 'message', title: 'Forever Note', requiredFields: ['finalHeading', 'finalMessage', 'finalCharacter'] },
         ],
     },
     {
@@ -161,7 +159,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 1699,
         icon: '💍',
         color: 'from-amber-400 to-orange-500',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'message', title: 'Intro', requiredFields: ['text'] },
             { id: 'p2', type: 'countdown', title: 'Time Together', requiredFields: ['startDate'] },
@@ -242,17 +240,17 @@ export const TEMPLATES: TemplateDefinition[] = [
     {
         id: 11,
         slug: 'cuteness-scanner',
-        title: 'Cuteness Scanner',
+        title: 'Cuteness Scanner (Interactive)',
         category: 'Fun',
         price: 149,
         originalPrice: 699,
         icon: '🔍',
         color: 'from-cyan-400 to-blue-500',
-        isActive: false,
+        isActive: true,
         pages: [
-            { id: 'p1', type: 'message', title: 'Initializing', requiredFields: ['text'] },
-            { id: 'p2', type: 'game', title: 'Scanning', requiredFields: ['text'], config: { gameType: 'scanner' } },
-            { id: 'p3', type: 'message', title: 'Report', requiredFields: ['v1', 'v2', 'v3'] },
+            { id: 'p1', type: 'message', title: 'Calibration', requiredFields: ['text'] },
+            { id: 'p2', type: 'game', title: 'Scanning', requiredFields: ['text'] },
+            { id: 'p3', type: 'celebration', title: 'Result', requiredFields: ['resultHeading', 'resultText', 'resultPercentage'] },
         ],
     },
     {
@@ -264,11 +262,13 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 699,
         icon: '🎆',
         color: 'from-yellow-600 to-orange-700',
-        isActive: false,
+        isActive: true,
         pages: [
-            { id: 'p1', type: 'message', title: 'Countdown', requiredFields: ['year'] },
+            { id: 'p1', type: 'message', title: 'Countdown', requiredFields: ['heading', 'subtext'] },
             { id: 'p2', type: 'game', title: 'Clear Bad Vibes', requiredFields: ['v1', 'v2', 'v3'], config: { gameType: 'swipe' } },
             { id: 'p3', type: 'message', title: 'Golden Ticket', requiredFields: ['name'] },
+            { id: 'p4', type: 'photo', title: 'Year Memories', requiredFields: ['photos'] },
+            { id: 'p5', type: 'celebration', title: 'Final Note', requiredFields: ['message'] },
         ],
     },
     {
@@ -323,19 +323,20 @@ export const TEMPLATES: TemplateDefinition[] = [
     },
     {
         id: 16,
-        slug: 'love-story',
-        title: 'Our Love Story',
+        slug: 'our-story',
+        title: 'Our Interactive Story (Premium)',
         category: 'Romance',
         price: 149,
-        originalPrice: 2800,
+        originalPrice: 1499,
         icon: '📖',
-        color: 'from-red-600 to-rose-700',
-        isActive: false,
+        color: 'from-indigo-600 to-violet-800',
+        tag: 'Premium',
+        isActive: true,
         pages: [
-            { id: 'p1', type: 'timeline', title: 'How we met', requiredFields: ['date', 'place'] },
-            { id: 'p2', type: 'timeline', title: 'First Date', requiredFields: ['date', 'place'] },
-            { id: 'p3', type: 'timeline', title: 'Going Official', requiredFields: ['date'] },
-            { id: 'p4', type: 'photo', title: 'Best moments', requiredFields: ['photos'] },
+            { id: 'p1', type: 'character', title: 'The Prologue', requiredFields: ['heading'] },
+            { id: 'p2', type: 'timeline', title: 'The Timeline', requiredFields: ['milestones'] },
+            { id: 'p3', type: 'photo', title: 'The Gallery', requiredFields: ['photos'] },
+            { id: 'p4', type: 'celebration', title: 'To Be Continued', requiredFields: ['message'] },
         ],
     },
     {
@@ -388,7 +389,6 @@ export const TEMPLATES: TemplateDefinition[] = [
             { id: 'p5', type: 'photo', title: 'Memories', requiredFields: ['photos'], config: { maxPhotos: 5 } },
         ],
     },
-    // KEEPING THIS ONE ACTIVE
     {
         id: 20,
         slug: 'romantic-valentines-journey',
@@ -399,7 +399,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '💖',
         color: 'from-pink-500 via-rose-500 to-red-600',
         tag: 'Premium',
-        isActive: false, // Old V1, user said V2 is needed.
+        isActive: false,
         pages: [
             {
                 id: 'p1',
@@ -436,7 +436,7 @@ export const TEMPLATES: TemplateDefinition[] = [
                 requiredFields: ['mainHeading', 'characterImage', 'loveMessage', 'signature', 'shareButtonText', 'backButtonText'],
                 config: { hasConfetti: true, hasFloatingHearts: true, characterAnimation: 'heart-float', maxMessageLength: 500 }
             }
-        ]
+        ],
     },
     {
         id: 21,
@@ -448,7 +448,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '💖',
         color: 'from-pink-600 to-rose-600',
         tag: 'New',
-        isActive: true, // ACTIVE
+        isActive: true,
         pages: [
             {
                 id: 'p1',
@@ -527,9 +527,8 @@ export const TEMPLATES: TemplateDefinition[] = [
                 requiredFields: ['thankYouText', 'finalMessage', 'shareText'],
                 config: { hasShareButton: true, hasReplayButton: true, hasFireworks: true, hasFloatingHearts: true, heartCount: 40 }
             }
-        ]
+        ],
     },
-    // NEW TEMPLATES (Adding 1st one for now)
     {
         id: 22,
         slug: 'happy-birthday-interaction',
@@ -591,6 +590,61 @@ export const TEMPLATES: TemplateDefinition[] = [
                 requiredFields: ['finalText'],
                 config: { style: 'gift-box-pop' }
             }
-        ]
-    }
+        ],
+    },
+    {
+        id: 23,
+        slug: 'small-surprise',
+        title: 'Small Surprise (Cute)',
+        category: 'Cute',
+        price: 149,
+        originalPrice: 1899,
+        icon: '🎁',
+        color: 'from-pink-400 to-rose-500',
+        tag: 'New',
+        isActive: true,
+        pages: [
+            { id: 'p1', type: 'character', title: 'Hello Beautiful', requiredFields: ['heading', 'subtext', 'characterImage'] },
+            { id: 'p2', type: 'game', title: 'Cuteness Meter', requiredFields: ['heading'] },
+            { id: 'p3', type: 'flip-cards', title: 'Reasons List', requiredFields: ['r1', 'r2', 'r3', 'r4', 'r5'] },
+            { id: 'p4', type: 'letter', title: 'Note', requiredFields: ['message'] },
+            { id: 'p5', type: 'celebration', title: 'Final Surprise', requiredFields: ['finalHeading'] },
+        ],
+    },
+    {
+        id: 24,
+        slug: 'memories-together',
+        title: 'Memories Together (Cinematic)',
+        category: 'Romance',
+        price: 149,
+        originalPrice: 1599,
+        icon: '🎞️',
+        color: 'from-blue-600 to-indigo-900',
+        tag: 'Premium',
+        isActive: true,
+        pages: [
+            { id: 'p1', type: 'character', title: 'To Moon & Back', requiredFields: ['heading'] },
+            { id: 'p2', type: 'message', title: 'Cinematic Intro', requiredFields: ['cinemaHeading'] },
+            { id: 'p3', type: 'photo', title: 'The Gallery', requiredFields: ['photos'] },
+            { id: 'p4', type: 'celebration', title: 'Final Thought', requiredFields: ['message'] },
+        ],
+    },
+    {
+        id: 25,
+        slug: 'love-proposal',
+        title: 'Love Proposal (Premium)',
+        category: 'Romance',
+        price: 149,
+        originalPrice: 1599,
+        icon: '💍',
+        color: 'from-rose-500 to-pink-600',
+        tag: 'Premium',
+        isActive: true,
+        pages: [
+            { id: 'p1', type: 'character', title: 'Start', requiredFields: ['heading'] },
+            { id: 'p2', type: 'game', title: 'The Question', requiredFields: ['question', 'yesText', 'noText', 'characterImage'] },
+            { id: 'p3', type: 'celebration', title: 'Celebrate', requiredFields: ['celebrationHeading', 'celebrationSubtext'] },
+            { id: 'p4', type: 'letter', title: 'The Vow', requiredFields: ['letterHeading', 'message'] },
+        ],
+    },
 ];

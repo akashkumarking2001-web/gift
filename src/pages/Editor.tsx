@@ -12,6 +12,8 @@ import { useToast } from "../hooks/use-toast";
 import FloatingHearts from "../components/landing/FloatingHearts";
 import { GiftService } from "../lib/gifts";
 import TemplateRenderer from "../components/templates/TemplateRenderer";
+import AIQRCodeGenerator from "../components/AIQRCodeGenerator";
+import { DEFAULT_MUSIC_TRACKS } from "../lib/music";
 
 const Editor = () => {
     const { id } = useParams();
@@ -29,6 +31,7 @@ const Editor = () => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const [showQRGenerator, setShowQRGenerator] = useState(false);
 
     // Load template and gift data
     useEffect(() => {
@@ -308,6 +311,23 @@ const Editor = () => {
                             <Share2 className="w-4 h-4" />
                             <span className="hidden sm:inline">{gift?.is_published ? "Transmit" : "Finalize & Transmit"}</span>
                         </motion.button>
+
+                        <AnimatePresence>
+                            {lastSaved && (
+                                <motion.button
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.8 }}
+                                    onClick={() => setShowQRGenerator(true)}
+                                    whileHover={{ scale: 1.05, y: -2 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="flex items-center gap-2 px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-600/20 border border-white/20"
+                                >
+                                    <span className="text-lg">✨</span>
+                                    <span className="hidden sm:inline">Artistic QR</span>
+                                </motion.button>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
             </header>
@@ -501,8 +521,39 @@ const Editor = () => {
                                         <Music className="w-4 h-4" />
                                         Audio Experience
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-white/40">Background Ambience (Max 2MB)</label>
+                                    <div className="space-y-4">
+                                        <label className="text-xs font-bold uppercase tracking-widest text-white/40">Background Ambience</label>
+
+                                        {/* Preset Selection */}
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-bold uppercase tracking-widest text-white/30">Select Preset</label>
+                                            <select
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none appearance-none cursor-pointer hover:bg-white/10 transition-colors"
+                                                onChange={(e) => {
+                                                    const track = DEFAULT_MUSIC_TRACKS.find(t => t.url === e.target.value);
+                                                    if (track) {
+                                                        updateField('global_settings', 'bgMusicUrl', track.url);
+                                                        toast({ title: "Music Selected", description: `Now playing: ${track.name}` });
+                                                    }
+                                                }}
+                                                value={DEFAULT_MUSIC_TRACKS.find(t => t.url === giftData['global_settings']?.bgMusicUrl)?.url || ""}
+                                            >
+                                                <option value="" disabled>Choose a romantic track...</option>
+                                                {DEFAULT_MUSIC_TRACKS.map((track) => (
+                                                    <option key={track.id} value={track.url} className="bg-black text-white">
+                                                        🎵 {track.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        <div className="relative flex items-center gap-4">
+                                            <div className="h-[1px] flex-1 bg-white/10"></div>
+                                            <span className="text-[10px] font-bold uppercase text-white/20">OR UPLOAD</span>
+                                            <div className="h-[1px] flex-1 bg-white/10"></div>
+                                        </div>
+
+                                        {/* Upload Custom */}
                                         <div className="flex items-center gap-3">
                                             <div className="relative flex-1 group/upload">
                                                 <input
@@ -521,8 +572,8 @@ const Editor = () => {
                                                     onChange={async (e) => {
                                                         const file = e.target.files?.[0];
                                                         if (!file) return;
-                                                        if (file.size > 2 * 1024 * 1024) {
-                                                            toast({ title: "File too large", description: "Audio must be under 2MB.", variant: "destructive" });
+                                                        if (file.size > 5 * 1024 * 1024) {
+                                                            toast({ title: "File too large", description: "Audio must be under 5MB.", variant: "destructive" });
                                                             return;
                                                         }
                                                         setIsUploading(true);
@@ -676,6 +727,12 @@ const Editor = () => {
                     </aside>
                 )}
             </div >
+
+            <AIQRCodeGenerator
+                isOpen={showQRGenerator}
+                onClose={() => setShowQRGenerator(false)}
+                giftUrl={gift?.gift_uuid ? `${window.location.origin}/gift/${gift.gift_uuid}` : window.location.href}
+            />
         </div >
     );
 };

@@ -1,105 +1,115 @@
-import { motion } from 'framer-motion';
-import { Heart } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, Sparkles } from 'lucide-react';
 
-interface Page1IntroProps {
-    data: {
-        text?: string;
-    };
-    onNext: () => void;
-    isEditing?: boolean;
-    onUpdate?: (field: string, value: string) => void;
-}
+const Page1Intro = ({ data, onNext }: any) => {
+    const [holdProgress, setHoldProgress] = useState(0);
+    const [isHolding, setIsHolding] = useState(false);
+    const [isExiting, setIsExiting] = useState(false);
+    const requestRef = useRef<number>();
 
-const Page1Intro = ({ data, onNext, isEditing = false, onUpdate }: Page1IntroProps) => {
-    const defaultData = {
-        text: data.text || "There are so many reasons why I love you, but here are the top 5..."
+    const handleHoldStart = () => setIsHolding(true);
+    const handleHoldEnd = () => {
+        setIsHolding(false);
+        if (holdProgress < 100) setHoldProgress(0);
     };
+
+    useEffect(() => {
+        const update = () => {
+            if (isHolding && holdProgress < 100) {
+                setHoldProgress(prev => Math.min(prev + 1.2, 100));
+            } else if (!isHolding && holdProgress > 0) {
+                setHoldProgress(prev => Math.max(prev - 2, 0));
+            }
+            requestRef.current = requestAnimationFrame(update);
+        };
+        requestRef.current = requestAnimationFrame(update);
+        return () => { if (requestRef.current) cancelAnimationFrame(requestRef.current); };
+    }, [isHolding, holdProgress]);
+
+    useEffect(() => {
+        if (holdProgress === 100 && !isExiting) {
+            setIsExiting(true);
+            setTimeout(onNext, 800);
+        }
+    }, [holdProgress, isExiting, onNext]);
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-[#0a0505] flex flex-col items-center justify-center p-8 text-center">
-            {/* Background Glows */}
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_left,rgba(251,113,133,0.1),transparent_50%)]" />
-            <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_bottom_right,rgba(225,29,72,0.1),transparent_50%)]" />
+        <div className="relative min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a0b2e] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
 
-            <div className="relative z-10 max-w-3xl">
-                {/* 3D Icons Reveal */}
-                <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: "spring", duration: 1.5 }}
-                    className="mb-12 flex justify-center gap-4"
-                >
-                    {[...Array(5)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            animate={{ y: [0, -15, 0] }}
-                            transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
-                        >
-                            <Heart size={32} fill={i % 2 === 0 ? "#f43f5e" : "#fb7185"} className="text-transparent drop-shadow-lg" />
-                        </motion.div>
-                    ))}
-                </motion.div>
-
-                {/* Main Text */}
-                <div
-                    className={`relative group ${isEditing ? 'cursor-pointer hover:bg-white/5 px-10 py-6 rounded-3xl transition-all' : ''}`}
-                    onDoubleClick={() => {
-                        if (isEditing) {
-                            const val = prompt("Edit Intro Text:", defaultData.text);
-                            if (val !== null) onUpdate?.('text', val);
-                        }
-                    }}
-                >
-                    <motion.h1
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-4xl md:text-7xl font-black text-white font-romantic leading-tight"
-                    >
-                        {defaultData.text}
-                    </motion.h1>
-                    {isEditing && (
-                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                            <span className="text-[10px] font-black text-white/40 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">Double Click to Edit</span>
-                        </div>
-                    )}
-                </div>
-
-                <motion.button
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={onNext}
-                    className="mt-20 group relative px-12 py-5 bg-gradient-to-r from-rose-500 to-pink-500 rounded-[2rem] text-white font-black text-xs uppercase tracking-[0.4em] shadow-2xl shadow-rose-500/30"
-                >
-                    Start the List <span className="inline-block transition-transform group-hover:translate-x-2">→</span>
-                </motion.button>
+            {/* AMBIENT GLOW */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] bg-pink-500/5 blur-[150px] rounded-full animate-pulse-slow" />
             </div>
 
-            {/* Floating background petals/hearts */}
-            {[...Array(12)].map((_, i) => (
-                <motion.div
-                    key={i}
-                    className="absolute text-rose-500/10 text-4xl"
-                    style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        transform: 'translateZ(0)',
-                        willChange: 'transform, opacity',
-                        backfaceVisibility: 'hidden'
-                    }}
-                    animate={{
-                        y: [-20, -150],
-                        rotate: 360,
-                        opacity: [0, 0.2, 0]
-                    }}
-                    transition={{
-                        duration: 10 + Math.random() * 5,
-                        repeat: Infinity,
-                        delay: Math.random() * 10
-                    }}
-                >
-                    🌸
-                </motion.div>
-            ))}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={isExiting ? { opacity: 0, scale: 1.2, filter: 'blur(20px)' } : { opacity: 1, scale: 1 }}
+                className="relative z-10 w-full max-w-sm"
+            >
+                {/* DARK INTRO CARD */}
+                <div className="bg-[#111] rounded-[3rem] p-12 text-center shadow-[0_40px_100px_rgba(0,0,0,0.8)] border border-white/5">
+                    <div className="space-y-6 mb-16">
+                        <motion.h1
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-white text-4xl md:text-5xl font-black font-romantic tracking-tight leading-tight"
+                        >
+                            {data.heading || "5 Reasons I Love You"}
+                        </motion.h1>
+                        <p className="text-pink-400 font-bold text-[10px] uppercase tracking-[0.4em] opacity-60">
+                            Hold the heart to unseal
+                        </p>
+                    </div>
+
+                    {/* HEART INTERACTION */}
+                    <div className="flex justify-center">
+                        <div
+                            className="relative w-40 h-40 flex items-center justify-center cursor-pointer touch-none"
+                            onMouseDown={handleHoldStart}
+                            onMouseUp={handleHoldEnd}
+                            onMouseLeave={handleHoldEnd}
+                            onTouchStart={handleHoldStart}
+                            onTouchEnd={handleHoldEnd}
+                        >
+                            <svg className="absolute inset-0 w-full h-full -rotate-90">
+                                <circle cx="80" cy="80" r="76" className="stroke-white/5 fill-none" strokeWidth="2" />
+                                <motion.circle
+                                    cx="80"
+                                    cy="80"
+                                    r="76"
+                                    className="stroke-pink-500 fill-none"
+                                    strokeWidth="2"
+                                    strokeDasharray="477"
+                                    animate={{ strokeDashoffset: 477 - (477 * holdProgress) / 100 }}
+                                />
+                            </svg>
+
+                            <motion.div
+                                animate={isHolding ? { scale: 0.85 } : { scale: 1 }}
+                                className={`w-28 h-28 rounded-full flex items-center justify-center shadow-lg transition-colors duration-500 ${holdProgress === 100 ? 'bg-pink-500 shadow-[0_0_40px_rgba(236,72,153,0.4)]' : 'bg-pink-500/20'}`}
+                            >
+                                <Heart
+                                    className={`w-14 h-14 transition-colors duration-500 ${holdProgress === 100 ? 'text-white' : 'text-pink-500'}`}
+                                    fill={holdProgress > 0 ? "currentColor" : "none"}
+                                />
+                            </motion.div>
+                        </div>
+                    </div>
+
+                    <div className="mt-16 text-white/10 uppercase font-black tracking-[0.5em] text-[8px]">
+                        Protocol Layer 01
+                    </div>
+                </div>
+            </motion.div>
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
+                }
+            `}} />
         </div>
     );
 };

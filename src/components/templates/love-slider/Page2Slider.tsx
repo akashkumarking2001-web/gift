@@ -1,158 +1,115 @@
-import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import { Heart } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronRight, Heart, Sparkles } from 'lucide-react';
 
-interface Page2SliderProps {
-    data: {
-        m1?: string;
-        m2?: string;
-        m3?: string;
-        m4?: string;
-        m5?: string;
+const Page2Slider = ({ data, onNext }: any) => {
+    const [sliderPos, setSliderPos] = useState(50);
+    const [isFinished, setIsFinished] = useState(false);
+
+    const imgBefore = data.imageBefore || "https://images.unsplash.com/photo-1516589174184-c68526614486?auto=format&fit=crop&q=80&w=1200";
+    const imgAfter = data.imageAfter || "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=1200";
+
+    const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSliderPos(Number(e.target.value));
+        if (Number(e.target.value) > 95) setIsFinished(true);
     };
-    onNext: () => void;
-    isEditing?: boolean;
-    onUpdate?: (field: string, value: string) => void;
-}
-
-const Page2Slider = ({ data, onNext, isEditing = false, onUpdate }: Page2SliderProps) => {
-    const [sliderValue, setSliderValue] = useState(0);
-    const [hasCompleted, setHasCompleted] = useState(false);
-
-    const defaultData = {
-        m1: data.m1 || "A little bit...",
-        m2: data.m2 || "Quite a lot actually.",
-        m3: data.m3 || "More than pizza (huge deal).",
-        m4: data.m4 || "To the moon and back!",
-        m5: data.m5 || "Till the end of infinity. ❤️"
-    };
-
-    const messages = [defaultData.m1, defaultData.m2, defaultData.m3, defaultData.m4, defaultData.m5];
-
-    // Get current message index based on slider percentage
-    const currentIndex = Math.min(Math.floor(sliderValue / 20), 4);
-    const currentMessage = messages[currentIndex];
-
-    useEffect(() => {
-        if (sliderValue >= 98 && !hasCompleted) {
-            setHasCompleted(true);
-            if (!isEditing) {
-                setTimeout(onNext, 2000);
-            }
-        }
-    }, [sliderValue, hasCompleted, onNext, isEditing]);
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-[#0d071a] flex flex-col items-center justify-center p-8">
-            {/* Background reactive to slider */}
-            <motion.div
-                animate={{
-                    backgroundColor: sliderValue > 50 ? '#1a0b2e' : '#0d071a',
-                    opacity: 0.5 + (sliderValue / 200)
-                }}
-                className="absolute inset-0 transition-colors duration-1000"
-            />
+        <div className="relative min-h-screen bg-[#fdfaff] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
 
-            {/* Glowing Orbs */}
-            <motion.div
-                animate={{
-                    scale: [1, 1.2 + (sliderValue / 100), 1],
-                    opacity: [0.1, 0.3 + (sliderValue / 200), 0.1]
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-600/20 blur-[150px] rounded-full"
-            />
-
-            <div className="relative z-10 w-full max-w-2xl text-center">
+            <div className="relative z-20 text-center mb-8">
                 <motion.h2
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-sm font-black text-purple-500 uppercase tracking-[0.5em] mb-12"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-2xl md:text-4xl font-black text-pink-900 font-romantic"
                 >
-                    Slide to Measure My Love
+                    {data.heading || "The Magic Between Us"}
                 </motion.h2>
+                <div className="flex items-center justify-center gap-2 text-pink-400 mt-2 font-bold text-[10px] uppercase tracking-widest">
+                    <span>Swipe to reveal the magic</span>
+                </div>
+            </div>
 
-                {/* Message Display */}
-                <div className="h-40 flex items-center justify-center mb-12 relative group">
-                    <motion.div
-                        key={currentIndex}
-                        initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        className={`text-4xl md:text-6xl font-black text-white font-lovely transition-all ${isEditing ? 'cursor-pointer hover:bg-white/5 px-8 py-4 rounded-2xl' : ''}`}
-                        onDoubleClick={() => {
-                            if (isEditing) {
-                                const field = `m${currentIndex + 1}`;
-                                const val = prompt(`Edit Message ${currentIndex + 1}:`, messages[currentIndex]);
-                                if (val !== null) onUpdate?.(field, val);
-                            }
-                        }}
-                    >
-                        {currentMessage}
-                        {isEditing && (
-                            <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                <span className="text-[8px] font-black text-white/30 uppercase tracking-widest bg-black/40 px-2 py-1 rounded-full">Double Click to Edit Level {currentIndex + 1}</span>
-                            </div>
-                        )}
-                    </motion.div>
+            {/* SLIDER CONTAINER */}
+            <div className="relative w-full max-w-4xl aspect-[16/10] bg-white rounded-[2.5rem] shadow-[0_40px_100px_rgba(236,72,153,0.15)] overflow-hidden border-8 border-white group">
+
+                {/* Image After (The Result) */}
+                <div className="absolute inset-0">
+                    <img
+                        src={imgAfter}
+                        alt="After"
+                        className="w-full h-full object-cover grayscale-[0.2]"
+                    />
                 </div>
 
-                {/* The Slider */}
-                <div className="relative w-full h-8 bg-white/5 rounded-full border border-white/10 p-1 flex items-center group">
-                    {/* Progress Track */}
-                    <div
-                        className="h-full bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-[0_0_20px_rgba(168,85,247,0.4)]"
-                        style={{ width: `${sliderValue}%` }}
+                {/* Image Before (The Reality) with Clip Path */}
+                <div
+                    className="absolute inset-0 z-10"
+                    style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
+                >
+                    <img
+                        src={imgBefore}
+                        alt="Before"
+                        className="w-full h-full object-cover brightness-90 shadow-2xl"
                     />
+                </div>
 
-                    {/* Draggable Handle */}
-                    <motion.div
-                        drag="x"
-                        dragConstraints={{ left: 0, right: 0 }} // We'll handle manual positioning for better control in this UI
-                        onDrag={(e: any, info: any) => {
-                            const container = e.currentTarget.parentElement;
-                            if (container) {
-                                const rect = container.getBoundingClientRect();
-                                const newValue = Math.max(0, Math.min(100, ((info.point.x - rect.left) / rect.width) * 100));
-                                setSliderValue(newValue);
-                            }
-                        }}
-                        style={{ left: `calc(${sliderValue}% - 30px)` }}
-                        className="absolute top-1/2 -translate-y-1/2 w-16 h-16 bg-white rounded-full shadow-2xl flex items-center justify-center cursor-grab active:cursor-grabbing border-4 border-purple-500 z-20"
-                    >
-                        <Heart size={24} fill={sliderValue > 0 ? "#a855f7" : "none"} className="text-purple-600" />
-                    </motion.div>
-
-                    {/* Percentage Indicator */}
-                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">
-                        Current Love Intensity: {Math.round(sliderValue)}%
+                {/* Drag Handle Overlay */}
+                <div
+                    className="absolute inset-y-0 z-20 w-1 bg-white cursor-ew-resize pointer-events-none"
+                    style={{ left: `${sliderPos}%` }}
+                >
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-2xl flex items-center justify-center border-4 border-white">
+                        <motion.div
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                        >
+                            <Heart className="text-pink-500" fill="currentColor" size={20} />
+                        </motion.div>
                     </div>
                 </div>
 
-                {/* Success Message */}
-                {sliderValue >= 98 && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.5 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="mt-20 text-pink-500 font-black text-xs uppercase tracking-[0.5em] animate-pulse"
-                    >
-                        Overflowing Detected! <Heart size={14} className="inline ml-2" fill="currentColor" />
-                    </motion.div>
-                )}
+                {/* Invisible Range Input for Interaction */}
+                <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={sliderPos}
+                    onChange={handleSliderChange}
+                    className="absolute inset-0 z-30 opacity-0 cursor-ew-resize w-full h-full"
+                />
 
-                {/* Editor Instructions */}
-                {isEditing && (
-                    <p className="mt-24 text-white/10 text-[9px] uppercase tracking-widest leading-loose">
-                        Tip: Slide the handle to different positions to edit all 5 messages.<br />
-                        Double-click the message text above to customize it.
-                    </p>
-                )}
-
-                {!isEditing && sliderValue < 98 && (
-                    <p className="mt-24 text-white/20 text-[10px] uppercase tracking-widest animate-bounce">
-                        Keep sliding →
-                    </p>
-                )}
+                {/* Labels */}
+                <div className="absolute bottom-6 left-6 z-40 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/30 text-[10px] uppercase font-black text-white tracking-widest">
+                    Reality
+                </div>
+                <div className="absolute bottom-6 right-6 z-40 bg-pink-500/20 backdrop-blur-md px-4 py-1.5 rounded-full border border-pink-500/30 text-[10px] uppercase font-black text-pink-500 tracking-widest">
+                    Fantasy
+                </div>
             </div>
+
+            {/* CONTINUE BUTTON */}
+            <AnimatePresence>
+                {isFinished && (
+                    <motion.button
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        onClick={onNext}
+                        className="mt-12 px-14 py-5 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] shadow-xl flex items-center gap-3"
+                    >
+                        <span>Final Surprise</span>
+                        <ChevronRight size={16} />
+                    </motion.button>
+                )}
+            </AnimatePresence>
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,800&display=swap');
+                }
+            `}} />
         </div>
     );
 };

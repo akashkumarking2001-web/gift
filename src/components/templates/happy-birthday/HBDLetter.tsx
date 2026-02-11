@@ -1,110 +1,132 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, X as CloseIcon, Pen, ArrowRight } from 'lucide-react';
+import { Heart, Mail, Sparkles, ArrowRight, Star } from 'lucide-react';
 
 const HBDLetter = ({ data, onNext }: any) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-rose-400 via-pink-400 to-fuchsia-500 flex flex-col items-center justify-center p-6 relative">
-            {/* Soft Ambient Background Pattern */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <pattern id="letter-pattern" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
-                            <text x="10" y="30" fontSize="20" fill="white">💌</text>
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#letter-pattern)" />
-                </svg>
+        <div className="min-h-screen bg-[#fdfaff] flex flex-col items-center justify-center p-6 relative font-outfit overflow-hidden isolate select-none">
+
+            {/* SOFT PASTEL BACKGROUND */}
+            <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="absolute -top-20 -right-20 w-96 h-96 border-4 border-dashed border-purple-200 rounded-full"
+                />
             </div>
 
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
                 {!isOpen ? (
                     <motion.div
-                        layoutId="envelope-container"
-                        className="relative cursor-pointer z-10 group"
-                        onClick={() => setIsOpen(true)}
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1, rotate: [-1, 1, -1] }}
-                        transition={{
-                            scale: { duration: 0.5 },
-                            rotate: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-                        }}
-                        whileHover={{ scale: 1.05 }}
+                        key="closed"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, rotateY: 90, scale: 0.8 }}
+                        transition={{ duration: 0.6 }}
+                        className="relative z-10 flex flex-col items-center"
                     >
-                        {/* 3D Realistic Envelope CSS */}
-                        <div className="w-80 h-52 bg-white rounded-xl shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] relative flex items-center justify-center overflow-hidden border-2 border-white/50">
-                            {/* Flap Shadow */}
-                            <div className="absolute top-0 left-0 w-0 h-0 border-l-[160px] border-l-transparent border-t-[110px] border-t-rose-100 border-r-[160px] border-r-transparent drop-shadow-md origin-top transform group-hover:rotate-x-180 transition-transform duration-500 ease-in-out z-20" />
-
-                            {/* Envelope Fold */}
-                            <div className="absolute bottom-0 left-0 w-0 h-0 border-l-[160px] border-l-rose-50 border-b-[100px] border-b-rose-100 border-r-[160px] border-r-rose-50 z-10" />
-
-                            {/* Seal */}
-                            <div className="w-16 h-16 bg-rose-500 rounded-full shadow-lg border-4 border-white flex items-center justify-center z-30 group-hover:scale-110 transition-transform">
-                                <Heart className="w-8 h-8 text-white fill-current" />
-                            </div>
-
-                            <div className="absolute bottom-4 text-rose-400 font-bold text-xs uppercase tracking-widest z-30 animate-pulse bg-white/80 px-2 rounded">
-                                Tap to Open
-                            </div>
+                        <div className="text-center mb-12">
+                            <motion.h2
+                                className="text-3xl md:text-5xl font-black text-purple-900 font-romantic"
+                                animate={{ scale: [1, 1.05, 1] }}
+                                transition={{ duration: 3, repeat: Infinity }}
+                            >
+                                Special Message 💌
+                            </motion.h2>
+                            <p className="text-purple-400 font-bold uppercase tracking-[0.3em] text-[10px] mt-4">Just for you</p>
                         </div>
+
+                        <motion.div
+                            whileHover={{ y: -10, scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => setIsOpen(true)}
+                            className="relative cursor-pointer group"
+                        >
+                            <div className="w-80 h-56 md:w-[480px] md:h-64 bg-white rounded-[2.5rem] shadow-[0_30px_70px_-10px_rgba(168,85,247,0.2)] border border-purple-50 flex items-center justify-center overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-pink-50/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                                <div className="relative flex flex-col items-center gap-4">
+                                    <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center text-purple-500 shadow-inner group-hover:scale-110 transition-transform">
+                                        <Mail size={40} />
+                                    </div>
+                                    <span className="text-purple-400 font-black uppercase tracking-[0.3em] text-[10px]">Tap to open</span>
+                                </div>
+
+                                {/* Floating decorations */}
+                                <Heart className="absolute top-6 left-6 text-pink-200" size={20} fill="currentColor" />
+                                <Star className="absolute bottom-6 right-6 text-purple-200 fill-current" size={20} />
+                            </div>
+                        </motion.div>
                     </motion.div>
                 ) : (
                     <motion.div
-                        layoutId="envelope-container"
-                        className="relative w-full max-w-2xl bg-[#fffdf5] rounded-[2rem] shadow-2xl z-20 overflow-hidden" // Paper color
-                        initial={{ opacity: 0, y: 100, rotateX: -20 }}
-                        animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                        transition={{ duration: 0.8, type: "spring", stiffness: 100, damping: 20 }}
+                        key="open"
+                        initial={{ opacity: 0, rotateY: -90, scale: 0.8 }}
+                        animate={{ opacity: 1, rotateY: 0, scale: 1 }}
+                        transition={{ type: "spring", damping: 15 }}
+                        className="relative z-20 w-full max-w-2xl bg-white rounded-[3rem] shadow-[0_50px_100px_rgba(168,85,247,0.1)] border border-purple-50 flex flex-col overflow-hidden max-h-[85vh]"
                     >
-                        {/* Paper Texture Overlay */}
-                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/paper.png')] opacity-30 pointer-events-none" />
-
-                        {/* Header */}
-                        <div className="bg-rose-50 border-b border-rose-100 p-8 flex justify-between items-center">
-                            <h3 className="text-3xl font-romantic font-black text-rose-600 flex items-center gap-3">
-                                <Pen className="w-6 h-6 stroke-[3]" /> A Message For You
-                            </h3>
-                            <button onClick={onNext} className="text-rose-400 hover:text-rose-600 transition-colors flex items-center gap-1 group">
-                                <span className="text-[10px] uppercase font-black tracking-widest group-hover:underline">Continue</span>
-                                <ArrowRight className="w-4 h-4 inline group-hover:translate-x-1 transition-transform" />
-                            </button>
+                        {/* Letter Header */}
+                        <div className="px-10 py-6 border-b border-purple-50 flex items-center justify-between bg-purple-50/20">
+                            <div className="flex items-center gap-3">
+                                <Heart className="text-pink-400" fill="currentColor" size={16} />
+                                <span className="text-purple-900 font-bold uppercase tracking-widest text-[10px]">Heartfelt Message</span>
+                            </div>
+                            <Sparkles className="text-purple-300" size={16} />
                         </div>
 
-                        {/* Letter Content */}
-                        <div className="p-8 md:p-12 min-h-[400px] relative">
-                            {/* Lined Paper Effect */}
-                            <div className="absolute inset-0 bg-[linear-gradient(transparent_29px,#fecdd3_1px)] bg-[length:100%_30px] pointer-events-none opacity-40 top-[100px]" />
-                            <div className="absolute left-10 top-0 bottom-0 w-[2px] bg-rose-300/30" /> {/* Margin line */}
-
+                        {/* Scrollable Letter Content */}
+                        <div className="p-10 md:p-16 overflow-y-auto font-romantic text-purple-900 custom-scrollbar">
                             <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.5, duration: 1 }}
-                                className="prose prose-lg prose-rose max-w-none font-handwriting text-gray-700 leading-[30px] pl-6 relative z-10"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="space-y-6"
                             >
-                                <p className="whitespace-pre-wrap text-xl md:text-2xl font-medium">
-                                    {data.message || "My Dearest,\n\nOn this special day, I just wanted to remind you how incredibly loved you are. May your day be filled with laughter, joy, and all the cake you can eat!\n\nUse this space to write your heartfelt message..."}
+                                <p className="text-2xl md:text-3xl leading-relaxed whitespace-pre-wrap italic">
+                                    {data.message || "My Dearest Cutiepie,\n\nI just wanted to take a moment to tell you how incredibly special you are to me. Your presence makes everything feel a little bit more magical, and your smile is the most beautiful thing I've ever seen.\n\nHappy Birthday! May this year be as wonderful and charming as you are."}
                                 </p>
+                                <div className="pt-8 flex flex-col items-end">
+                                    <span className="text-xl opacity-60">With all my love,</span>
+                                    <span className="text-3xl mt-2 font-black">Forever Yours ❤️</span>
+                                </div>
                             </motion.div>
                         </div>
 
-                        {/* Footer / Signature */}
-                        <div className="p-6 bg-rose-50/50 border-t border-rose-100 flex justify-end">
+                        {/* Footer Action */}
+                        <div className="p-8 border-t border-purple-50 flex justify-center bg-purple-50/10">
                             <motion.button
-                                whileHover={{ scale: 1.05, y: -2 }}
+                                whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(168,85,247,0.2)" }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={onNext}
-                                className="px-8 py-4 bg-rose-500 text-white rounded-2xl shadow-lg border-2 border-rose-400 font-black text-xs tracking-[0.2em] uppercase transition-all hover:bg-rose-600"
+                                className="px-14 py-5 rounded-2xl bg-gradient-to-r from-purple-400 to-pink-400 text-white font-black text-[10px] tracking-[0.4em] uppercase flex items-center gap-3"
                             >
-                                Reveal Final Gift 🎁
+                                One Last Thing <ArrowRight size={16} />
                             </motion.button>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,800&display=swap');
+                }
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 4px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: #f3e8ff;
+                    border-radius: 10px;
+                }
+            `}} />
         </div>
     );
 };

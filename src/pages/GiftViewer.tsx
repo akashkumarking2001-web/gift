@@ -127,7 +127,7 @@ const GiftViewer = () => {
     if (!template) return <div className="min-h-screen flex items-center justify-center">Gift not found</div>;
 
     return (
-        <div className="min-h-screen bg-background relative overflow-hidden flex flex-col font-outfit">
+        <div className="min-h-screen bg-white relative overflow-hidden flex flex-col font-outfit">
             <FloatingHearts />
 
             {/* Template Rendering Layer */}
@@ -162,16 +162,17 @@ const GiftViewer = () => {
                         {template.pages.map((_: any, i: number) => (
                             <motion.div
                                 key={i}
+                                initial={false}
                                 animate={{
                                     scaleX: currentPage === i ? 3 : 1,
-                                    backgroundColor: currentPage === i ? 'hsla(var(--primary))' : 'hsla(var(--white) / 0.2)'
+                                    backgroundColor: currentPage === i ? '#f43f5e' : 'rgba(0, 0, 0, 0.1)'
                                 }}
-                                style={{ transform: 'translateZ(0)', willChange: 'transform, background-color', transformOrigin: 'center' }}
+                                style={{ transform: 'translateZ(0)', willChange: 'transform' }}
                                 className="h-1.5 lg:h-2 w-2 rounded-full transition-all duration-500"
                             />
                         ))}
                     </div>
-                    <span className="text-[8px] lg:text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Chapter {currentPage + 1} of {template.pages.length}</span>
+                    <span className="text-[8px] lg:text-[10px] font-black uppercase tracking-[0.4em] text-white/60">Chapter {currentPage + 1} of {template.pages.length}</span>
                 </div>
 
                 <motion.button
@@ -187,7 +188,7 @@ const GiftViewer = () => {
 
             {/* Subtle Brand Watermark */}
             <div className="fixed bottom-3 left-1/2 -translate-x-1/2 text-[7px] lg:text-[9px] font-black text-white/5 uppercase tracking-[0.5em] z-0 pointer-events-none">
-                ENCRYPTED MAGIC BY GIFTMAGIC
+                ENCRYPTED MAGIC BY GIFT MAGIC
             </div>
 
         </div>

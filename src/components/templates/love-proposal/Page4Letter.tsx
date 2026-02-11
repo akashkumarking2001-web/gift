@@ -1,104 +1,99 @@
-import { motion } from 'framer-motion';
-import { Mail, Heart, ShieldCheck } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, RotateCcw, Send, Sparkles } from 'lucide-react';
 
-interface Page4LetterProps {
-    data: {
-        message?: string;
-    };
-    onNext: () => void;
-    isEditing?: boolean;
-    onUpdate?: (field: string, value: string) => void;
-}
+const Page4Letter = ({ data }: any) => {
+    const [displayText, setDisplayText] = useState("");
+    const fullText = data.message || "My dearest, from the moment we first crossed paths, my life has been transformed by your love. Today, as you unsealed this digital corner of my heart, I want you to know that my promise to you is eternal. Every heartbeat of mine belongs to you, and I am honored to walk this journey of life by your side. I love you, now and forever.";
 
-const Page4Letter = ({ data, onNext, isEditing = false, onUpdate }: Page4LetterProps) => {
-    const defaultData = {
-        message: data.message || "I promise to love you, cherish you, and stand by your side through every adventure that life brings our way. You are my greatest discovery and my most precious treasure. Forever yours."
+    useEffect(() => {
+        let i = 0;
+        const interval = setInterval(() => {
+            setDisplayText(fullText.slice(0, i));
+            i++;
+            if (i > fullText.length) clearInterval(interval);
+        }, 30);
+        return () => clearInterval(interval);
+    }, [fullText]);
+
+    const handleReplay = () => {
+        window.location.reload();
     };
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-[#0a0202] flex items-center justify-center p-6 md:p-12">
-            {/* Background Texture/Accents */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(220,38,38,0.08)_0%,transparent_70%)]" />
+        <div className="relative min-h-screen bg-[#fffafa] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
 
-            <div className="relative z-10 w-full max-w-3xl">
-                {/* Royal Parchment Aesthetic */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="relative bg-[#111111] border border-red-900/40 rounded-[3rem] p-10 md:p-20 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] overflow-hidden group"
-                >
-                    {/* Decorative Wax Seal (Glass Style) */}
-                    <div className="absolute top-10 right-10 w-24 h-24 bg-red-600/20 backdrop-blur-3xl rounded-full flex items-center justify-center border border-red-500/30 overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
-                        <Heart size={32} fill="#dc2626" className="text-red-600 drop-shadow-lg" />
+            {/* AMBIENT SOFT LIGHT */}
+            <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-b from-rose-100/20 to-transparent" />
+
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative z-10 w-full max-w-2xl"
+            >
+                {/* PREMIUM LETTER BOX */}
+                <div className="bg-white rounded-[3rem] p-10 md:p-16 shadow-[0_50px_100px_rgba(225,29,72,0.06)] border border-rose-50 relative overflow-hidden">
+
+                    {/* Decorative Seal Background */}
+                    <div className="absolute top-10 right-10 opacity-5 -rotate-12">
+                        <Heart className="w-48 h-48 text-rose-500" fill="currentColor" />
                     </div>
 
-                    {/* Letter Content */}
-                    <div className="relative z-20">
-                        {/* Header */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.5 }}
-                            className="flex items-center gap-4 mb-16"
-                        >
-                            <Mail size={16} className="text-red-500" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.8em] text-white/30">An Eternal Commitment</span>
-                        </motion.div>
-
-                        {/* Message Body */}
-                        <div
-                            className={`mb-20 relative group/msg ${isEditing ? 'cursor-pointer hover:bg-white/5 p-8 rounded-[2rem] transition-all' : ''}`}
-                            onDoubleClick={() => {
-                                if (isEditing) {
-                                    const val = prompt("Edit Final Vow:", defaultData.message);
-                                    if (val !== null) onUpdate?.('message', val);
-                                }
-                            }}
-                        >
-                            <p className="text-white text-2xl md:text-4xl font-romantic leading-[1.8] italic opacity-90 text-justify">
-                                "{defaultData.message}"
-                            </p>
-                            {isEditing && (
-                                <div className="absolute -top-6 left-0 opacity-0 group-hover/msg:opacity-100 transition-opacity">
-                                    <span className="text-[8px] font-black text-red-500 uppercase tracking-[0.3em] bg-red-500/10 px-3 py-1 rounded-full whitespace-nowrap">Double Click to Edit Vow</span>
-                                </div>
-                            )}
+                    <div className="space-y-12 relative z-10">
+                        <div className="space-y-4">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="inline-flex items-center gap-2 text-rose-300 uppercase tracking-[0.4em] text-[10px] font-black"
+                            >
+                                <Sparkles size={12} />
+                                <span>Eternal Vow</span>
+                            </motion.div>
+                            <h1 className="text-4xl md:text-6xl font-black text-rose-950 font-romantic tracking-tighter">
+                                {data.letterHeading || "My Love, Always"}
+                            </h1>
                         </div>
 
-                        {/* Signature */}
-                        <div className="flex flex-col items-end">
-                            <div className="w-56 h-[2px] bg-red-900/30 mb-8" />
-                            <p className="text-4xl md:text-5xl text-red-600 font-romantic tracking-widest px-4">
-                                Forever Yours
+                        {/* TYPEWRITER AREA */}
+                        <div className="min-h-[200px] border-l-2 border-rose-100 pl-8 md:pl-12">
+                            <p className="text-slate-600 text-lg md:text-2xl leading-relaxed font-medium font-serif italic">
+                                {displayText}
+                                <motion.span
+                                    animate={{ opacity: [1, 0] }}
+                                    transition={{ duration: 0.8, repeat: Infinity }}
+                                    className="inline-block w-1.5 h-6 bg-rose-400 ml-1 translate-y-1"
+                                />
                             </p>
-                            <div className="mt-6 flex items-center gap-3 text-white/20">
-                                <ShieldCheck size={14} className="text-red-500/40" />
-                                <span className="text-[8px] uppercase tracking-[0.5em] font-black italic">A lifetime guarantee</span>
-                            </div>
+                        </div>
+
+                        <div className="pt-8 flex flex-col md:flex-row gap-4">
+                            <motion.button
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={handleReplay}
+                                className="flex-1 py-5 bg-rose-50 text-rose-600 font-black rounded-2xl text-[10px] uppercase tracking-[0.4em] flex items-center justify-center gap-3"
+                            >
+                                <RotateCcw size={16} /> Relive the moment
+                            </motion.button>
+                            <button className="flex-1 py-5 bg-rose-500 text-white font-black rounded-2xl text-[10px] uppercase tracking-[0.4em] flex items-center justify-center gap-3 shadow-lg shadow-rose-200">
+                                <Send size={16} /> Send My Own
+                            </button>
+                        </div>
+
+                        <div className="text-[9px] text-rose-200 uppercase font-black tracking-[0.8em] text-center mt-8">
+                            Unsealed // Permanent
                         </div>
                     </div>
+                </div>
+            </motion.div>
 
-                    {/* Subtle Internal Glow */}
-                    <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-red-600/10 blur-[100px] rounded-full pointer-events-none" />
-                </motion.div>
-
-                {/* Final Action Button */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.5 }}
-                    className="mt-16 flex flex-col items-center gap-8"
-                >
-                    <button
-                        onClick={() => window.location.reload()}
-                        className="px-12 py-5 bg-gradient-to-r from-red-600 to-red-900 rounded-full text-white font-black text-xs uppercase tracking-[0.6em] shadow-[0_30px_60px_-15px_rgba(220,38,38,0.5)] hover:scale-105 active:scale-95 transition-all"
-                    >
-                        Replay Vow ↺
-                    </button>
-                    <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.5em]">The End of the Beginning</p>
-                </motion.div>
-            </div>
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
+                }
+            `}} />
         </div>
     );
 };
