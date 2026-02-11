@@ -68,18 +68,31 @@ export const ProfileService = {
         } as UserProfile;
     },
 
-    // Get user profile
     async getProfile(): Promise<UserProfile | null> {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return null;
 
-        const { data, error } = await supabase
-            .from('user_profiles')
-            .select('*')
-            .eq('id', user.id)
-            .single();
+        try {
+            const { data, error } = await supabase
+                .from('user_profiles')
+                .select('*')
+                .eq('id', user.id)
+                .maybeSingle(); // Better than single() for non-existent profiles
 
-        if (error) return null;
-        return data;
+            if (error) {
+                console.error("Profile fetch error:", error);
+                // Fallback to minimal profile if DB error
+                return {
+                    id: user.id,
+                    email: user.email || '',
+                    created_at: user.created_at,
+                    updated_at: user.created_at
+                } as UserProfile;
+            }
+            return data;
+        } catch (e) {
+            console.error("Profile fetch exception:", e);
+            return null;
+        }
     },
 };

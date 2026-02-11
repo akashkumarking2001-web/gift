@@ -133,7 +133,10 @@ const TemplateGallery = () => {
                     <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent p-4 flex flex-col justify-end">
                       <div className="flex items-center justify-between mb-1">
                         {template.tag && (
-                          <div className="glass-card-static px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider text-primary border border-primary/20">
+                          <div className={`glass-card-static px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider border ${template.tag === 'FLAGSHIP'
+                              ? 'border-yellow-500/50 text-yellow-400 bg-yellow-500/10 shadow-[0_0_10px_rgba(234,179,8,0.3)] animate-pulse'
+                              : 'border-primary/20 text-primary bg-primary/10'
+                            }`}>
                             {template.tag}
                           </div>
                         )}

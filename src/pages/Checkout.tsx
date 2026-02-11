@@ -226,9 +226,6 @@ const Checkout = () => {
 
         if (uploadError) {
           console.error("Upload error:", uploadError);
-          // Don't throw, just log and proceed without screenshot if it fails? 
-          // Or user said "Submit Payment Proof button must be functional even if user hasn't uploaded".
-          // If they uploaded and it failed, maybe we should warn? But sticking to user request: screenshot not mandatory.
         } else {
           const { data } = supabase.storage
             .from('payment-proofs')
@@ -238,13 +235,35 @@ const Checkout = () => {
       }
 
       // Step 3: Create purchase using PurchaseService
-      await PurchaseService.createPurchase({
-        template_id: templateId,
-        template_title: templateTitle,
-        amount_paid: templatePrice,
-        transaction_id: transactionId,
-        payment_screenshot_url: screenshotUrl,
-      });
+      const isBundle = !!checkoutState?.bundle;
+
+      if (isBundle && checkoutState?.bundle) {
+        await PurchaseService.createBundlePurchase({
+          bundle_id: checkoutState.bundle,
+          bundle_name: templateTitle,
+          amount_paid: templatePrice,
+          transaction_id: transactionId,
+          payment_screenshot_url: screenshotUrl,
+        });
+
+        toast({
+          title: "Bundle Purchase Submitted! 🎉",
+          description: `Your ${checkoutState.bundle === 'valentines' ? '3 templates' : 'templates'} will be unlocked within 2 hours after verification.`,
+        });
+      } else {
+        await PurchaseService.createPurchase({
+          template_id: templateId,
+          template_title: templateTitle,
+          amount_paid: templatePrice,
+          transaction_id: transactionId,
+          payment_screenshot_url: screenshotUrl,
+        });
+
+        toast({
+          title: "Purchase Submitted! 🎉",
+          description: "Your template will be unlocked within 2 hours after verification.",
+        });
+      }
 
       // Step 4: Update user profile (for existing users)
       if (!isNewUser) {
@@ -254,17 +273,25 @@ const Checkout = () => {
         });
       }
 
-      toast({
-        title: "Purchase Submitted! 🎉",
-        description: "Your template will be unlocked within 2 hours after verification.",
-      });
-
       setTimeout(() => navigate("/dashboard"), 2000);
     } catch (error: any) {
       console.error("Submission error:", error);
+
+      let errorMessage = error.message || "There was an error submitting your request. Please try again.";
+
+      if (errorMessage.includes("already registered") || error.code === "23505") {
+        errorMessage = "An account already exists with this email. Please login first to complete your purchase, or use a different email.";
+        toast({
+          title: "Account Already Exists",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({
         title: "Submission Failed",
-        description: error.message || "There was an error submitting your request. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -276,7 +303,6 @@ const Checkout = () => {
     <div className="min-h-screen bg-[#0a060a] text-white font-sans selection:bg-primary/30 relative overflow-x-hidden">
       <FloatingHearts />
 
-      {/* Background Glows */}
       <div
         style={{ transform: 'translateZ(0)', willChange: 'opacity', backfaceVisibility: 'hidden' }}
         className="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full pointer-events-none"
@@ -287,7 +313,6 @@ const Checkout = () => {
       />
 
 
-      {/* Navbar */}
       <nav className="w-full z-50 px-6 py-4 relative">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
@@ -319,7 +344,6 @@ const Checkout = () => {
       <main className="max-w-7xl mx-auto px-6 py-12 relative z-10">
         <div className="grid lg:grid-cols-12 gap-12">
 
-          {/* Left Column: Order Summary */}
           <div
             style={{ transform: 'translateZ(0)', willChange: 'transform' }}
             className="lg:col-span-5 space-y-8"
@@ -335,7 +359,6 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                {/* Template Features - Dynamic based on template */}
                 <div className="space-y-3">
                   <p className="text-xs font-bold text-white/60 uppercase tracking-wider">What's Included:</p>
                   <div className="space-y-2">
@@ -360,7 +383,6 @@ const Checkout = () => {
 
                 <hr className="border-white/5" />
 
-                {/* Dynamic Pricing */}
                 <div className="space-y-3">
                   {templateMrp > templatePrice && (
                     <>
@@ -404,7 +426,6 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* Right Column: Checkout Form */}
           <div
             style={{ transform: 'translateZ(0)', willChange: 'transform' }}
             className="lg:col-span-7"
@@ -416,7 +437,6 @@ const Checkout = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Section 1: Details */}
                 <div className="space-y-6">
                   <h3 className="text-sm font-bold uppercase tracking-widest text-primary/80 flex items-center gap-2">
                     <span className="bg-primary/20 text-primary w-5 h-5 rounded-full flex items-center justify-center text-[10px]">1</span>
@@ -457,7 +477,6 @@ const Checkout = () => {
                       />
                     </div>
 
-                    {/* Password fields - only for new users */}
                     {isNewUser && (
                       <>
                         <div className="space-y-2">
@@ -487,7 +506,6 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                {/* Section 2: Payment */}
                 <div className="space-y-6 pt-6 border-t border-white/5">
                   <h3 className="text-sm font-bold uppercase tracking-widest text-primary/80 flex items-center gap-2">
                     <span className="bg-primary/20 text-primary w-5 h-5 rounded-full flex items-center justify-center text-[10px]">2</span>
@@ -497,7 +515,6 @@ const Checkout = () => {
                   <div className="flex flex-col md:flex-row gap-8 items-center bg-white/5 rounded-2xl p-6 border border-white/5">
                     <div className="bg-white p-3 rounded-xl shadow-2xl shrink-0">
                       <div className="size-32 bg-white flex items-center justify-center border-4 border-white">
-                        {/* Placeholder for QR Code - replacing specific Image with div/icon or keeping simulates */}
                         {qrCodeUrl ? (
                           <img src={qrCodeUrl} alt="UPI QR Code" className="w-full h-full object-contain" />
                         ) : (

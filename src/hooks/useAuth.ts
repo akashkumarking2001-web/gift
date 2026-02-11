@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
+
+type User = Awaited<ReturnType<typeof supabase.auth.getUser>>['data']['user'];
 
 interface AuthState {
     user: User | null;

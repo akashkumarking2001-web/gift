@@ -26,6 +26,11 @@ const Dashboard = () => {
   const [allTemplates, setAllTemplates] = useState<TemplateDefinition[]>([]);
   const [userStats, setUserStats] = useState({ totalSpent: 0, transactionCount: 0 });
   const [isLoading, setIsLoading] = useState(true);
+
+  // Bundle template access state
+  const [lockedTemplates, setLockedTemplates] = useState<any[]>([]);
+  const [unlockedTemplates, setUnlockedTemplates] = useState<any[]>([]);
+
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -51,14 +56,24 @@ const Dashboard = () => {
         console.error("Failed to load purchases", e);
       }
 
+      // Fetch template access (locked/unlocked from bundles)
+      try {
+        const locked = await PurchaseService.getUserLockedTemplates();
+        const unlocked = await PurchaseService.getUserUnlockedTemplates();
+        setLockedTemplates(locked);
+        setUnlockedTemplates(unlocked);
+      } catch (e) {
+        console.error("Failed to load template access", e);
+      }
+
       // Fetch all templates
       try {
         let templates = await TemplateService.getAll();
 
-        // AUTO-SYNC FIX: Check if new template (ID 22) is missing. If so, sync and refetch.
-        const hasNewTemplate = templates.some(t => t.id === 22);
-        if (!hasNewTemplate) {
-          console.log("New template missing in DB. Syncing...");
+        // AUTO-SYNC FIX: Check if latest flagship template (ID 31) is missing. If so, sync and refetch.
+        const hasLatestTemplate = templates.some(t => t.id === 31);
+        if (!hasLatestTemplate) {
+          console.log("Flagship V3 missing in DB. Syncing...");
           await TemplateService.syncFromLocal();
           templates = await TemplateService.getAll();
         }
@@ -257,7 +272,7 @@ const Dashboard = () => {
                   className="space-y-10"
                 >
                   {/* My Purchased Templates Section */}
-                  {purchases.length > 0 && (
+                  {(purchases.length > 0 || unlockedTemplates.length > 0 || lockedTemplates.length > 0) && (
                     <div className="space-y-6">
                       <div className="flex flex-col gap-2">
                         <h2 className="text-4xl font-black text-white tracking-tighter">My <span className="gradient-text">Templates</span></h2>
@@ -265,14 +280,20 @@ const Dashboard = () => {
                       </div>
 
                       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {purchases.map((purchase, i) => {
-                          const template = allTemplates.find(t => t.id.toString() === purchase.template_id);
-                          const isLocked = purchase.status === 'pending';
-                          const isRejected = purchase.status === 'rejected';
+                        {/* 
+                          New Logic: Combine individual purchases and bundle template access.
+                          We want to show one card per 'usable' template.
+                        */}
+                        {[...lockedTemplates, ...unlockedTemplates].map((access, i) => {
+                          const template = allTemplates.find(t => t.id.toString() === access.template_id || t.slug === access.template_id);
+                          const purchase = purchases.find(p => p.id === access.purchase_id);
+                          const isLocked = access.is_locked;
+                          const isRejected = purchase?.status === 'rejected';
+                          const isBundle = purchase?.is_bundle;
 
                           return (
                             <motion.div
-                              key={purchase.id}
+                              key={access.id}
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: i * 0.1 }}
@@ -280,12 +301,24 @@ const Dashboard = () => {
                               style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
                             >
                               <div className={`glass-card flex flex-col h-full ${isLocked ? 'opacity-75' : 'cursor-pointer hover:border-primary/50'} transition-all duration-500 overflow-hidden shadow-2xl`}>
+                                {/* Bundle Badge */}
+                                {isBundle && (
+                                  <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1">
+                                    <Gift className="w-3 h-3" />
+                                    BUNDLE ITEM
+                                  </div>
+                                )}
+
                                 {/* Locked Overlay */}
-                                {isLocked && (
+                                {isLocked && purchase?.status !== 'rejected' && (
                                   <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center">
                                     <Lock className="w-12 h-12 text-primary mb-4 animate-pulse" />
-                                    <h4 className="text-white font-bold text-lg mb-2">Template Locked</h4>
-                                    <p className="text-white/60 text-sm mb-4">Your purchase is being reviewed</p>
+                                    <h4 className="text-white font-bold text-lg mb-2">
+                                      Template Locked
+                                    </h4>
+                                    <p className="text-white/60 text-sm mb-4">
+                                      Verification in progress...
+                                    </p>
                                     <div className="flex items-center gap-2 text-primary text-xs font-bold bg-primary/10 px-4 py-2 rounded-full">
                                       <Clock className="w-4 h-4" />
                                       Available within 2 hours
@@ -326,9 +359,9 @@ const Dashboard = () => {
                                 <div className="p-6 flex-1 flex flex-col justify-between">
                                   <div>
                                     <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-2 block">{template?.category || 'Template'}</span>
-                                    <h3 className="text-xl font-black text-white leading-tight mb-2">{purchase.template_title}</h3>
+                                    <h3 className="text-xl font-black text-white leading-tight mb-2">{template?.title || purchase?.template_title}</h3>
                                     <div className="text-xs text-white/40 mb-4">
-                                      Purchased {new Date(purchase.purchased_at).toLocaleDateString()}
+                                      {purchase?.purchased_at ? `Purchased ${new Date(purchase.purchased_at).toLocaleDateString()}` : 'New Access'}
                                     </div>
                                   </div>
                                   {!isLocked && !isRejected && (
@@ -340,13 +373,68 @@ const Dashboard = () => {
                                       Customize Now
                                     </button>
                                   )}
-                                  {/* Hidden button for layout structure when locked/rejected */}
+                                  {/* Hidden space for layout structure when locked/rejected */}
                                   {(isLocked || isRejected) && <div className="h-10"></div>}
                                 </div>
                               </div>
                             </motion.div>
                           );
                         })}
+
+                        {/* Fallback for legacy purchases that don't have user_template_access records */}
+                        {purchases
+                          .filter(p => ![...lockedTemplates, ...unlockedTemplates].some(a => a.purchase_id === p.id))
+                          .map((purchase, i) => {
+                            const template = allTemplates.find(t => t.id.toString() === purchase.template_id);
+                            const isLocked = purchase.status === 'pending';
+                            const isRejected = purchase.status === 'rejected';
+
+                            return (
+                              <motion.div
+                                key={purchase.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: (lockedTemplates.length + unlockedTemplates.length + i) * 0.1 }}
+                                className="group relative"
+                              >
+                                <div className={`glass-card flex flex-col h-full ${isLocked ? 'opacity-75' : 'cursor-pointer hover:border-primary/50'} transition-all duration-500 overflow-hidden shadow-2xl`}>
+                                  {/* Legacy item overlay */}
+                                  {isLocked && (
+                                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center">
+                                      <Lock className="w-12 h-12 text-primary mb-4 animate-pulse" />
+                                      <h4 className="text-white font-bold text-lg mb-2">Verification Pending</h4>
+                                      <div className="flex items-center gap-2 text-primary text-xs font-bold bg-primary/10 px-4 py-2 rounded-full">
+                                        <Clock className="w-4 h-4" />
+                                        Available within 2 hours
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  <div className={`h-40 bg-gradient-to-br ${template?.color || 'from-primary to-secondary'} opacity-20 group-hover:opacity-40 transition-all duration-700 flex items-center justify-center text-7xl relative overflow-hidden`}>
+                                    <div>{template?.icon || '🎁'}</div>
+                                  </div>
+                                  <div className="p-6 flex-1 flex flex-col justify-between">
+                                    <div>
+                                      <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-2 block">{template?.category || 'Package'}</span>
+                                      <h3 className="text-xl font-black text-white leading-tight mb-2">{purchase.template_title}</h3>
+                                      <div className="text-xs text-white/40 mb-4">
+                                        Purchased {new Date(purchase.purchased_at).toLocaleDateString()}
+                                      </div>
+                                    </div>
+                                    {!isLocked && !isRejected && template && (
+                                      <button
+                                        onClick={() => handleCreateGift(template.id)}
+                                        className="w-full gradient-primary py-3 rounded-2xl text-primary-foreground font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 group-hover:scale-[1.02] transition-transform"
+                                      >
+                                        <Eye className="w-4 h-4" />
+                                        Customize Now
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              </motion.div>
+                            );
+                          })}
                       </div>
                     </div>
                   )}
@@ -362,7 +450,10 @@ const Dashboard = () => {
 
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                       {allTemplates
-                        .filter(t => !purchases.some(p => p.template_id === t.id.toString() && p.status !== 'rejected'))
+                        .filter(t =>
+                          !purchases.some(p => p.template_id === t.id.toString() && p.status !== 'rejected') &&
+                          ![...unlockedTemplates, ...lockedTemplates].some(a => a.template_id === t.id.toString() || a.template_id === t.slug)
+                        )
                         .map((t, i) => (
                           <motion.div
                             key={t.id}

@@ -19,6 +19,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const [bgMusicUrl, setBgMusicUrlState] = useState<string | null>(null);
     const bgMusicRef = useRef<HTMLAudioElement | null>(null);
     const [audioAllowed, setAudioAllowed] = useState(false);
+    const [hasStartedBGM, setHasStartedBGM] = useState(false);
 
     // SFX URLs - Using more reliable stable links
     const SFX = {
@@ -31,22 +32,17 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     useEffect(() => {
         const unlockAudio = () => {
             setAudioAllowed(true);
-            // Resume AudioContext if we were using Web Audio API, but we are using HTML5 Audio for now.
-            // Just marking as allowed helps us know we can play.
-            if (bgMusicRef.current && !isMuted && !bgMusicRef.current.paused) {
-                // already playing
-            } else if (bgMusicRef.current && !isMuted) {
-                bgMusicRef.current.play().catch(e => console.log("Unlock play failed", e));
-            }
+            // Only mark audio as allowed, do NOT auto-play
+            // BGM will only play when explicitly called via playBGM()
         };
 
-        window.addEventListener('click', unlockAudio);
-        window.addEventListener('touchstart', unlockAudio);
+        window.addEventListener('click', unlockAudio, { once: true });
+        window.addEventListener('touchstart', unlockAudio, { once: true });
         return () => {
             window.removeEventListener('click', unlockAudio);
             window.removeEventListener('touchstart', unlockAudio);
         };
-    }, [isMuted]);
+    }, []);
 
     // BGM Management
     useEffect(() => {
@@ -61,9 +57,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             audio.muted = isMuted; // Sync mute state
             bgMusicRef.current = audio;
 
-            if (audioAllowed && !isMuted) {
-                audio.play().catch(e => console.log("BGM Init play failed", e));
-            }
+            // DO NOT auto-play here - only play when playBGM() is explicitly called
         }
         return () => {
             if (bgMusicRef.current) {
@@ -77,11 +71,11 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     useEffect(() => {
         if (bgMusicRef.current) {
             bgMusicRef.current.muted = isMuted;
-            if (!isMuted && audioAllowed) {
+            if (!isMuted && audioAllowed && hasStartedBGM) {
                 bgMusicRef.current.play().catch(e => console.log("Unmute play failed", e));
             }
         }
-    }, [isMuted, audioAllowed]);
+    }, [isMuted, audioAllowed, hasStartedBGM]);
 
     const setBgMusicUrl = (url: string) => {
         if (url !== bgMusicUrl) {
@@ -90,6 +84,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
 
     const playBGM = () => {
+        setHasStartedBGM(true);
         if (bgMusicRef.current && audioAllowed && !isMuted) {
             bgMusicRef.current.play().catch(e => console.log("Manual play BGM failed", e));
         }

@@ -76,15 +76,26 @@ const AdminDashboard = () => {
     fetchPurchases();
     SettingsService.getSettings().then((s: any) => {
       setSettings(s);
-      if (s.bundle_config) {
-        try {
-          const loadedBundles = JSON.parse(s.bundle_config);
-          setBundles({ ...bundles, ...loadedBundles });
-        } catch (e) {
-          console.error("Failed to parse bundle config", e);
-        }
+    });
+
+    // Fetch bundles from database
+    PurchaseService.getAllBundles().then((bList) => {
+      if (bList && bList.length > 0) {
+        const bundleObj: any = { ...bundles };
+        bList.forEach(b => {
+          bundleObj[b.bundle_id] = {
+            id: b.bundle_id,
+            title: b.bundle_name,
+            price: Number(b.price),
+            originalPrice: Number(b.original_price),
+            templates: b.template_ids,
+            isActive: b.is_active
+          };
+        });
+        setBundles(bundleObj);
       }
     });
+
     fetchTemplates();
   }, []);
 
@@ -101,8 +112,15 @@ const AdminDashboard = () => {
   const handleApprovePurchase = async (id: string) => {
     try {
       await PurchaseService.approvePurchase(id);
+
+      // If it's a bundle, unlock associated templates
+      const purchase = purchases.find(p => p.id === id);
+      if (purchase?.is_bundle) {
+        await PurchaseService.unlockBundleTemplates(id);
+      }
+
       setPurchases((prev) => prev.map((p) => p.id === id ? { ...p, status: 'approved' as const, approved_at: new Date().toISOString() } : p));
-      toast({ title: "Success", description: "Purchase approved! Template unlocked for user." });
+      toast({ title: "Success", description: purchase?.is_bundle ? "Bundle approved! All templates unlocked." : "Purchase approved! Template unlocked." });
     } catch (error) {
       console.error("Approval failed:", error);
       toast({ title: "Error", description: "Failed to approve purchase.", variant: "destructive" });
@@ -174,10 +192,24 @@ const AdminDashboard = () => {
 
   const handleSaveBundles = async () => {
     try {
-      await SettingsService.updateSetting('bundle_config', JSON.stringify(bundles));
-      toast({ title: "Success", description: "Bundle configuration updated." });
+      // Save each bundle to the database
+      const bundleKeys = Object.keys(bundles);
+      for (const key of bundleKeys) {
+        const b = bundles[key];
+        await PurchaseService.updateBundle({
+          bundle_id: b.id,
+          bundle_name: b.title,
+          price: b.price,
+          original_price: b.originalPrice || 0,
+          template_ids: b.templates || [],
+          is_active: b.isActive !== false
+        });
+      }
+
+      toast({ title: "Success", description: "Bundle configuration saved to database." });
     } catch (error) {
-      toast({ title: "Error", description: "Failed to save bundles.", variant: "destructive" });
+      console.error("Failed to save bundles:", error);
+      toast({ title: "Error", description: "Failed to save bundles to database.", variant: "destructive" });
     }
   };
 
@@ -457,8 +489,24 @@ const AdminDashboard = () => {
                             <div className="text-[10px] text-white/40">{purchase.user_email}</div>
                           </td>
                           <td className="px-6 py-5">
-                            <div className="font-semibold text-sm text-white">{purchase.template_title}</div>
+                            <div className="flex items-center gap-2">
+                              <div className="font-semibold text-sm text-white">{purchase.template_title}</div>
+                              {purchase.is_bundle && (
+                                <span className="text-[8px] bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider border border-purple-500/20 flex items-center gap-1">
+                                  <Gift className="w-2.5 h-2.5" /> Bundle
+                                </span>
+                              )}
+                            </div>
                             <div className="text-[10px] text-white/30">ID: {purchase.template_id}</div>
+                            {purchase.is_bundle && purchase.template_ids && (
+                              <div className="mt-1 flex flex-wrap gap-1">
+                                {purchase.template_ids.map((tid, idx) => (
+                                  <span key={idx} className="text-[8px] bg-white/5 text-white/40 px-1 py-0.5 rounded border border-white/5">
+                                    {tid}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                           </td>
                           <td className="px-6 py-5">
                             <code className="bg-white/5 px-2 py-1 rounded text-[11px] text-primary/80 font-mono border border-white/5">{purchase.transaction_id}</code>
@@ -551,6 +599,7 @@ const AdminDashboard = () => {
                     <tr>
                       <th className="px-6 py-4">Date</th>
                       <th className="px-6 py-4">User</th>
+                      <th className="px-6 py-4">Item</th>
                       <th className="px-6 py-4">UTR / Ref</th>
                       <th className="px-6 py-4">Proof</th>
                       <th className="px-6 py-4">Amount</th>
@@ -570,6 +619,17 @@ const AdminDashboard = () => {
                         <td className="px-6 py-5">
                           <div className="font-bold text-sm text-white/90">{p.user_email.split('@')[0]}</div>
                           <div className="text-[10px] text-white/40">{p.user_email}</div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-2">
+                            <div className="font-semibold text-sm text-white">{p.template_title}</div>
+                            {p.is_bundle && (
+                              <span className="text-[8px] bg-purple-500/20 text-purple-400 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider border border-purple-500/20 flex items-center gap-1">
+                                <Gift className="w-2.5 h-2.5" /> Bundle
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[10px] text-white/30">ID: {p.template_id}</div>
                         </td>
                         <td className="px-6 py-5">
                           <code className="bg-white/5 px-2 py-1 rounded text-[11px] text-primary/80 font-mono border border-white/5">{p.transaction_id}</code>

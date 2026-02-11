@@ -25,6 +25,7 @@ import HappyBirthdayRenderer from './happy-birthday/HappyBirthdayRenderer';
 import HappyNewYearRenderer from './happy-new-year/HappyNewYearRenderer';
 import SmallSurpriseRenderer from './small-surprise/SmallSurpriseRenderer';
 import CutenessScannerRenderer from './CutenessScannerRenderer';
+import ValentineJourneyV3Renderer from './ValentineJourneyV3Renderer';
 
 interface TemplateRendererProps {
     templateSlug: string;
@@ -67,6 +68,7 @@ const TemplateRenderer: React.FC<TemplateRendererProps> = ({
         'new-year-start': HappyNewYearRenderer,
         'small-surprise': SmallSurpriseRenderer,
         'cuteness-scanner': CutenessScannerRenderer,
+        'valentine-journey-v3': ValentineJourneyV3Renderer,
     };
 
     const SpecificRenderer = renderers[templateSlug];

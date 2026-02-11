@@ -27,7 +27,7 @@ const Page3Memories = ({ data, onNext }: any) => {
 
                 {/* HORIZONTAL SCROLL GALLERY */}
                 <div className="flex flex-col md:flex-row gap-8 overflow-x-auto pb-12 snap-x px-4 no-scrollbar">
-                    {photos.map((photo, i) => (
+                    {photos.map((photo: string, i: number) => (
                         <motion.div
                             key={i}
                             initial={{ opacity: 0, x: 100 }}

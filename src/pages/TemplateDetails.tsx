@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Play, Check, Shield, Star, Clock, Zap } from "lucide-react";
 import { TEMPLATES, TemplateDefinition } from "../lib/templates";
 import { TemplateService } from "../lib/templateService";
+import { PurchaseService } from "../lib/purchaseService";
+import { GiftService } from "../lib/gifts";
+import { useToast } from "../hooks/use-toast";
 import FloatingHearts from "../components/landing/FloatingHearts";
 
 const TemplateDetails = () => {
@@ -11,20 +14,26 @@ const TemplateDetails = () => {
     const navigate = useNavigate();
     const [template, setTemplate] = useState<TemplateDefinition | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isOwned, setIsOwned] = useState(false);
+    const { toast } = useToast();
 
     useEffect(() => {
-        setLoading(true);
-        // Use local templates directly
-        const t = TEMPLATES.find(t => t.slug === slug);
-        setTemplate(t || null);
-        setLoading(false);
+        const load = async () => {
+            setLoading(true);
+            const t = TEMPLATES.find(t => t.slug === slug);
+            setTemplate(t || null);
 
-        // Database version (disabled for now)
-        // TemplateService.getAll().then(templates => {
-        //     const t = templates.find(t => t.slug === slug);
-        //     setTemplate(t || null);
-        //     setLoading(false);
-        // });
+            if (t) {
+                try {
+                    const owned = await PurchaseService.hasPurchased(t.id.toString(), t.category);
+                    setIsOwned(owned);
+                } catch (e) {
+                    console.error("Ownership check failed", e);
+                }
+            }
+            setLoading(false);
+        };
+        load();
     }, [slug]);
 
     if (loading) {
@@ -64,6 +73,21 @@ const TemplateDetails = () => {
                 mrp: template.originalPrice
             }
         });
+    };
+
+    const handleCustomize = async () => {
+        if (!template) return;
+        try {
+            const newGift = await GiftService.createGift(template.id);
+            navigate(`/editor/${newGift.id}`);
+        } catch (error) {
+            console.error("Failed to create gift:", error);
+            toast({
+                title: "Error",
+                description: "Failed to initialize gift editor. Please try again.",
+                variant: "destructive",
+            });
+        }
     };
 
     return (
@@ -216,10 +240,10 @@ const TemplateDetails = () => {
 
                         <div className="pt-8 border-t border-white/10 space-y-4">
                             <button
-                                onClick={handleBuyNow}
-                                className="w-full bg-primary hover:bg-primary/90 text-white text-xl font-bold py-5 rounded-2xl shadow-xl shadow-primary/20 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-3"
+                                onClick={isOwned ? handleCustomize : handleBuyNow}
+                                className={`w-full ${isOwned ? 'bg-pastel-green hover:bg-emerald-600' : 'bg-primary hover:bg-primary/90'} text-white text-xl font-bold py-5 rounded-2xl shadow-xl transition-all transform hover:scale-[1.02] flex items-center justify-center gap-3`}
                             >
-                                Create This Gift Now
+                                {isOwned ? "Customize My Gift" : "Create This Gift Now"}
                             </button>
                             <p className="text-center text-xs text-white/40 uppercase tracking-widest">
                                 100% Satisfaction Guarantee

@@ -52,9 +52,9 @@ const SpecialOffersSection = () => {
 
                         <div className="space-y-4 mb-8 flex-1">
                             {[
+                                "Valentine Journey V3 (8K FLAGSHIP)",
                                 "Romantic Journey V2 (Super Animated)",
                                 "Interactive Love Question Template",
-                                "5 Things I Love About You",
                                 "Full HD Media Support",
                                 "Unique Shareable Link"
                             ].map((item, i) => (

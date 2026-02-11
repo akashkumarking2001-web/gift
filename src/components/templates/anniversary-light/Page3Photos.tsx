@@ -136,7 +136,7 @@ const Page3Photos = ({ data, onNext, isEditing = false, onUpdate }: Page3PhotosP
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             className="max-w-4xl max-h-[80vh] bg-white p-4 shadow-[0_100px_200px_-50px_rgba(0,0,0,0.2)] rounded-sm border border-slate-100 flex flex-col items-center"
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e: React.MouseEvent) => e.stopPropagation()}
                         >
                             <img src={selectedPhoto} alt="Full View" className="max-w-full max-h-full object-contain" />
                             <div className="py-6 flex items-center gap-4 text-pink-500 font-romantic text-2xl italic">
