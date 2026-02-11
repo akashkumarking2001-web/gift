@@ -13,7 +13,7 @@ interface Page1LoadingProps {
 
 const Page1Loading = ({ data, onNext, isEditing = false, onUpdate }: Page1LoadingProps) => {
     const defaultData = {
-        subtext: data.subtext || "Calculating The Years of Perfection..."
+        subtext: data.subtext || "Preparing the perfect surprise..."
     };
 
     useEffect(() => {
@@ -24,35 +24,38 @@ const Page1Loading = ({ data, onNext, isEditing = false, onUpdate }: Page1Loadin
     }, [onNext, isEditing]);
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-[#05050a] flex flex-col items-center justify-center p-8 text-center font-outfit">
+        <div className="min-h-screen relative overflow-hidden bg-[#fffdfa] flex flex-col items-center justify-center p-8 text-center font-outfit select-none">
 
-            {/* Hyper-Realistic Neon Atmosphere */}
+            {/* FESTIVE PASTEL ATMOSPHERE */}
             <div className="absolute inset-0 z-0 pointer-events-none">
                 <motion.div
-                    animate={{ opacity: [0.1, 0.2, 0.1], scale: [1, 1.2, 1] }}
+                    animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.1, 1] }}
                     transition={{ duration: 10, repeat: Infinity }}
-                    className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(236,72,153,0.2),transparent_50%),radial-gradient(circle_at_75%_75%,rgba(168,85,247,0.2),transparent_50%)]"
+                    className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(255,241,200,0.4),transparent_50%),radial-gradient(circle_at_75%_75%,rgba(255,192,203,0.4),transparent_50%)]"
                 />
 
-                {/* Floating Bokeh Orbs */}
+                {/* Floating Confetti Shapes */}
                 {[...Array(15)].map((_, i) => (
                     <motion.div
                         key={i}
-                        className="absolute bg-white/5 rounded-full blur-3xl"
+                        className="absolute blur-[1px]"
                         style={{
-                            width: `${Math.random() * 200 + 100}px`,
-                            height: `${Math.random() * 200 + 100}px`,
+                            width: `${Math.random() * 20 + 10}px`,
+                            height: `${Math.random() * 20 + 10}px`,
+                            backgroundColor: ['#fb7185', '#fbbf24', '#818cf8', '#34d399'][i % 4],
+                            borderRadius: i % 2 === 0 ? '50%' : '2px',
                             left: `${Math.random() * 100}%`,
                             top: `${Math.random() * 100}%`,
                         }}
                         animate={{
-                            y: [0, -200, 0],
-                            x: [0, 100, 0],
-                            opacity: [0.1, 0.3, 0.1]
+                            y: [0, -300],
+                            rotate: [0, 360],
+                            opacity: [0, 0.6, 0]
                         }}
                         transition={{
-                            duration: 10 + Math.random() * 10,
+                            duration: 5 + Math.random() * 5,
                             repeat: Infinity,
+                            delay: Math.random() * 5
                         }}
                     />
                 ))}
@@ -67,17 +70,16 @@ const Page1Loading = ({ data, onNext, isEditing = false, onUpdate }: Page1Loadin
                     transition={{ type: "spring", damping: 15, stiffness: 100 }}
                     className="mb-16 relative"
                 >
-                    <div className="relative p-12 bg-white/5 backdrop-blur-3xl rounded-[4rem] border border-white/10 shadow-[0_50px_100px_rgba(236,72,153,0.3)] isolate overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-purple-500/20" />
-                        <Gift size={90} className="text-pink-400 drop-shadow-[0_0_30px_rgba(236,72,153,0.6)]" />
+                    <div className="relative p-14 bg-white rounded-[4rem] border-4 border-pink-50 shadow-[0_30px_70px_rgba(251,113,133,0.2)] isolate overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-pink-50 to-amber-50" />
+                        <Gift size={100} className="text-pink-400 drop-shadow-[0_10px_20px_rgba(251,113,133,0.3)] relative z-10" />
 
-                        {/* Kinetic Accents */}
                         <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                            className="absolute -inset-4 pointer-events-none"
+                            animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+                            transition={{ duration: 4, repeat: Infinity }}
+                            className="absolute -top-4 -right-4 text-4xl"
                         >
-                            <Sparkles className="absolute top-0 right-1/4 w-8 h-8 text-yellow-200 fill-current opacity-40 blur-[1px]" />
+                            🎉
                         </motion.div>
                     </div>
                 </motion.div>
@@ -87,10 +89,10 @@ const Page1Loading = ({ data, onNext, isEditing = false, onUpdate }: Page1Loadin
                     <motion.div
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-4 bg-pink-500/10 backdrop-blur-xl px-10 py-3 rounded-full border border-pink-500/20"
+                        className="inline-flex items-center gap-4 bg-white px-10 py-3 rounded-full border border-pink-100 shadow-sm"
                     >
-                        <Zap size={14} className="text-pink-400 fill-current animate-pulse" />
-                        <span className="text-pink-100 font-black uppercase tracking-[0.6em] text-[10px]">Initializing Celebration</span>
+                        <Sparkles size={16} className="text-amber-400 animate-pulse fill-current" />
+                        <span className="text-[#5e2d63] font-black uppercase tracking-[0.6em] text-[10px]">Unwrapping Your Special Day</span>
                     </motion.div>
 
                     <div className="space-y-4">
@@ -98,16 +100,16 @@ const Page1Loading = ({ data, onNext, isEditing = false, onUpdate }: Page1Loadin
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
-                            className="text-5xl md:text-8xl font-black text-white font-romantic leading-tight tracking-[0.02em] drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
+                            className="text-5xl md:text-8xl font-black text-[#5e2d63] font-romantic leading-tight drop-shadow-sm"
                         >
-                            Unveiling The Magic
+                            A Magical Journey Begins
                         </motion.h1>
 
                         <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.8 }}
-                            className="text-pink-400/50 text-xl md:text-2xl font-black uppercase tracking-[0.4em]"
+                            className="text-pink-400/80 text-xl md:text-2xl font-black uppercase tracking-[0.4em]"
                         >
                             {defaultData.subtext}
                         </motion.p>
@@ -115,31 +117,35 @@ const Page1Loading = ({ data, onNext, isEditing = false, onUpdate }: Page1Loadin
                 </div>
 
                 {/* Hyper-Realistic Progress Indicator */}
-                <div className="relative w-72 h-3 bg-white/5 rounded-full overflow-hidden border border-white/5 p-0.5">
+                <div className="relative w-80 h-4 bg-white rounded-full overflow-hidden border-2 border-pink-50 p-1 shadow-inner">
                     <motion.div
                         initial={{ width: "0%" }}
                         animate={{ width: "100%" }}
                         transition={{ duration: 4, ease: "easeInOut" }}
-                        className="h-full bg-gradient-to-r from-pink-600 via-fuchsia-500 to-purple-600 rounded-full shadow-[0_0_20px_rgba(236,72,153,0.5)]"
+                        className="h-full bg-gradient-to-r from-pink-400 via-amber-300 to-rose-400 rounded-full shadow-[0_0_15px_rgba(251,113,133,0.4)]"
                     />
                 </div>
 
-                {/* Metadata Stats */}
-                <div className="mt-16 flex gap-12 text-[9px] font-black uppercase tracking-[0.4em] text-white/10">
+                <div className="mt-16 flex gap-12 text-[9px] font-black uppercase tracking-[0.4em] text-slate-300">
                     <div className="flex items-center gap-2 flex-col">
-                        <span className="text-pink-500/30">Status</span>
-                        <span>Optimized</span>
+                        <span className="text-pink-400 opacity-40">Mood</span>
+                        <span>Celebratory</span>
                     </div>
                     <div className="flex items-center gap-2 flex-col">
-                        <span className="text-purple-500/30">Protocol</span>
-                        <span>Birthday V4</span>
+                        <span className="text-amber-400 opacity-40">Aura</span>
+                        <span>Pure Happiness</span>
                     </div>
                 </div>
 
             </div>
 
-            {/* Background Texture Detail */}
-            <div className="fixed inset-0 pointer-events-none opacity-[0.02] bg-[radial-gradient(#fff_1px,transparent_1px)] bg-[size:40px_40px]" />
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
+                }
+            `}} />
         </div>
     );
 };

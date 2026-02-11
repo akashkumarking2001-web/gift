@@ -102,11 +102,11 @@ const Register = () => {
           <div className="inline-flex flex-col items-center gap-6 group">
             <Link to="/" className="relative">
               <img
-                src="/logo.svg"
+                src="/logo.svg?v=3"
                 alt="Gift Magic"
                 className="h-24 w-auto object-contain group-hover:scale-105 transition-transform"
                 onError={(e: any) => {
-                  e.currentTarget.src = "/logo.png";
+                  e.currentTarget.src = "/logo.png?v=3";
                   const fallback = document.getElementById('register-logo-fallback');
                   if (fallback) fallback.style.display = 'block';
                 }}

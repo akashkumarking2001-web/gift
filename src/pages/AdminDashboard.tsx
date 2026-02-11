@@ -252,11 +252,11 @@ const AdminDashboard = () => {
           <Link to="/" className="flex items-center gap-3 group">
             <div className="relative">
               <img
-                src="/logo.svg"
+                src="/logo.svg?v=3"
                 alt="Gift Magic"
                 className="h-10 w-10 object-contain group-hover:scale-110 transition-transform"
                 onError={(e: any) => {
-                  e.currentTarget.src = "/logo.png";
+                  e.currentTarget.src = "/logo.png?v=3";
                 }}
               />
             </div>

@@ -1,167 +1,141 @@
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
-import { Gift, Sparkles, Star, Trophy, ArrowRight, Zap } from 'lucide-react';
+import { Sparkles, Heart, Gift, PartyPopper } from 'lucide-react';
 
-interface Page3CelebrationProps {
-    data: {
-        mainText?: string;
-        subtext?: string;
-        buttonText?: string;
+const Page3Celebration = ({ data, onNext }: any) => {
+    const [poppedCount, setPoppedCount] = useState(0);
+    const totalBalloons = 8;
+    const [balloons, setBalloons] = useState([...Array(totalBalloons)].map((_, i) => ({
+        id: i,
+        color: ['#fb7185', '#fbbf24', '#818cf8', '#34d399', '#f472b6', '#a78bfa'][i % 6],
+        x: Math.random() * 80 + 10,
+        y: Math.random() * 60 + 20,
+        popped: false
+    })));
+
+    const handlePop = (id: number) => {
+        setBalloons(prev => prev.map(b => b.id === id ? { ...b, popped: true } : b));
+        setPoppedCount(prev => prev + 1);
+
+        confetti({
+            particleCount: 40,
+            spread: 60,
+            origin: { x: balloons.find(b => b.id === id)!.x / 100, y: balloons.find(b => b.id === id)!.y / 100 },
+            colors: [balloons.find(b => b.id === id)!.color, '#ffffff']
+        });
     };
-    onNext: () => void;
-    isEditing?: boolean;
-    onUpdate?: (field: string, value: string) => void;
-}
 
-const Page3Celebration = ({ data, onNext, isEditing = false, onUpdate }: Page3CelebrationProps) => {
-    const defaultData = {
-        mainText: data.mainText || "Moment of Transcendence",
-        subtext: data.subtext || "The countdown ends... the magic begins.",
-        buttonText: data.buttonText || "Unveil Your Gifts"
-    };
-
-    useEffect(() => {
-        const duration = 15 * 1000;
-        const animationEnd = Date.now() + duration;
-        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
-
-        const interval: any = setInterval(function () {
-            const timeLeft = animationEnd - Date.now();
-
-            if (timeLeft <= 0) {
-                return clearInterval(interval);
-            }
-
-            const particleCount = 50 * (timeLeft / duration);
-            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
-            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
-        }, 250);
-
-        return () => clearInterval(interval);
-    }, []);
+    const isDone = poppedCount >= totalBalloons;
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-[#05050a] flex flex-col items-center justify-center p-8 text-center font-outfit">
+        <div className="min-h-screen relative overflow-hidden bg-[#fffdfa] flex flex-col items-center justify-start pt-20 px-8 font-outfit select-none isolate">
 
-            {/* Hyper-Realistic Gilded Atmospehre */}
-            <div className="absolute inset-0 z-0 pointer-events-none">
+            <div className="relative z-10 text-center mb-12">
                 <motion.div
-                    animate={{ opacity: [0.1, 0.3, 0.1], scale: [1, 1.2, 1] }}
-                    transition={{ duration: 10, repeat: Infinity }}
-                    className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(236,72,153,0.2),transparent_70%)]"
-                />
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-center justify-center gap-4 mb-4"
+                >
+                    <PartyPopper size={32} className="text-pink-500" />
+                    <h1 className="text-4xl md:text-7xl font-black text-[#5e2d63] font-romantic">
+                        Pop for a Surprise!
+                    </h1>
+                </motion.div>
+                <p className="text-pink-400 font-black uppercase tracking-[0.4em] text-[10px]">
+                    {isDone ? "Surprise Unlocked!" : `Pop all balloons (${poppedCount}/${totalBalloons})`}
+                </p>
+            </div>
 
-                {/* Floating Confetti Particles */}
-                {[...Array(50)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute w-2 h-2 rounded-sm"
-                        style={{
-                            backgroundColor: ['#ec4899', '#f43f5e', '#fb923c', '#ffffff', '#eab308'][i % 5],
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                        }}
-                        animate={{
-                            y: [0, -200, 0],
-                            rotate: 360,
-                            opacity: [0, 0.6, 0]
-                        }}
-                        transition={{
-                            duration: 4 + Math.random() * 4,
-                            repeat: Infinity,
-                        }}
-                    />
+            {/* BALLOON FIELD */}
+            <div className="relative w-full max-w-5xl h-[50vh]">
+                {balloons.map((balloon) => (
+                    <AnimatePresence key={balloon.id}>
+                        {!balloon.popped && (
+                            <motion.div
+                                initial={{ scale: 0, y: 100 }}
+                                animate={{
+                                    scale: 1,
+                                    y: 0,
+                                    x: [0, 10, -10, 0],
+                                    rotate: [0, 5, -5, 0]
+                                }}
+                                exit={{ scale: 2, opacity: 0 }}
+                                transition={{
+                                    delay: balloon.id * 0.1,
+                                    x: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                                    rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+                                }}
+                                onClick={() => handlePop(balloon.id)}
+                                className="absolute cursor-pointer group"
+                                style={{ left: `${balloon.x}%`, top: `${balloon.y}%` }}
+                            >
+                                <div
+                                    className="w-20 h-24 md:w-32 md:h-40 rounded-[50%_50%_50%_50%_/60%_60%_40%_40%] relative shadow-xl transform transition-transform group-hover:scale-110"
+                                    style={{ backgroundColor: balloon.color }}
+                                >
+                                    <div className="absolute top-4 left-6 w-4 h-8 bg-white/20 rounded-full blur-[2px]" />
+                                    {/* String */}
+                                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-0.5 h-10 bg-slate-200" />
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 ))}
             </div>
 
-            <div className="relative z-10 max-w-5xl w-full flex flex-col items-center space-y-16">
-
-                {/* Visual Reveal Area */}
-                <motion.div
-                    initial={{ scale: 0, rotate: -30 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: "spring", damping: 15, stiffness: 80 }}
-                    className="relative"
-                >
-                    {/* Multi-layered Glow */}
-                    <div className="absolute inset-0 bg-pink-600 blur-[80px] opacity-40 animate-pulse" />
-
-                    <div className="relative p-12 md:p-16 bg-white/5 backdrop-blur-3xl rounded-[5rem] border border-white/10 shadow-[0_50px_100px_-20px_rgba(236,72,153,0.5)] isolate">
-                        <Gift size={120} className="text-pink-400 drop-shadow-[0_0_50px_rgba(236,72,153,0.8)]" />
-
-                        {/* Orbiting Elements */}
+            {/* FINAL REVEAL CARD */}
+            <AnimatePresence>
+                {isDone && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        className="fixed inset-0 z-50 flex flex-col items-center justify-center p-8 bg-white/80 backdrop-blur-2xl"
+                    >
                         <motion.div
                             animate={{ rotate: 360 }}
                             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                            className="absolute -inset-10 pointer-events-none"
+                            className="absolute inset-0 z-0 pointer-events-none opacity-5"
                         >
-                            <Star className="absolute top-0 right-0 w-10 h-10 text-yellow-200 fill-current opacity-40" />
-                            <Sparkles className="absolute bottom-0 left-0 w-8 h-8 text-white opacity-30" />
+                            <Sparkles size={800} className="text-pink-500 mx-auto" strokeWidth={0.1} />
                         </motion.div>
-                    </div>
-                </motion.div>
 
-                {/* Narrative Typography */}
-                <div className="space-y-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-4 bg-white/5 backdrop-blur-xl px-10 py-3 rounded-full border border-white/10"
-                    >
-                        <Trophy size={16} className="text-pink-400" />
-                        <span className="text-pink-100/50 font-black uppercase tracking-[0.6em] text-[10px]">The Achievement of Life</span>
-                        <Star size={16} className="text-yellow-400 fill-current" />
+                        <div className="relative bg-white border-4 border-pink-100 rounded-[4rem] p-12 md:p-24 text-center shadow-[0_60px_150px_rgba(251,113,133,0.3)] max-w-4xl w-full isolate overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-pink-50 to-amber-50" />
+
+                            <motion.div
+                                animate={{ scale: [1, 1.2, 1] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                                className="mb-12 inline-block relative z-10"
+                            >
+                                <Gift size={100} fill="#f43f5e" className="text-rose-500 drop-shadow-[0_10px_30px_rgba(244,63,94,0.4)]" />
+                            </motion.div>
+
+                            <h2 className="text-5xl md:text-8xl font-black text-[#5e2d63] font-romantic mb-10 leading-tight relative z-10">
+                                {data.mainText || "Happy Birthday!"}
+                            </h2>
+
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={onNext}
+                                className="px-20 py-8 bg-[#fb7185] hover:bg-[#f43f5e] text-white font-black text-sm uppercase tracking-[0.5em] rounded-full shadow-2xl relative z-10 overflow-hidden group"
+                            >
+                                <span className="relative z-10">Discover More</span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-rose-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </motion.button>
+                        </div>
                     </motion.div>
+                )}
+            </AnimatePresence>
 
-                    <div className="space-y-6">
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="text-5xl md:text-9xl font-black text-white font-romantic leading-[1.1] drop-shadow-2xl"
-                        >
-                            {defaultData.mainText}
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.6 }}
-                            className="text-pink-100/40 text-xl md:text-3xl font-lovely italic leading-relaxed max-w-4xl mx-auto"
-                        >
-                            "{defaultData.subtext}"
-                        </motion.p>
-                    </div>
-                </div>
-
-                {/* Professional CTA */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1.2 }}
-                >
-                    <motion.button
-                        onClick={onNext}
-                        whileHover={{ scale: 1.05, y: -5 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="group relative px-24 py-9 bg-white text-[#050510] font-black text-xs uppercase tracking-[0.7em] rounded-[3rem] shadow-[0_40px_100px_rgba(255,255,255,0.15)] flex items-center gap-6 isolate"
-                    >
-                        <div className="absolute inset-0 bg-pink-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-[3rem]" />
-                        <span className="relative z-10 text-pink-900">{defaultData.buttonText}</span>
-                        <ArrowRight className="relative z-10 w-6 h-6 border-2 border-pink-900 rounded-full p-0.5 group-hover:translate-x-4 transition-transform duration-500" />
-                    </motion.button>
-                </motion.div>
-            </div>
-
-            {/* Corner Metadata */}
-            <div className="fixed bottom-12 left-12 flex flex-col items-start gap-2 opacity-10">
-                <div className="h-[1px] w-40 bg-pink-500" />
-                <div className="font-romantic text-5xl text-pink-500 italic">Euphoria</div>
-            </div>
-
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
+                }
+            `}} />
         </div>
     );
 };

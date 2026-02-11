@@ -1,8 +1,12 @@
 import React from 'react';
-import Page1Intro from './our-story/Page1Intro';
-import Page2Timeline from './our-story/Page2Timeline';
-import Page3Gallery from './our-story/Page3Gallery';
-import Page4Conclusion from './our-story/Page4Conclusion';
+import Page1Loading from './our-story/Page1Loading';
+import Page2Intro from './our-story/Page2Intro';
+import Page3Spark from './our-story/Page3Spark';
+import Page4Timeline from './our-story/Page4Timeline';
+import Page5Gallery from './our-story/Page5Gallery';
+import Page6Favorite from './our-story/Page6Favorite';
+import Page7Letter from './our-story/Page7Letter';
+import Page8Final from './our-story/Page8Final';
 
 interface OurStoryRendererProps {
     pageId: string;
@@ -20,23 +24,27 @@ const OurStoryRenderer: React.FC<OurStoryRendererProps> = ({
     onUpdate
 }) => {
     const pageComponents: Record<string, React.ComponentType<any>> = {
-        'p1': Page1Intro,
-        'p2': Page2Timeline,
-        'p3': Page3Gallery,
-        'p4': Page4Conclusion,
+        'p1': Page1Loading,
+        'p2': Page2Intro,
+        'p3': Page3Spark,
+        'p4': Page4Timeline,
+        'p5': Page5Gallery,
+        'p6': Page6Favorite,
+        'p7': Page7Letter,
+        'p8': Page8Final,
     };
 
     const PageComponent = pageComponents[pageId];
 
     if (!PageComponent) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#050510]">
-                <div className="text-white text-center">
-                    <h1 className="text-4xl font-black mb-4 uppercase tracking-[0.2em] opacity-30">Writing Chapters</h1>
-                    <p className="text-xs font-black uppercase tracking-widest text-indigo-500 mb-8">Page ID: {pageId}</p>
+            <div className="min-h-screen flex items-center justify-center bg-[#faf7f2]">
+                <div className="text-[#1e293b] text-center">
+                    <h1 className="text-4xl font-black mb-4 uppercase tracking-[0.1em] opacity-30 italic font-serif">A Story Untold</h1>
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#94a3b8] mb-8">Page ID: {pageId}</p>
                     <button
                         onClick={onNext}
-                        className="bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 text-indigo-500 px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest transition-all"
+                        className="bg-white hover:bg-[#f1f5f9] border-2 border-[#e5e7eb] text-[#64748b] px-8 py-3 rounded-full font-bold text-xs uppercase tracking-widest transition-all shadow-sm"
                     >
                         Skip Module →
                     </button>

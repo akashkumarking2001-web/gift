@@ -1,59 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTemplateAudio } from '../../../hooks/useTemplateAudio';
-
-// Import Specific Pages
+import React from 'react';
+import SSSLoading from './SSSLoading';
 import SSSIntro from './SSSIntro';
 import SSSMeter from './SSSMeter';
+import SSSPrediction from './SSSPrediction';
+import SSSGallery from './SSSGallery';
 import SSSRevealList from './SSSRevealList';
+import SSSGate from './SSSGate';
 import SSSNote from './SSSNote';
 import SSSFinal from './SSSFinal';
 
-export default function SmallSurpriseRenderer({
+interface SmallSurpriseRendererProps {
+    pageId: string;
+    data: Record<string, any>;
+    onNext: () => void;
+    isEditing?: boolean;
+    onUpdate?: (field: string, value: any) => void;
+}
+
+const SmallSurpriseRenderer: React.FC<SmallSurpriseRendererProps> = ({
     pageId,
     data,
-    onNext
-}: {
-    pageId: string,
-    data: any,
-    onNext: () => void
-}) {
-    const { playBGM, playSFX } = useTemplateAudio({});
-
-    const pageMapping: Record<string, React.ComponentType<any>> = {
-        'p1': SSSIntro,
-        'p2': SSSMeter,
-        'p3': SSSRevealList,
-        'p4': SSSNote,
-        'p5': SSSFinal
+    onNext,
+    isEditing = false,
+    onUpdate
+}) => {
+    const pageComponents: Record<string, React.ComponentType<any>> = {
+        'p1': SSSLoading,
+        'p2': SSSIntro,
+        'p3': SSSMeter,
+        'p4': SSSPrediction,
+        'p5': SSSGallery,
+        'p6': SSSRevealList,
+        'p7': SSSGate,
+        'p8': SSSNote,
+        'p9': SSSFinal,
     };
 
-    const Component = pageMapping[pageId] || SSSIntro;
+    const PageComponent = pageComponents[pageId];
 
-    useEffect(() => {
-        if (pageId === 'p1') {
-            playBGM();
-        } else if (pageId === 'p2') {
-            playSFX('reveal');
-        } else if (pageId === 'p5') {
-            playSFX('celebration');
-        }
-    }, [pageId, playBGM, playSFX]);
+    if (!PageComponent) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-[#0d0d0d]">
+                <div className="text-white text-center">
+                    <h1 className="text-4xl font-black mb-4 uppercase tracking-[0.2em] opacity-30">Protocol Not Found</h1>
+                    <p className="text-xs font-black uppercase tracking-widest text-rose-500 mb-8">Page ID: {pageId}</p>
+                    <button
+                        onClick={onNext}
+                        className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest transition-all"
+                    >
+                        Skip Module →
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a]">
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={pageId}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="flex-1 w-full relative"
-                >
-                    <Component data={data} onNext={onNext} />
-                </motion.div>
-            </AnimatePresence>
-        </div>
+        <PageComponent
+            data={data}
+            onNext={onNext}
+            isEditing={isEditing}
+            onUpdate={onUpdate}
+        />
     );
-}
+};
+
+export default SmallSurpriseRenderer;

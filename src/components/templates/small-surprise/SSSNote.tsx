@@ -1,118 +1,86 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Heart, Sparkles, Send } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Heart, Sparkles, ChevronRight, PenTool, Cpu } from 'lucide-react';
 
-const SSSNote = ({ data, onNext }: any) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [typedText, setTypedText] = useState("");
-    const fullText = data.message || "I really like how you carry yourself. You have this natural charm that’s so rare and beautiful. Just wanted you to know you're appreciated more than you realize.";
-
-    useEffect(() => {
-        if (isOpen) {
-            let i = 0;
-            const timer = setInterval(() => {
-                setTypedText(fullText.slice(0, i));
-                i++;
-                if (i > fullText.length) clearInterval(timer);
-            }, 30);
-            return () => clearInterval(timer);
-        }
-    }, [isOpen, fullText]);
-
+const SSSNote = ({ data, onNext, isEditing = false, onUpdate }: any) => {
     return (
-        <div className="relative min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a0b2e] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
+        <div className="min-h-screen relative overflow-hidden bg-[#0d0d0d] flex flex-col items-center justify-center p-8 font-mono select-none isolate">
 
-            <AnimatePresence mode="wait">
-                {!isOpen ? (
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,#4c0519_0%,#0d0d0d_70%)] opacity-60" />
+
+            <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="relative z-10 w-full max-w-4xl bg-white/5 backdrop-blur-3xl rounded-[4rem] border border-white/10 p-12 md:p-24 shadow-[0_50px_150px_rgba(0,0,0,0.5)] text-center space-y-12"
+            >
+                {/* Visual Ornament */}
+                <div className="absolute top-10 right-10 opacity-10">
+                    <Cpu size={100} className="text-white" />
+                </div>
+
+                <div className="flex justify-center mb-8">
                     <motion.div
-                        key="envelope"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, y: -50, scale: 1.1 }}
-                        onClick={() => setIsOpen(true)}
-                        className="relative cursor-pointer group flex flex-col items-center gap-12"
+                        animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+                        transition={{ duration: 5, repeat: Infinity }}
+                        className="p-10 bg-rose-600/10 rounded-full border border-rose-500/20 relative shadow-2xl"
                     >
-                        <div className="text-center space-y-4">
-                            <motion.h2 className="text-white text-3xl md:text-5xl font-romantic">An unsealed note</motion.h2>
-                            <span className="text-pink-400 font-bold uppercase tracking-[0.4em] text-[10px]">Tap the heart to read</span>
-                        </div>
-
-                        <div className="relative w-80 h-56 md:w-96 md:h-64 bg-pink-100 rounded-[2rem] shadow-[0_40px_100px_rgba(0,0,0,0.5)] flex items-center justify-center border-4 border-white isolate">
-                            {/* Envelope Top Flap Shadow Visual */}
-                            <div className="absolute inset-0 bg-pink-200/50 clip-envelope-flap z-10" />
-                            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-xl z-20 group-hover:scale-110 transition-transform duration-500">
-                                <Heart size={40} className="text-pink-500" fill="currentColor" />
-                            </div>
-
-                            {/* Particles around envelope */}
-                            <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                                className="absolute inset-0 border-2 border-dashed border-white/30 rounded-[2rem] -m-4 pointer-events-none"
-                            />
-                        </div>
+                        <PenTool size={60} className="text-rose-500" />
+                        <motion.div
+                            animate={{ opacity: [0, 1, 0] }}
+                            transition={{ duration: 3, repeat: Infinity }}
+                            className="absolute -top-2 -right-2"
+                        >
+                            <Sparkles size={32} className="text-amber-400" />
+                        </motion.div>
                     </motion.div>
-                ) : (
+                </div>
+
+                <div className="space-y-10">
                     <motion.div
-                        key="note"
-                        initial={{ opacity: 0, y: 100, scale: 0.8 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        className="relative z-10 w-full max-w-2xl"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="inline-block px-8 py-3 bg-white/5 rounded-full border border-white/10"
                     >
-                        {/* THE PINK NOTE */}
-                        <div className="bg-[#fff5f8] rounded-[3rem] shadow-[0_50px_150px_rgba(0,0,0,0.6)] border-4 border-white overflow-hidden min-h-[500px] flex flex-col">
-
-                            {/* Note Header */}
-                            <div className="px-10 py-8 border-b border-pink-100 flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <Send size={16} className="text-pink-400" />
-                                    <span className="text-pink-900 font-black uppercase tracking-[0.3em] text-[10px]">Direct Heart Stream</span>
-                                </div>
-                                <Sparkles size={20} className="text-pink-300 animate-pulse" />
-                            </div>
-
-                            {/* Typewriter Body */}
-                            <div className="p-10 md:p-16 flex-1 font-romantic text-pink-950 text-2xl md:text-4xl leading-relaxed italic relative">
-                                {typedText}
-                                <motion.span
-                                    animate={{ opacity: [1, 0] }}
-                                    transition={{ duration: 0.5, repeat: Infinity }}
-                                    className="inline-block w-4 h-10 bg-pink-500 align-middle ml-2"
-                                />
-
-                                {/* Background Decorative Watermark */}
-                                <Heart size={200} className="absolute bottom-10 right-10 text-pink-200/10 rotate-12 -z-10" fill="currentColor" />
-                            </div>
-
-                            {/* Footer Action */}
-                            <div className="p-10 flex justify-center bg-pink-50/50">
-                                <motion.button
-                                    initial={{ opacity: 0 }}
-                                    animate={typedText.length >= fullText.length ? { opacity: 1 } : { opacity: 0 }}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={onNext}
-                                    className="px-12 py-5 bg-pink-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] shadow-lg flex items-center gap-3"
-                                >
-                                    <span>One Final Surprise</span>
-                                    <Send size={14} />
-                                </motion.button>
-                            </div>
-                        </div>
+                        <span className="text-rose-400 font-black uppercase tracking-[0.5em] text-[10px]">Transmission Decrypted</span>
                     </motion.div>
-                )}
-            </AnimatePresence>
 
-            <style dangerouslySetInnerHTML={{
-                __html: `
-                @font-face {
-                    font-family: 'Romantic';
-                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
-                }
-                .clip-envelope-flap {
-                    clip-path: polygon(0 0, 100% 0, 50% 50%);
-                }
-            `}} />
+                    <h2
+                        className="text-4xl md:text-8xl font-black text-white uppercase tracking-tighter leading-tight cursor-pointer"
+                        onClick={() => {
+                            if (isEditing) {
+                                const val = prompt("Edit Dear Name:", "My Dear...");
+                                if (val) onUpdate?.('dearName', val);
+                            }
+                        }}
+                    >
+                        My Dear...
+                    </h2>
+
+                    <div className="h-[2px] w-24 bg-gradient-to-r from-transparent via-rose-500/40 to-transparent mx-auto" />
+
+                    <p
+                        className="text-white text-xl md:text-3xl font-black uppercase tracking-[0.1em] leading-relaxed max-w-3xl mx-auto border-t border-white/5 pt-12 cursor-pointer"
+                        onClick={() => {
+                            if (isEditing) {
+                                const val = prompt("Edit Message:", data.message || "I wanted to take a moment and tell you something very special. You are the most incredible person I've ever met, and I'm so lucky to have you in my life. Every day feels like a new gift when I'm with you.");
+                                if (val) onUpdate?.('message', val);
+                            }
+                        }}
+                    >
+                        "{data.message || "I wanted to take a moment and tell you something very special. You are the most incredible person I've ever met, and I'm so lucky to have you in my life. Every day feels like a new gift when I'm with you."}"
+                    </p>
+                </div>
+
+                <div className="pt-12">
+                    <motion.button
+                        whileHover={{ scale: 1.05, y: -5 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={onNext}
+                        className="px-24 py-8 bg-white text-black font-black text-xs uppercase tracking-[0.6em] rounded-full shadow-2xl transition-all"
+                    >
+                        The Ultimate Surprise
+                    </motion.button>
+                </div>
+            </motion.div>
         </div>
     );
 };

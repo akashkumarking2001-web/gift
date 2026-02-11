@@ -1,167 +1,126 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { Calendar, Heart, ShieldCheck, ChevronRight, Sparkles, Watch } from 'lucide-react';
+import { Calendar, Heart, Sparkles, ChevronRight, Watch, Clock } from 'lucide-react';
 
-interface Page2CounterProps {
-    data: {
-        startDate?: string;
-        heading?: string;
-    };
-    onNext: () => void;
-    isEditing?: boolean;
-    onUpdate?: (field: string, value: string) => void;
-}
-
-const Page2Counter = ({ data, onNext, isEditing = false, onUpdate }: Page2CounterProps) => {
-    const [timeElapsed, setTimeElapsed] = useState({ years: 0, days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-    const defaultData = {
-        startDate: data.startDate || "2023-01-01T00:00:00Z",
-        heading: data.heading || "Every Second is a Choice to Stay"
-    };
+const Page2Counter = ({ data, onNext }: any) => {
+    const [stats, setStats] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
     useEffect(() => {
-        const updateCounter = () => {
-            const now = new Date().getTime();
-            const start = new Date(defaultData.startDate).getTime();
-            const diff = now - start;
+        const startDate = new Date(data.startDate || "2023-01-01");
 
-            if (diff > 0) {
-                const totalSeconds = Math.floor(diff / 1000);
-                const totalMinutes = Math.floor(totalSeconds / 60);
-                const totalHours = Math.floor(totalMinutes / 60);
-                const totalDays = Math.floor(totalHours / 24);
+        const update = () => {
+            const now = new Date();
+            const diff = now.getTime() - startDate.getTime();
 
-                setTimeElapsed({
-                    years: Math.floor(totalDays / 365),
-                    days: totalDays % 365,
-                    hours: totalHours % 24,
-                    minutes: totalMinutes % 60,
-                    seconds: totalSeconds % 60
-                });
-            }
+            setStats({
+                days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+                seconds: Math.floor((diff % (1000 * 60)) / 1000)
+            });
         };
 
-        const timer = setInterval(updateCounter, 1000);
-        updateCounter();
+        const timer = setInterval(update, 1000);
+        update();
         return () => clearInterval(timer);
-    }, [defaultData.startDate]);
-
-    const TimeUnit = ({ value, label, delay }: { value: number, label: string, delay: number }) => (
-        <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay, duration: 0.8 }}
-            className="group relative flex flex-col items-center bg-white/5 backdrop-blur-2xl border border-white/5 rounded-[3rem] p-10 md:p-14 shadow-2xl transition-all hover:bg-white/10"
-        >
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent rounded-[3rem]" />
-            <motion.div
-                key={value}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="text-4xl md:text-8xl font-black text-amber-500 font-romantic leading-none drop-shadow-[0_10px_30px_rgba(245,158,11,0.3)]"
-            >
-                {value.toString().padStart(2, '0')}
-            </motion.div>
-            <div className="flex items-center gap-2 mt-6">
-                <span className="h-[1px] w-4 bg-amber-500/30" />
-                <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.5em] text-white/40">{label}</span>
-                <span className="h-[1px] w-4 bg-amber-500/30" />
-            </div>
-        </motion.div>
-    );
+    }, [data.startDate]);
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-[#080706] flex flex-col items-center justify-center p-8 font-outfit">
+        <div className="min-h-screen relative overflow-hidden bg-[#fffdfa] flex flex-col items-center justify-center p-8 font-outfit select-none isolate">
 
-            {/* Hyper-Realistic Gilded Atmospehre */}
-            <div className="fixed inset-0 z-0">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(180,130,50,0.1),transparent_70%)]" />
-                <div className="absolute inset-0 bg-[#080706]/60 backdrop-blur-[100px]" />
-
-                {/* Floating Gilded Numbers */}
-                {[...Array(5)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute text-[20rem] font-black text-amber-900/5 select-none"
-                        style={{ left: `${i * 20}%`, top: `${Math.random() * 80}%` }}
-                        animate={{ y: [0, -50, 0] }}
-                        transition={{ duration: 10 + i, repeat: Infinity }}
-                    >
-                        {i + 1}
-                    </motion.div>
-                ))}
+            {/* AMBIENT CELESTIAL TRACK */}
+            <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.05]">
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] border-[1px] border-amber-900 rounded-full"
+                />
             </div>
 
-            <div className="relative z-10 w-full max-w-7xl flex flex-col items-center space-y-16">
+            <div className="relative z-10 w-full max-w-7xl flex flex-col items-center gap-16">
 
-                {/* Visual Anchor */}
+                {/* Visual Label */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="inline-flex items-center gap-4 bg-white/5 backdrop-blur-xl px-10 py-3 rounded-full border border-white/10"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="inline-flex items-center gap-4 bg-white px-10 py-4 rounded-full border border-amber-100 shadow-xl"
                 >
-                    <Watch size={16} className="text-amber-500" />
-                    <span className="text-amber-100/50 font-black uppercase tracking-[0.6em] text-[10px]">The Pulse of Forever</span>
-                    <Heart size={16} fill="#f43f5e" className="text-rose-500 animate-pulse" />
+                    <Clock size={20} className="text-amber-500 animate-spin-slow" />
+                    <span className="text-[#451a03] font-black uppercase tracking-[0.6em] text-[10px]">The Chronometer of Love</span>
                 </motion.div>
 
-                {/* Heading */}
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-center"
-                >
-                    <h2 className="text-4xl md:text-7xl font-black text-white font-romantic leading-[1.1] drop-shadow-2xl">
-                        {defaultData.heading}
-                    </h2>
-                    <div className="h-1 w-40 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto mt-8 opacity-30" />
-                </motion.div>
-
-                {/* HIGH-DENSITY COUNTER GRID */}
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-8 w-full">
-                    <TimeUnit value={timeElapsed.years} label="Years" delay={0.2} />
-                    <TimeUnit value={timeElapsed.days} label="Days" delay={0.3} />
-                    <TimeUnit value={timeElapsed.hours} label="Hours" delay={0.4} />
-                    <TimeUnit value={timeElapsed.minutes} label="Min" delay={0.5} />
-                    <TimeUnit value={timeElapsed.seconds} label="Sec" delay={0.6} />
+                {/* MAIN COUNTER */}
+                <div className="relative text-center">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="relative inline-block"
+                    >
+                        <h2 className="text-[12rem] md:text-[22rem] font-black text-amber-900/10 font-romantic leading-none select-none">
+                            {stats.days}
+                        </h2>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <motion.span
+                                key={stats.days}
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                className="text-7xl md:text-[14rem] font-black text-[#451a03] font-romantic drop-shadow-[0_20px_40px_rgba(69,26,3,0.2)]"
+                            >
+                                {stats.days}
+                            </motion.span>
+                            <span className="text-amber-600 font-black uppercase tracking-[1em] text-[10px] md:text-xs">Beautiful Days</span>
+                        </div>
+                    </motion.div>
                 </div>
 
-                {/* Pro Navigation */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1 }}
-                    className="flex flex-col items-center gap-10"
-                >
-                    {isEditing && (
-                        <button
-                            onClick={() => {
-                                const date = prompt("Enter Start Date (YYYY-MM-DD):", defaultData.startDate.split('T')[0]);
-                                if (date) onUpdate?.('startDate', new Date(date).toISOString());
-                            }}
-                            className="px-12 py-5 bg-white/5 border border-white/10 rounded-3xl text-amber-100/40 font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all flex items-center gap-3"
+                {/* TIME SUB-STATIONS */}
+                <div className="grid grid-cols-3 gap-8 md:gap-16 w-full max-w-3xl">
+                    {[
+                        { label: 'Hours', value: stats.hours },
+                        { label: 'Minutes', value: stats.minutes },
+                        { label: 'Seconds', value: stats.seconds }
+                    ].map((item, i) => (
+                        <motion.div
+                            key={item.label}
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 + i * 0.1 }}
+                            className="bg-white border border-amber-50 rounded-3xl p-8 flex flex-col items-center gap-2 shadow-lg"
                         >
-                            <Calendar size={14} /> Adjust The Beginning
-                        </button>
-                    )}
+                            <span className="text-2xl md:text-5xl font-black text-[#451a03] font-romantic">{item.value.toString().padStart(2, '0')}</span>
+                            <div className="h-0.5 w-6 bg-amber-100" />
+                            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-amber-500/60">{item.label}</span>
+                        </motion.div>
+                    ))}
+                </div>
 
-                    <motion.button
-                        whileHover={{ scale: 1.05, y: -5 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={onNext}
-                        className="group relative px-20 py-8 bg-white text-[#0a0805] font-black text-xs uppercase tracking-[0.6em] rounded-[3rem] transition-all flex items-center gap-6 shadow-[0_40px_100px_rgba(255,255,255,0.15)] isolate"
-                    >
-                        <div className="absolute inset-0 bg-amber-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-[3rem]" />
-                        <span className="relative z-10 text-amber-900">Explore The Roadmap</span>
-                        <ChevronRight className="relative z-10 w-6 h-6 border-2 border-amber-900 rounded-full p-0.5 group-hover:translate-x-3 transition-transform" />
-                    </motion.button>
-                </motion.div>
-
+                <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={onNext}
+                    className="mt-12 flex flex-col items-center gap-4 group"
+                >
+                    <div className="w-16 h-16 rounded-full border border-amber-100 flex items-center justify-center group-hover:bg-amber-50 transition-colors">
+                        <ChevronRight className="text-amber-500 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                    <span className="text-[9px] font-black uppercase tracking-[0.6em] text-amber-400">View Our Legacy</span>
+                </motion.button>
             </div>
 
-            {/* Background Texture Detail */}
-            <div className="fixed inset-0 pointer-events-none opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @font-face {
+                    font-family: 'Romantic';
+                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
+                }
+                .animate-spin-slow {
+                    animation: spin 10s linear infinite;
+                }
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            `}} />
         </div>
     );
 };

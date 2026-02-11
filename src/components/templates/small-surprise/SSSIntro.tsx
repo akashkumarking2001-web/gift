@@ -1,91 +1,87 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Sparkles } from 'lucide-react';
+import { Heart, Sparkles, ChevronRight, Gift } from 'lucide-react';
 
-const SSSIntro = ({ data, onNext }: any) => {
+const SSSIntro = ({ data, onNext, isEditing = false, onUpdate }: any) => {
     return (
-        <div className="relative min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a0b2e] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
+        <div className="min-h-screen relative overflow-hidden bg-[#0d0d0d] flex flex-col items-center justify-center p-8 font-mono select-none isolate">
 
             {/* AMBIENT GLOW */}
             <div className="absolute inset-0 z-0 pointer-events-none">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] bg-pink-500/5 blur-[150px] rounded-full animate-pulse-slow" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] bg-rose-500/10 blur-[150px] rounded-full animate-pulse" />
             </div>
 
             <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1 }}
-                className="relative z-10 flex flex-col items-center text-center space-y-12"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+                className="relative z-10 w-full max-w-4xl bg-white/5 backdrop-blur-3xl rounded-[4rem] border border-white/10 p-12 md:p-24 shadow-[0_50px_100px_rgba(0,0,0,0.5)] text-center overflow-hidden"
             >
-                {/* CIRCULAR WINDOW WITH CHARACTER */}
-                <div className="relative">
+                {/* Decoration */}
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-rose-600 via-white/20 to-rose-600" />
+
+                <motion.div
+                    animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
+                    transition={{ duration: 6, repeat: Infinity }}
+                    className="mb-12 relative inline-block"
+                >
+                    <div className="p-12 bg-rose-500/10 rounded-[3rem] border border-rose-500/20 shadow-2xl relative">
+                        <Gift size={80} className="text-rose-500" />
+                        <motion.div
+                            animate={{ opacity: [0, 1, 0] }}
+                            transition={{ duration: 3, repeat: Infinity }}
+                            className="absolute -top-4 -right-4"
+                        >
+                            <Sparkles size={40} className="text-amber-400" />
+                        </motion.div>
+                    </div>
+                </motion.div>
+
+                <div className="space-y-10 mb-20">
                     <motion.div
-                        animate={{ y: [0, -15, 0] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                        className="w-56 h-56 md:w-64 md:h-64 rounded-full bg-[#111] border-4 border-pink-500/20 p-2 shadow-[0_0_50px_rgba(236,72,153,0.1)] relative overflow-hidden flex items-center justify-center"
-                    >
-                        <img
-                            src={data.characterImage || "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZkNXhndm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4mZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PXM/MeIucAjPKoA1j0zZX/giphy.gif"}
-                            alt="Blushing character"
-                            className="w-full h-full object-contain scale-125 translate-y-4"
-                        />
-
-                        {/* Circular Border Ring */}
-                        <div className="absolute inset-0 border-[12px] border-[#0a0a0a] rounded-full z-20" />
-                    </motion.div>
-
-                    {/* Floating Hearts around window */}
-                    <motion.div
-                        animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                        className="absolute -top-4 -right-4 text-pink-500 drop-shadow-[0_0_10px_rgba(236,72,153,0.5)]"
-                    >
-                        <Heart fill="currentColor" size={40} />
-                    </motion.div>
-                </div>
-
-                <div className="space-y-6">
-                    <motion.h1
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 }}
-                        className="text-white text-5xl md:text-7xl font-black font-romantic tracking-tight"
-                    >
-                        {data.heading || "Hey Beautiful"}
-                    </motion.h1>
-                    <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 0.7 }}
-                        className="text-pink-400/80 font-medium text-lg md:text-xl"
+                        className="inline-flex items-center gap-3 px-8 py-3 bg-rose-500/10 rounded-full border border-rose-500/20"
                     >
-                        {data.subtext || "Do you even know how cute you are?"}
-                    </motion.p>
+                        <Heart size={14} className="text-rose-500 animate-pulse" />
+                        <span className="text-rose-400 font-black uppercase tracking-[0.5em] text-[10px]">Secure Packet Received</span>
+                    </motion.div>
+
+                    <div className="space-y-4">
+                        <h1
+                            className="text-4xl md:text-8xl font-black text-white leading-tight uppercase tracking-tighter"
+                            onClick={() => {
+                                if (isEditing) {
+                                    const val = prompt("Edit Heading:", data.heading || "Hello Beautiful");
+                                    if (val) onUpdate?.('heading', val);
+                                }
+                            }}
+                        >
+                            {data.heading || "Hello Beautiful"}
+                        </h1>
+                        <p
+                            className="text-rose-100/40 text-lg md:text-2xl font-black uppercase tracking-[0.2em] max-w-xl mx-auto border-t border-white/5 pt-8"
+                            onClick={() => {
+                                if (isEditing) {
+                                    const val = prompt("Edit Subtext:", data.subtext || "A personalized surprise is ready for decryption.");
+                                    if (val) onUpdate?.('subtext', val);
+                                }
+                            }}
+                        >
+                            {data.subtext || "A personalized surprise is ready for decryption."}
+                        </p>
+                    </div>
                 </div>
 
                 <motion.button
-                    whileHover={{ scale: 1.05, boxShadow: "0 20px 40px -10px rgba(236,72,153,0.4)" }}
+                    whileHover={{ scale: 1.05, boxShadow: "0 0 50px rgba(225,29,72,0.4)" }}
                     whileTap={{ scale: 0.95 }}
                     onClick={onNext}
-                    className="px-12 py-5 bg-gradient-to-r from-pink-500 to-rose-600 text-white font-black text-xs uppercase tracking-[0.4em] rounded-full group flex items-center gap-3 shadow-[0_15px_30px_-5px_rgba(236,72,153,0.3)]"
+                    className="group relative px-20 py-8 bg-rose-600 text-white font-black text-xs uppercase tracking-[0.6em] rounded-full transition-all flex items-center gap-6 mx-auto overflow-hidden shadow-2xl"
                 >
-                    <Heart size={16} fill="white" className="group-hover:animate-ping" />
-                    <span>{data.buttonText || "Open My Heart 🤍"}</span>
+                    <span className="relative z-10">Decrypt Message</span>
+                    <ChevronRight size={18} className="relative z-10 group-hover:translate-x-2 transition-transform" />
                 </motion.button>
             </motion.div>
-
-            {/* TYPOGRAPHY DECOR */}
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/5 text-[10px] uppercase font-black tracking-[1em] whitespace-nowrap">
-                Surprise Mode // Activated
-            </div>
-
-            <style dangerouslySetInnerHTML={{
-                __html: `
-                @font-face {
-                    font-family: 'Romantic';
-                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
-                }
-            `}} />
         </div>
     );
 };

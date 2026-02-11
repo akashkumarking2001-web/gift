@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { useState, useRef } from 'react';
 import confetti from 'canvas-confetti';
+import { GiftService } from '../../../lib/gifts';
+import { Loader2, Upload } from 'lucide-react';
 
 interface Page4QuestionProps {
     data: {
@@ -20,7 +22,9 @@ const Page4Question = ({ data, onNext, isEditing = false, onUpdate }: Page4Quest
     const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 });
     const [noClickCount, setNoClickCount] = useState(0);
     const [showPleaseText, setShowPleaseText] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const defaultData = {
         question: data.question || "Will you be my Valentine?",
@@ -80,11 +84,37 @@ const Page4Question = ({ data, onNext, isEditing = false, onUpdate }: Page4Quest
         setTimeout(() => setShowPleaseText(false), 2000);
     };
 
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setIsUploading(true);
+            const file = e.target.files[0];
+            try {
+                const url = await GiftService.uploadMedia(file);
+                if (url) {
+                    onUpdate?.('characterImage', url);
+                }
+            } catch (error) {
+                console.error("Upload failed", error);
+                alert("Upload failed. Please try again.");
+            } finally {
+                setIsUploading(false);
+                if (fileInputRef.current) fileInputRef.current.value = '';
+            }
+        }
+    };
+
     return (
         <div
             ref={containerRef}
             className="min-h-screen relative overflow-hidden bg-gradient-to-br from-pink-500 via-rose-500 to-red-600 flex items-center justify-center p-4"
         >
+            <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileSelect}
+            />
             {/* Animated Hearts Background */}
             {/* Animated Hearts Background - Optimized */}
             {[...Array(8)].map((_, i) => (
@@ -165,14 +195,22 @@ const Page4Question = ({ data, onNext, isEditing = false, onUpdate }: Page4Quest
                             <div
                                 className="absolute inset-0 bg-black/60 rounded-full flex flex-col items-center justify-center opacity-0 group-hover/character:opacity-100 transition-opacity z-20 cursor-pointer"
                                 onClick={() => {
-                                    const url = prompt("Enter Image URL:", defaultData.characterImage);
-                                    if (url) onUpdate?.('characterImage', url);
+                                    fileInputRef.current?.click();
                                 }}
                             >
-                                <p className="text-white text-[10px] font-black uppercase tracking-widest mb-2">Change Image</p>
-                                <button className="bg-white/20 backdrop-blur-md text-white border border-white/30 px-6 py-2 rounded-full font-black text-xs uppercase tracking-tighter">
-                                    Replace
-                                </button>
+                                {isUploading ? (
+                                    <div className="flex flex-col items-center text-white gap-2">
+                                        <Loader2 className="w-8 h-8 animate-spin" />
+                                        <span className="text-[10px] uppercase tracking-widest">Uploading...</span>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center">
+                                        <p className="text-white text-[10px] font-black uppercase tracking-widest mb-2">Change Image</p>
+                                        <button className="bg-white/20 backdrop-blur-md text-white border border-white/30 px-6 py-2 rounded-full font-black text-xs uppercase tracking-tighter flex items-center gap-2">
+                                            <Upload size={14} /> Replace
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
                         {/* Floating elements around character */}

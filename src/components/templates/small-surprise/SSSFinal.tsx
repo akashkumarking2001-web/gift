@@ -1,138 +1,109 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Sparkles, RotateCcw, Share2, Star } from 'lucide-react';
+import { Heart, Sparkles, Send, Share2, RefreshCw, Star, Gift, Zap } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { useEffect } from 'react';
 
-const SSSFinal = ({ data }: any) => {
-    const handleReplay = () => {
-        window.location.reload();
-    };
+const SSSFinal = ({ data, isEditing = false, onUpdate }: any) => {
+    useEffect(() => {
+        const duration = 15 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-    React.useEffect(() => {
-        confetti({
-            particleCount: 150,
-            spread: 100,
-            origin: { y: 0.6 },
-            colors: ['#EC4899', '#ffffff', '#FFD700']
-        });
+        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+        const interval: any = setInterval(function () {
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+
+            const particleCount = 50 * (timeLeft / duration);
+            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#f43f5e', '#ffffff', '#fb7185'] });
+            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#f43f5e', '#ffffff', '#fb7185'] });
+        }, 250);
+
+        return () => clearInterval(interval);
     }, []);
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a0b2e] flex flex-col items-center justify-start pt-24 p-6 font-outfit overflow-hidden isolate select-none">
+        <div className="min-h-screen relative overflow-hidden bg-[#0d0d0d] flex flex-col items-center justify-center p-8 font-mono select-none isolate">
 
-            {/* AMBIENT PARTICLES */}
-            <div className="absolute inset-0 z-0 pointer-events-none">
-                {[...Array(20)].map((_, i) => (
+            <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,#4c0519_0%,#0d0d0d_80%)]" />
+
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="relative z-10 w-full max-w-4xl bg-white/5 backdrop-blur-3xl rounded-[4rem] border border-white/10 p-12 md:p-20 shadow-[0_60px_150px_rgba(0,0,0,0.6)] text-center space-y-12"
+            >
+                {/* Final Interactive Reveal */}
+                <div className="relative inline-block group">
                     <motion.div
-                        key={i}
-                        className="absolute text-pink-500/10"
-                        style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
-                        animate={{
-                            y: [0, -40, 0],
-                            scale: [1, 1.2, 1],
-                            opacity: [0.1, 0.3, 0.1]
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+                        className="absolute inset-[-60px] border border-dashed border-rose-500/20 rounded-full"
+                    />
+
+                    <motion.div
+                        animate={{ scale: [1, 1.2, 1], rotate: [0, 5, -5, 0] }}
+                        transition={{ duration: 4, repeat: Infinity }}
+                        className="p-16 bg-rose-600 rounded-[3rem] shadow-[0_0_80px_rgba(225,29,72,0.5)] border-4 border-rose-400 relative z-10"
+                    >
+                        <Gift size={100} className="text-white drop-shadow-2xl" />
+                    </motion.div>
+                    <div className="absolute -top-6 -right-6 bg-white p-6 rounded-full shadow-2xl text-rose-600">
+                        <Heart size={32} fill="currentColor" />
+                    </div>
+                </div>
+
+                <div className="space-y-8">
+                    <h2
+                        className="text-5xl md:text-[8rem] font-black text-white uppercase tracking-tighter leading-tight cursor-pointer"
+                        onClick={() => {
+                            if (isEditing) {
+                                const val = prompt("Edit Final Heading:", data.finalHeading || "Mission Complete");
+                                if (val) onUpdate?.('finalHeading', val);
+                            }
                         }}
-                        transition={{ duration: 4 + Math.random() * 4, repeat: Infinity }}
                     >
-                        <Heart size={20 + Math.random() * 20} fill="currentColor" />
-                    </motion.div>
-                ))}
-            </div>
-
-            <div className="relative z-10 w-full max-w-2xl flex flex-col items-center text-center gap-12">
-                <div className="space-y-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-2 bg-pink-500/10 px-6 py-2 rounded-full border border-pink-500/20"
-                    >
-                        <Sparkles size={14} className="text-pink-400" />
-                        <span className="text-pink-200 font-black uppercase tracking-[0.4em] text-[10px]">Finale Revealed</span>
-                    </motion.div>
-
-                    <motion.h1
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="text-white text-5xl md:text-8xl font-black font-romantic leading-tight tracking-tighter"
-                    >
-                        {data.finalHeading || "Special To Me"}
-                    </motion.h1>
-
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                        className="text-pink-100/60 text-lg md:text-2xl max-w-lg mx-auto leading-relaxed"
-                    >
-                        {data.finalMessage || "I really appreciate having you in my life. You'll always be special to me."}
-                    </motion.p>
+                        {data.finalHeading || "Mission Complete"}
+                    </h2>
+                    <div className="h-[2px] w-24 bg-rose-500/20 mx-auto" />
+                    <p className="text-rose-100/40 text-[10px] font-black uppercase tracking-[1em] italic">
+                        The ultimate surprise payload has been delivered successfully.
+                    </p>
                 </div>
 
-                {/* POP-OUT CHARACTER WINDOW */}
-                <div className="relative w-full h-80 flex items-center justify-center">
-                    {/* Circle Window */}
-                    <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: "spring", damping: 12 }}
-                        className="w-64 h-64 rounded-full bg-[#111] border-4 border-white/5 relative overflow-hidden"
-                    >
-                        {/* Glow from inside */}
-                        <div className="absolute inset-0 bg-pink-500/10 blur-3xl rounded-full" />
-
-                        {/* Character Pop-out */}
-                        <motion.img
-                            src={data.finalCharacter || "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZkNXhndm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4zdm4mZXA9djFfaW50ZXJuYWxfZ2lmX2J5X2lkJmN0PXM/MeIucAjPKoA1j0zZX/giphy.gif"}
-                            initial={{ y: 200, opacity: 0 }}
-                            animate={{ y: 20, opacity: 1 }}
-                            transition={{ delay: 0.8, type: "spring", stiffness: 100 }}
-                            className="w-full h-full object-contain scale-110"
-                        />
-
-                        {/* Sparkle badge */}
-                        <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                            className="absolute top-4 right-4 text-yellow-400"
+                {/* Final Engagement Cluster */}
+                <div className="pt-12 flex flex-col gap-10">
+                    <div className="flex justify-center gap-8">
+                        <motion.button
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            className="p-6 bg-white/5 rounded-full text-white shadow-xl border border-white/10 hover:bg-white/10 transition-colors"
                         >
-                            <Star size={32} fill="currentColor" />
-                        </motion.div>
-                    </motion.div>
-                </div>
+                            <Share2 size={24} />
+                        </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.1, rotate: -5 }}
+                            className="p-6 bg-white/5 rounded-full text-white shadow-xl border border-white/10 hover:bg-white/10 transition-colors"
+                        >
+                            <Send size={24} />
+                        </motion.button>
+                    </div>
 
-                {/* ACTIONS */}
-                <div className="flex flex-col md:flex-row gap-4 w-full max-w-md pt-8">
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={handleReplay}
-                        className="flex-1 py-5 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] flex items-center justify-center gap-3 transition-all hover:bg-white/10"
+                        onClick={() => window.location.reload()}
+                        className="flex items-center gap-4 text-white/20 hover:text-white transition-colors uppercase font-black text-[10px] tracking-[0.6em] mx-auto"
                     >
-                        <RotateCcw size={16} /> Replay
-                    </motion.button>
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex-1 py-5 bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] flex items-center justify-center gap-3 shadow-xl"
-                    >
-                        <Share2 size={16} /> Share Moment
+                        <RefreshCw size={14} /> Restart Protocol
                     </motion.button>
                 </div>
-            </div>
 
-            {/* FINAL SIGNATURE */}
-            <div className="fixed bottom-10 opacity-30">
-                <p className="font-romantic text-3xl text-white italic tracking-widest">~ Forever ❤️</p>
-            </div>
-
-            <style dangerouslySetInnerHTML={{
-                __html: `
-                @font-face {
-                    font-family: 'Romantic';
-                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
-                }
-            `}} />
+                {/* Corner detail */}
+                <div className="absolute bottom-10 right-10 text-white/5"><Zap size={100} /></div>
+            </motion.div>
         </div>
     );
 };

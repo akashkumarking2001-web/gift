@@ -1,113 +1,103 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, Sparkles, CheckCircle2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Sparkles, Heart, ChevronRight, Bookmark } from 'lucide-react';
 
-const SSSRevealList = ({ data, onNext }: any) => {
-    const list = [
-        "You look adorable",
-        "You have the sweetest vibe",
-        "Your smile is contagious",
-        "You're genuinely special",
-        "I'm so lucky to know you"
+const SSSRevealList = ({ data, onNext, isEditing = false, onUpdate }: any) => {
+    const reasons = [
+        data.r1 || "Your contagious laughter that brightens the darkest room.",
+        data.r2 || "The way your eyes sparkle when you're truly happy.",
+        data.r3 || "Your infinite kindness that inspires everyone around you.",
+        data.r4 || "The perfect way you handle every challenge with grace.",
+        data.r5 || "Simply being the most incredible person I've ever known."
     ];
 
-    const [revealed, setRevealed] = useState<number[]>([]);
-
-    const handleReveal = (index: number) => {
-        if (!revealed.includes(index)) {
-            setRevealed(prev => [...prev, index]);
-        }
-    };
-
-    const allRevealed = revealed.length === list.length;
-
     return (
-        <div className="relative min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a0b2e] flex flex-col items-center justify-center p-6 font-outfit overflow-hidden isolate select-none">
+        <div className="min-h-screen relative overflow-hidden bg-[#0d0d0d] flex flex-col items-center justify-start py-24 px-8 font-mono select-none isolate">
 
-            <div className="relative z-20 text-center mb-16 space-y-4">
-                <motion.h2
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-white text-3xl md:text-5xl font-black font-romantic tracking-tight"
-                >
-                    {data.heading || "Just for you"}
-                </motion.h2>
-                <div className="flex justify-center items-center gap-2 text-pink-400 uppercase tracking-[0.4em] text-[10px] font-bold">
-                    <Sparkles size={12} fill="currentColor" />
-                    <span>Tap each one to reveal</span>
-                    <Sparkles size={12} fill="currentColor" />
-                </div>
-            </div>
+            <div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#4c0519] to-transparent pointer-events-none opacity-40" />
 
-            {/* INTERACTIVE LIST */}
-            <div className="relative z-10 w-full max-w-sm space-y-4">
-                {list.map((item, i) => (
+            <div className="relative z-10 w-full max-w-6xl">
+
+                {/* Header Section */}
+                <div className="text-center mb-32 space-y-6">
                     <motion.div
-                        key={i}
-                        initial={{ x: -100, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: i * 0.1 }}
-                        onClick={() => handleReveal(i)}
-                        className={`relative group cursor-pointer h-20 rounded-2xl overflow-hidden border transition-all duration-500 ${revealed.includes(i) ? 'bg-white/10 border-white/20' : 'bg-[#111] border-white/5 hover:border-pink-500/30'}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="inline-flex items-center gap-4 bg-white/5 px-8 py-3 rounded-full border border-white/10 shadow-lg text-rose-500 font-black uppercase tracking-[0.5em] text-[10px]"
                     >
-                        <AnimatePresence mode="wait">
-                            {!revealed.includes(i) ? (
-                                <motion.div
-                                    key="hidden"
-                                    exit={{ y: -20, opacity: 0 }}
-                                    className="absolute inset-0 flex items-center justify-between px-8"
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-8 h-8 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-500 group-hover:scale-110 transition-transform">
-                                            <Heart size={16} fill={i % 2 === 0 ? "currentColor" : "none"} />
-                                        </div>
-                                        <div className="w-32 h-2 bg-white/5 rounded-full overflow-hidden">
-                                            <div className="w-1/2 h-full bg-white/10" />
-                                        </div>
-                                    </div>
-                                    <Sparkles size={16} className="text-white/10 group-hover:text-pink-500/40 transition-colors" />
-                                </motion.div>
-                            ) : (
-                                <motion.div
-                                    key="revealed"
-                                    initial={{ y: 20, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    className="absolute inset-0 flex items-center gap-6 px-8"
-                                >
-                                    <CheckCircle2 size={24} className="text-pink-500 flex-shrink-0" />
-                                    <span className="text-white font-medium text-lg tracking-tight">
-                                        {item}
-                                    </span>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                        <Bookmark size={16} />
+                        <span>Core Smiles Database</span>
                     </motion.div>
-                ))}
-            </div>
 
-            {/* CONTINUE BUTTON */}
-            <AnimatePresence>
-                {allRevealed && (
-                    <motion.button
-                        initial={{ opacity: 0, y: 30 }}
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
+                        className="text-4xl md:text-9xl font-black text-white uppercase tracking-tighter leading-tight"
+                    >
+                        Reasons to Smile
+                    </motion.h2>
+                </div>
+
+                {/* INTERACTIVE CARDS */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    {reasons.map((reason, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1, duration: 0.8 }}
+                            className="group perspective"
+                            onClick={() => {
+                                if (isEditing) {
+                                    const val = prompt("Edit Reason " + (i + 1) + ":", reason);
+                                    if (val) onUpdate?.('r' + (i + 1), val);
+                                }
+                            }}
+                        >
+                            <div className="relative h-64 w-full transition-transform duration-700 preserve-3d group-hover:rotate-y-180">
+                                {/* FRONT */}
+                                <div className="absolute inset-0 bg-white/5 border border-white/10 rounded-[2.5rem] flex flex-col items-center justify-center gap-6 backface-hidden shadow-2xl backdrop-blur-xl group-hover:bg-rose-600/10 transition-colors">
+                                    <div className="w-16 h-16 bg-rose-600 rounded-2xl flex items-center justify-center text-2xl font-black text-white shadow-lg">0{i + 1}</div>
+                                    <span className="text-[10px] font-black uppercase tracking-[0.8em] text-rose-500/60">Unlock Reason</span>
+                                </div>
+
+                                {/* BACK */}
+                                <div className="absolute inset-0 bg-white p-10 rounded-[2.5rem] flex flex-col items-center justify-center text-center rotate-y-180 backface-hidden shadow-2xl border-4 border-rose-600">
+                                    <Heart size={24} className="text-rose-600 mb-6 fill-current" />
+                                    <p className="text-black text-lg md:text-xl font-black uppercase tracking-tight leading-relaxed">
+                                        "{reason}"
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+
+                {/* Final Button */}
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1 }}
+                    className="mt-32 flex justify-center"
+                >
+                    <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={onNext}
-                        className="mt-16 px-12 py-5 bg-white text-black font-black text-[10px] uppercase tracking-[0.4em] rounded-2xl shadow-xl flex items-center gap-3"
+                        className="px-24 py-8 bg-rose-600 text-white font-black text-xs uppercase tracking-[0.6em] rounded-full shadow-2xl flex items-center gap-6 group transition-all"
                     >
-                        <span>Unseal My Note</span>
-                        <Heart size={14} fill="currentColor" className="text-pink-500" />
+                        <span>Unlock Secret Gate</span>
+                        <ChevronRight size={18} className="group-hover:translate-x-3 transition-transform" />
                     </motion.button>
-                )}
-            </AnimatePresence>
+                </motion.div>
+            </div>
 
             <style dangerouslySetInnerHTML={{
                 __html: `
-                @font-face {
-                    font-family: 'Romantic';
-                    src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap');
-                }
+                .perspective { perspective: 2000px; }
+                .preserve-3d { transform-style: preserve-3d; }
+                .backface-hidden { backface-visibility: hidden; }
+                .rotate-y-180 { transform: rotateY(180deg); }
             `}} />
         </div>
     );

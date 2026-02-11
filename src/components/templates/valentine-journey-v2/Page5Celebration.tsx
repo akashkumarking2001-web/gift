@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import confetti from 'canvas-confetti';
+import { GiftService } from '../../../lib/gifts';
+import { Loader2, Upload } from 'lucide-react';
 
 interface Page5CelebrationProps {
     data: {
@@ -16,6 +18,8 @@ interface Page5CelebrationProps {
 
 const Page5Celebration = ({ data, onNext, isEditing = false, onUpdate }: Page5CelebrationProps) => {
     const [showMessage, setShowMessage] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const defaultData = {
         mainHeading: data.mainHeading || "Yay! You said Yes!",
@@ -54,8 +58,34 @@ const Page5Celebration = ({ data, onNext, isEditing = false, onUpdate }: Page5Ce
         setTimeout(() => setShowMessage(true), 1000);
     }, []);
 
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setIsUploading(true);
+            const file = e.target.files[0];
+            try {
+                const url = await GiftService.uploadMedia(file);
+                if (url) {
+                    onUpdate?.('characterImage', url);
+                }
+            } catch (error) {
+                console.error("Upload failed", error);
+                alert("Upload failed. Please try again.");
+            } finally {
+                setIsUploading(false);
+                if (fileInputRef.current) fileInputRef.current.value = '';
+            }
+        }
+    };
+
     return (
         <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-yellow-400 via-pink-500 to-red-500 flex items-center justify-center p-4">
+            <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleFileSelect}
+            />
             {/* Animated Background */}
             <motion.div
                 className="absolute inset-0"
@@ -183,14 +213,22 @@ const Page5Celebration = ({ data, onNext, isEditing = false, onUpdate }: Page5Ce
                                     className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover/character:opacity-100 transition-opacity cursor-pointer z-20"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        const url = prompt("Enter Image URL:", defaultData.characterImage);
-                                        if (url) onUpdate?.('characterImage', url);
+                                        fileInputRef.current?.click();
                                     }}
                                 >
-                                    <p className="text-white text-[10px] font-black uppercase tracking-widest mb-2">Change Image</p>
-                                    <button className="bg-white/20 backdrop-blur-md text-white border border-white/30 px-6 py-2 rounded-full font-black text-xs uppercase tracking-tighter shadow-lg">
-                                        📷 Replace
-                                    </button>
+                                    {isUploading ? (
+                                        <div className="flex flex-col items-center text-white gap-2">
+                                            <Loader2 className="w-8 h-8 animate-spin" />
+                                            <span className="text-[10px] uppercase tracking-widest">Uploading...</span>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col items-center">
+                                            <p className="text-white text-[10px] font-black uppercase tracking-widest mb-2">Change Image</p>
+                                            <button className="bg-white/20 backdrop-blur-md text-white border border-white/30 px-6 py-2 rounded-full font-black text-xs uppercase tracking-tighter shadow-lg flex items-center gap-2">
+                                                <Upload size={14} /> Replace
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </motion.div>
