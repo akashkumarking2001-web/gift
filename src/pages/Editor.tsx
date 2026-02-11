@@ -271,67 +271,72 @@ const Editor = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-6">
-                    <div className="hidden md:flex flex-col items-end">
+                <div className="flex items-center gap-2 md:gap-6">
+                    <div className="hidden lg:flex flex-col items-end">
                         <span className="text-[10px] font-black uppercase tracking-widest text-white/20">Sync Status</span>
                         <p className="text-[11px] font-medium text-white/60">
                             {isSaving ? (
                                 <span className="flex items-center gap-2">
-                                    <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1 }} className="text-primary italic">Syncing to cloud...</motion.span>
+                                    <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1 }} className="text-primary italic">Syncing...</motion.span>
                                 </span>
-                            ) : lastSaved ? `Manifest secured ${lastSaved.toLocaleTimeString()}` : "Unsecured Session"}
+                            ) : lastSaved ? `Secured ${lastSaved.toLocaleTimeString()}` : "Unsecured"}
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5 md:gap-3">
                         <motion.button
                             onClick={() => setShowMusicModal(true)}
                             whileHover={{ y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className="xl:hidden flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-white/70 hover:text-white"
+                            className="xl:hidden flex items-center justify-center w-10 h-10 md:w-auto md:px-5 md:py-2.5 rounded-xl md:rounded-2xl text-xs font-black uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-white/70 hover:text-white"
+                            title="Music"
                         >
                             <Music className="w-4 h-4" />
-                            <span className="hidden sm:inline">Music</span>
+                            <span className="hidden lg:inline ml-2">Music</span>
                         </motion.button>
 
                         <motion.button
                             onClick={handlePreview}
                             whileHover={{ y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-white/70 hover:text-white"
+                            className="flex items-center justify-center w-10 h-10 md:w-auto md:px-5 md:py-2.5 rounded-xl md:rounded-2xl text-xs font-black uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-white/70 hover:text-white"
+                            title="Preview"
                         >
                             <Eye className="w-4 h-4" />
-                            <span className="hidden sm:inline">Preview</span>
+                            <span className="hidden lg:inline ml-2">Preview</span>
                         </motion.button>
 
                         <motion.button
                             onClick={() => setIsDesignView(!isDesignView)}
                             whileHover={{ y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${isDesignView ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : 'bg-white/5 border border-white/10 text-white/70 hover:text-white'}`}
+                            className={`flex items-center justify-center w-10 h-10 md:w-auto md:px-5 md:py-2.5 rounded-xl md:rounded-2xl text-xs font-black uppercase tracking-widest transition-all ${isDesignView ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : 'bg-white/5 border border-white/10 text-white/70 hover:text-white'}`}
+                            title={isDesignView ? "Editing View" : "Design View"}
                         >
                             <Layout className="w-4 h-4" />
-                            <span className="hidden sm:inline">{isDesignView ? "Editing View" : "Design View"}</span>
+                            <span className="hidden lg:inline ml-2">{isDesignView ? "Edit" : "Design"}</span>
                         </motion.button>
 
                         <motion.button
                             onClick={() => handleSave()}
                             whileHover={{ y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest gradient-primary text-primary-foreground shadow-xl shadow-primary/20"
+                            className="flex items-center justify-center w-10 h-10 md:w-auto md:px-5 md:py-2.5 rounded-xl md:rounded-2xl text-xs font-black uppercase tracking-widest gradient-primary text-primary-foreground shadow-xl shadow-primary/20"
+                            title="Save"
                         >
                             <Save className="w-4 h-4" />
-                            <span className="hidden sm:inline">Save Manifest</span>
+                            <span className="hidden lg:inline ml-2">Save</span>
                         </motion.button>
 
                         <motion.button
                             onClick={handleShare}
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
-                            className="flex items-center gap-2 px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest bg-pastel-green text-white shadow-xl shadow-pastel-green/20"
+                            className="flex items-center justify-center w-10 h-10 md:w-auto md:px-6 md:py-2.5 rounded-xl md:rounded-2xl text-xs font-black uppercase tracking-widest bg-pastel-green text-white shadow-xl shadow-pastel-green/20"
+                            title="Transmit"
                         >
                             <Share2 className="w-4 h-4" />
-                            <span className="hidden sm:inline">{gift?.is_published ? "Transmit" : "Finalize & Transmit"}</span>
+                            <span className="hidden lg:inline ml-2">{gift?.is_published ? "Transmit" : "Finalize"}</span>
                         </motion.button>
 
                         <AnimatePresence>
@@ -343,10 +348,11 @@ const Editor = () => {
                                     onClick={() => setShowQRGenerator(true)}
                                     whileHover={{ scale: 1.05, y: -2 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="flex items-center gap-2 px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-600/20 border border-white/20"
+                                    className="flex items-center justify-center w-10 h-10 md:w-auto md:px-6 md:py-2.5 rounded-xl md:rounded-2xl text-xs font-black uppercase tracking-widest bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-600/20 border border-white/20"
+                                    title="Artistic QR"
                                 >
-                                    <span className="text-lg">✨</span>
-                                    <span className="hidden sm:inline">Artistic QR</span>
+                                    <span className="text-sm md:text-lg">✨</span>
+                                    <span className="hidden lg:inline ml-1">QR</span>
                                 </motion.button>
                             )}
                         </AnimatePresence>
