@@ -39,7 +39,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '🤍',
         color: 'from-gray-400 to-slate-500',
         tag: 'Free',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'character', title: 'Welcome', requiredFields: ['greeting'] },
             { id: 'p2', type: 'message', title: 'Heart Note', requiredFields: ['text'] },
@@ -55,7 +55,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '📸',
         color: 'from-zinc-400 to-stone-500',
         tag: 'Free',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'photo', title: 'Memory', requiredFields: ['photos'] },
             { id: 'p2', type: 'message', title: 'Note', requiredFields: ['text'] },
@@ -71,7 +71,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '🎂',
         color: 'from-pink-500 to-rose-600',
         tag: 'Popular',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'loading', title: 'Loading Screen', requiredFields: ['subtext'] },
             { id: 'p2', type: 'countdown', title: 'Countdown', requiredFields: ['targetDate', 'heading'] },
@@ -90,7 +90,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '💝',
         color: 'from-red-500 to-pink-600',
         tag: 'Best Seller',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'character', title: 'Intro', requiredFields: ['greeting'] },
             { id: 'p2', type: 'game', title: 'The Question', requiredFields: ['question', 'yesText', 'noText'], config: { gameType: 'moving-no' } },
@@ -177,7 +177,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '🕯️',
         color: 'from-yellow-400 to-orange-500',
         tag: 'Interactive',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'message', title: 'Age Count', requiredFields: ['age'] },
             { id: 'p2', type: 'game', title: 'Blow Candles', requiredFields: ['wish'], config: { gameType: 'candles' } },
@@ -195,7 +195,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 899,
         icon: '🥺',
         color: 'from-blue-400 to-indigo-500',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'character', title: 'Sad Panda', requiredFields: ['text'] },
             { id: 'p2', type: 'message', title: 'My Apology', requiredFields: ['text'] },
@@ -213,7 +213,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '🔮',
         color: 'from-purple-500 to-indigo-600',
         tag: 'Fun',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'message', title: 'Analysis', requiredFields: ['n1', 'n2'] },
             { id: 'p2', type: 'celebration', title: 'Match Found', requiredFields: ['text'] },
@@ -230,7 +230,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 699,
         icon: '🏳️',
         color: 'from-green-400 to-teal-500',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'message', title: 'White Flag', requiredFields: ['text'] },
             { id: 'p2', type: 'game', title: 'Mistake Swipe', requiredFields: ['m1', 'm2', 'm3'], config: { gameType: 'swipe' } },
@@ -280,7 +280,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 899,
         icon: '🤝',
         color: 'from-orange-400 to-red-500',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'message', title: 'To My Friend', requiredFields: ['name'] },
             { id: 'p2', type: 'game', title: 'Memory Match', requiredFields: ['text'], config: { gameType: 'memory' } },
@@ -297,7 +297,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 1399,
         icon: '💜',
         color: 'from-purple-600 to-indigo-700',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'message', title: 'Intro', requiredFields: ['text'] },
             { id: 'p2', type: 'game', title: 'Love Quiz', requiredFields: ['q1', 'q2', 'q3'] },
@@ -313,7 +313,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 2499,
         icon: '🎁',
         color: 'from-rose-500 to-pink-600',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'countdown', title: 'Countdown', requiredFields: ['date'] },
             { id: 'p2', type: 'game', title: 'Candles', requiredFields: ['wish'] },
@@ -348,7 +348,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 1199,
         icon: '📒',
         color: 'from-amber-300 to-orange-400',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'photo', title: 'Page 1', requiredFields: ['photos'] },
             { id: 'p2', type: 'photo', title: 'Page 2', requiredFields: ['photos'] },
@@ -364,7 +364,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 1199,
         icon: '📓',
         color: 'from-slate-400 to-gray-500',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'photo', title: 'Page 1', requiredFields: ['photos'] },
             { id: 'p2', type: 'photo', title: 'Page 2', requiredFields: ['photos'] },
@@ -380,7 +380,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         originalPrice: 899,
         icon: '🍾',
         color: 'from-blue-300 to-cyan-400',
-        isActive: false,
+        isActive: true,
         pages: [
             { id: 'p1', type: 'character', title: 'Start Journey', requiredFields: ['greeting', 'subtext'] },
             { id: 'p2', type: 'message', title: 'Floating...', requiredFields: ['text'] },
@@ -399,7 +399,7 @@ export const TEMPLATES: TemplateDefinition[] = [
         icon: '💖',
         color: 'from-pink-500 via-rose-500 to-red-600',
         tag: 'Premium',
-        isActive: false,
+        isActive: true,
         pages: [
             {
                 id: 'p1',
