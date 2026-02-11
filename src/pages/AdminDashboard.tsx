@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, CreditCard, Users, BarChart3, Settings, LogOut,
@@ -248,10 +248,27 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-[#0a060a] text-white font-sans flex overflow-hidden">
       {/* Sidebar */}
       <aside className="w-64 bg-[#0f090d] border-r border-white/5 flex flex-col fixed h-full z-50">
-        <div className="p-6 flex items-center gap-2">
-          <div className="text-primary text-3xl">♥</div>
-          <h1 className="text-2xl font-black tracking-tight text-white">Gift Magic</h1>
-          <span className="text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded font-bold uppercase ml-1">Admin</span>
+        <div className="p-6">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="relative">
+              <img
+                src="/logo.svg"
+                alt="Gift Magic"
+                className="h-10 w-10 object-contain group-hover:scale-110 transition-transform"
+                onError={(e: any) => {
+                  e.currentTarget.src = "/logo.png";
+                }}
+              />
+            </div>
+            <div className="flex flex-col leading-tight">
+              <span className="text-xl font-black tracking-tight flex items-center">
+                <span className="gradient-text">Gift</span>
+                <span className="text-white ml-1">Magic</span>
+                <span className="text-[8px] bg-primary/20 text-primary px-1.5 py-0.5 rounded font-bold uppercase ml-2">Admin</span>
+              </span>
+              <span className="text-[7px] font-bold tracking-[0.2em] text-[#f04299]/60 uppercase mt-0.5">Digital Experience</span>
+            </div>
+          </Link>
         </div>
 
         <nav className="flex-1 mt-4">

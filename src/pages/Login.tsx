@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, Sparkles, ArrowRight } from "lucide-react";
 import FloatingHearts from "../components/landing/FloatingHearts";
 import { supabase } from "../lib/supabase";
-import { useNavigate } from "react-router-dom";
 import { useToast } from "../hooks/use-toast";
 
 const Login = () => {
@@ -65,42 +64,41 @@ const Login = () => {
           style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
           className="text-center mb-12"
         >
-          <Link to="/" className="inline-flex flex-col items-center gap-4 group">
-            {/* Logo Image */}
-            <img
-              src="/logo.png"
-              alt="Gift Magic"
-              className="h-24 w-auto object-contain group-hover:scale-105 transition-transform"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                const fallback = document.getElementById('login-logo-fallback');
-                if (fallback) fallback.style.display = 'block';
-              }}
-            />
-            {/* Fallback emoji logo */}
-            <motion.div
-              id="login-logo-fallback"
-              animate={{
-                rotate: [0, 10, -10, 0],
-                scale: [1, 1.2, 1],
-                y: [0, -5, 0]
-              }}
-              style={{ display: 'none', transform: 'translateZ(0)', willChange: 'transform' }}
-              transition={{ duration: 4, repeat: Infinity }}
-              className="text-7xl filter drop-shadow-[0_0_20px_rgba(255,107,181,0.5)] group-hover:scale-125 transition-transform duration-500"
-            >
-              💝
-            </motion.div>
+          <div className="inline-flex flex-col items-center gap-6 group">
+            <Link to="/" className="relative">
+              <img
+                src="/logo.svg"
+                alt="Gift Magic"
+                className="h-24 w-auto object-contain group-hover:scale-105 transition-transform"
+                onError={(e: any) => {
+                  e.currentTarget.src = "/logo.png";
+                  const fallback = document.getElementById('login-logo-fallback');
+                  if (fallback) fallback.style.display = 'block';
+                }}
+              />
+              <motion.div
+                id="login-logo-fallback"
+                animate={{
+                  rotate: [0, 10, -10, 0],
+                  scale: [1, 1.2, 1],
+                }}
+                style={{ display: 'none', transform: 'translateZ(0)', willChange: 'transform' }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="text-7xl absolute inset-0 flex items-center justify-center"
+              >
+                💝
+              </motion.div>
+            </Link>
 
             {/* Brand Text */}
-            <div className="flex flex-col items-center">
-              <span className="text-4xl font-black tracking-tight">
-                <span className="gradient-text">Gift </span>
-                <span className="text-white">Magic</span>
+            <div className="flex flex-col items-center leading-tight">
+              <span className="text-5xl font-black tracking-tight flex items-center">
+                <span className="gradient-text">Gift</span>
+                <span className="text-white ml-2">Magic</span>
               </span>
-              <span className="text-[10px] font-bold tracking-[0.3em] text-primary/60">Digital Experience</span>
+              <span className="text-xs font-bold tracking-[0.4em] text-[#f04299]/60 uppercase mt-2">Digital Experience</span>
             </div>
-          </Link>
+          </div>
         </motion.div>
 
         {/* Login form */}

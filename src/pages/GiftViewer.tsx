@@ -31,12 +31,18 @@ const GiftViewer = () => {
             if (!uuid) return;
             try {
                 const data = await GiftService.getGiftByUuid(uuid);
-                const foundTemplate = TEMPLATES.find((t: any) => t.id === data.template_id);
+                if (!data) {
+                    console.error("Gift data is null");
+                    return;
+                }
+                const foundTemplate = TEMPLATES.find((t: any) => t.id === Number(data.template_id));
                 if (foundTemplate) {
                     setTemplate(foundTemplate);
                     setGiftData(data.gift_data || {});
+                } else {
+                    console.error("Template not found for id:", data.template_id);
                 }
-            } catch (e) {
+            } catch (e: any) {
                 console.error("Failed to fetch gift:", e);
             } finally {
                 setLoading(false);
@@ -122,9 +128,34 @@ const GiftViewer = () => {
         );
     }
 
-    if (!template) return <div className="min-h-screen flex items-center justify-center">Gift not found</div>;
-
-    if (!template) return <div className="min-h-screen flex items-center justify-center">Gift not found</div>;
+    if (!template) {
+        return (
+            <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center text-white relative overflow-hidden font-outfit">
+                <FloatingHearts />
+                <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 blur-[150px] rounded-full pointer-events-none" />
+                <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="text-6xl mb-8"
+                >
+                    🔍
+                </motion.div>
+                <h2 className="text-2xl font-bold font-poppins mb-2">Gift Not Found</h2>
+                <p className="text-white/60 text-center max-w-xs">
+                    This gift might be private or the link might be incorrect.
+                    Please ask the sender for a new link.
+                </p>
+                <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => window.location.href = '/'}
+                    className="mt-8 px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-white/10 transition-all"
+                >
+                    Go Back Home
+                </motion.button>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-white relative overflow-hidden flex flex-col font-outfit">

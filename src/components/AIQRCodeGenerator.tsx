@@ -71,137 +71,178 @@ const AIQRCodeGenerator: React.FC<AIQRCodeGeneratorProps> = ({ isOpen, onClose, 
             qrImg.src = qrDataUrl;
             await new Promise(resolve => qrImg.onload = resolve);
 
-            // --- DRAWING THE SCENE ---
+            // --- DRAWING THE SCENE (8K HYPER-REALISTIC STYLE) ---
 
-            // 1. Background (Gradient + Noise)
-            const gradient = ctx.createLinearGradient(0, 0, width, height);
-            gradient.addColorStop(0, '#0f0c29');
-            gradient.addColorStop(0.5, '#302b63');
-            gradient.addColorStop(1, '#24243e');
-            ctx.fillStyle = gradient;
+            // 1. Deep Premium Background
+            const bgGradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, height);
+            bgGradient.addColorStop(0, '#2d0b1d'); // Deep wine
+            bgGradient.addColorStop(0.5, '#1a050f'); // Near black
+            bgGradient.addColorStop(1, '#050105'); // Absolute depths
+            ctx.fillStyle = bgGradient;
             ctx.fillRect(0, 0, width, height);
 
-            // Add simulated noise/texture
-            // (Simple random dots for texture)
-            ctx.fillStyle = 'rgba(255,255,255,0.03)';
-            for (let i = 0; i < 5000; i++) {
-                ctx.fillRect(Math.random() * width, Math.random() * height, 2, 2);
+            // 2. Ambient Particles & Glows
+            for (let i = 0; i < 40; i++) {
+                const x = Math.random() * width;
+                const y = Math.random() * height;
+                const size = Math.random() * 300 + 100;
+                const pGlow = ctx.createRadialGradient(x, y, 0, x, y, size);
+                pGlow.addColorStop(0, 'rgba(240, 66, 153, 0.08)');
+                pGlow.addColorStop(1, 'rgba(240, 66, 153, 0)');
+                ctx.fillStyle = pGlow;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
             }
 
-            // 2. 3D Platform/Floor
-            // Simple perspective grid at bottom
+            // 3. Top Call to Action Text
+            ctx.shadowColor = 'rgba(240, 66, 153, 0.8)';
+            ctx.shadowBlur = 40;
+            ctx.font = 'black 140px Outfit, sans-serif';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText("Scan this for a surprise!", width / 2, height * 0.15);
+
+            ctx.shadowBlur = 0;
+            ctx.font = 'bold 80px Outfit, sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.fillText("A Special Mystery Awaits You", width / 2, height * 0.185);
+
+            // 4. Central Design: Two QR Codes and Two Teddy Bears
+            const qrSize = width * 0.28;
+            const centralY = height * 0.4;
+
+            // Shared QR Drawing Logic Helper
+            const drawQRCard = (x: number, y: number, rotation: number) => {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(rotation);
+
+                // Card Shadow (Premium Soft)
+                ctx.shadowColor = 'rgba(0,0,0,0.8)';
+                ctx.shadowBlur = 80;
+                ctx.shadowOffsetY = 40;
+
+                // Card Border Glow
+                ctx.strokeStyle = 'rgba(240, 66, 153, 0.5)';
+                ctx.lineWidth = 4;
+
+                // White Card
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.roundRect(-qrSize / 2, -qrSize / 2, qrSize, qrSize, 40);
+                ctx.fill();
+                ctx.stroke();
+
+                // QR Image
+                ctx.shadowBlur = 0;
+                ctx.drawImage(qrImg, -qrSize / 2 + 20, -qrSize / 2 + 20, qrSize - 40, qrSize - 40);
+
+                ctx.restore();
+            };
+
+            // Left QR
+            drawQRCard(width * 0.32, centralY, -0.08);
+            // Right QR
+            drawQRCard(width * 0.68, centralY, 0.08);
+
+            // 5. Teddy Bears (Flanking)
+            // We use high-detail emojis but with cinematic layer effects
+            const drawTeddy = (x: number, y: number, scale: number, flip = false) => {
+                ctx.save();
+                ctx.translate(x, y);
+                if (flip) ctx.scale(-1, 1);
+
+                // Ambient Occlusion Shadow
+                ctx.shadowColor = 'rgba(0,0,0,0.6)';
+                ctx.shadowBlur = 60;
+                ctx.shadowOffsetY = 30;
+
+                ctx.font = `${scale}px serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText("🧸", 0, 0);
+
+                // Rim Light Effect (Subtle glow)
+                ctx.shadowColor = '#f04299';
+                ctx.shadowBlur = 20;
+                ctx.globalCompositeOperation = 'source-atop';
+                ctx.fillStyle = 'rgba(240, 66, 153, 0.1)';
+                ctx.fillText("🧸", 0, 0);
+
+                ctx.restore();
+            };
+
+            drawTeddy(width * 0.12, centralY, 450); // Left Bear
+            drawTeddy(width * 0.88, centralY, 450, true); // Right Bear
+
+            // 6. User's Photo (Premium Heart Frame at Bottom)
+            const photoSize = width * 0.6;
+            const photoY = height * 0.72;
+
+            // Heart Shape Mask Function
+            const drawHeartPath = (x: number, y: number, size: number) => {
+                ctx.beginPath();
+                const topCurveHeight = size * 0.3;
+                ctx.moveTo(x, y + size * 0.2);
+                ctx.bezierCurveTo(x, y, x - size / 2, y, x - size / 2, y + topCurveHeight);
+                ctx.bezierCurveTo(x - size / 2, y + (size + topCurveHeight) / 2, x, y + size, x, y + size);
+                ctx.bezierCurveTo(x, y + size, x + size / 2, y + (size + topCurveHeight) / 2, x + size / 2, y + topCurveHeight);
+                ctx.bezierCurveTo(x + size / 2, y, x, y, x, y + size * 0.2);
+                ctx.closePath();
+            };
+
+            // Photo Glow
             ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(0, height * 0.7);
-            ctx.lineTo(width, height * 0.7);
-            ctx.lineTo(width, height);
-            ctx.lineTo(0, height);
-            ctx.closePath();
-            const floorGrad = ctx.createLinearGradient(0, height * 0.7, 0, height);
-            floorGrad.addColorStop(0, 'rgba(0,0,0,0.5)');
-            floorGrad.addColorStop(1, 'rgba(0,0,0,0.8)');
-            ctx.fillStyle = floorGrad;
+            ctx.shadowColor = '#f04299';
+            ctx.shadowBlur = 120;
+            drawHeartPath(width / 2, photoY - photoSize / 2, photoSize);
+            ctx.fillStyle = 'rgba(240, 66, 153, 0.3)';
             ctx.fill();
             ctx.restore();
 
-            // 3. User Image (Bottom Center, "Floating" or "Standing")
-            // Make it circular with a glow
-            const imgSize = width * 0.5;
-            const imgX = (width - imgSize) / 2;
-            const imgY = height * 0.55;
-
+            // Mask Image
             ctx.save();
-            // Glow
-            ctx.shadowColor = '#d946ef'; // Fuchsia glow
-            ctx.shadowBlur = 100;
-            ctx.shadowOffsetX = 0;
-            ctx.shadowOffsetY = 0;
-
-            // Frame
-            ctx.beginPath();
-            ctx.arc(width / 2, imgY + imgSize / 2, imgSize / 2, 0, Math.PI * 2);
-            ctx.closePath();
+            drawHeartPath(width / 2, photoY - photoSize / 2, photoSize);
             ctx.clip();
 
-            // Draw Image (Cover fit)
             const aspect = userImg.width / userImg.height;
-            let drawW = imgSize;
-            let drawH = imgSize / aspect;
-            if (aspect < 1) { // Tall image
-                drawW = imgSize * (1 / aspect);
-                drawH = imgSize;
+            let dW = photoSize;
+            let dH = photoSize / aspect;
+            if (aspect < 1) {
+                dW = photoSize * aspect;
+                dH = photoSize;
             }
-            // Center crop
-            ctx.drawImage(userImg, width / 2 - drawW / 2, imgY + imgSize / 2 - drawH / 2, drawW, drawH);
-
+            ctx.drawImage(userImg, width / 2 - dW / 2, photoY - dH / 2 + 50, dW, dH);
             ctx.restore();
 
-            // Border for Image
-            ctx.beginPath();
-            ctx.arc(width / 2, imgY + imgSize / 2, imgSize / 2, 0, Math.PI * 2);
-            ctx.lineWidth = 20;
+            // Heart Border
+            ctx.save();
             ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 15;
+            drawHeartPath(width / 2, photoY - photoSize / 2, photoSize);
             ctx.stroke();
-
-
-            // 4. Two QR Codes (Left and Right, "3D" Tilted)
-            // We simulate 3D tilt by skewing or just perspective transform logic if we implement a helper.
-            // For simplicity and robustness, we'll draw them as "floating cards" on the sides.
-
-            const qrCardSize = width * 0.25;
-            const qrY = height * 0.35; // Above the user image
-
-            // Left QR
-            ctx.save();
-            ctx.translate(width * 0.2, qrY);
-            ctx.rotate(-0.1); // Slight tilt inward
-            // Shadow
-            ctx.shadowColor = 'rgba(0,0,0,0.5)';
-            ctx.shadowBlur = 50;
-            ctx.shadowOffsetY = 30;
-            // Card background
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, qrCardSize, qrCardSize);
-            // QR
-            ctx.drawImage(qrImg, 10, 10, qrCardSize - 20, qrCardSize - 20);
             ctx.restore();
 
-            // Right QR
-            ctx.save();
-            ctx.translate(width * 0.8 - qrCardSize, qrY);
-            ctx.rotate(0.1); // Slight tilt inward
-            // Shadow
-            ctx.shadowColor = 'rgba(0,0,0,0.5)';
-            ctx.shadowBlur = 50;
-            ctx.shadowOffsetY = 30;
-            // Card background
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, qrCardSize, qrCardSize);
-            // QR
-            ctx.drawImage(qrImg, 10, 10, qrCardSize - 20, qrCardSize - 20);
-            ctx.restore();
-
-            // 5. Text Overlay
-            ctx.font = 'bold 120px Outfit, sans-serif';
-            ctx.fillStyle = '#ffffff';
+            // 7. Footer & Branding
+            const footerY = height - 300;
+            ctx.font = 'black 60px Outfit, sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
             ctx.textAlign = 'center';
-            ctx.shadowColor = 'rgba(0,0,0,0.8)';
-            ctx.shadowBlur = 20;
-            ctx.fillText("Scan to Reveal", width / 2, height * 0.2);
+            ctx.fillText("GIFT MAGIC", width / 2, footerY);
 
-            ctx.font = 'italic 80px Outfit, serif';
-            ctx.fillStyle = '#e879f9'; // Pink-ish
-            ctx.fillText("A Surprise Awaits", width / 2, height * 0.25);
+            ctx.font = 'bold 30px Outfit, sans-serif';
+            ctx.letterSpacing = '10px';
+            ctx.fillText("DIGITAL EXPERIENCE", width / 2, footerY + 60);
 
-            // 6. Final Polish
-            // Add a subtle vignette
-            const vignette = ctx.createRadialGradient(width / 2, height / 2, width / 3, width / 2, height / 2, height);
+            // 8. Cinematic Overlay (Vignette)
+            const vignette = ctx.createRadialGradient(width / 2, height / 2, width / 4, width / 2, height / 2, height);
             vignette.addColorStop(0, 'rgba(0,0,0,0)');
-            vignette.addColorStop(1, 'rgba(0,0,0,0.6)');
+            vignette.addColorStop(1, 'rgba(0,0,0,0.7)');
             ctx.fillStyle = vignette;
             ctx.fillRect(0, 0, width, height);
 
-            // Export
+            // Export Result
             const resultUrl = canvas.toDataURL('image/png', 1.0);
             setGeneratedQR(resultUrl);
 

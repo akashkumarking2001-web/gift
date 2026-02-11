@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { TemplateService } from '../lib/templateService';
 import { TEMPLATES } from '../lib/templates';
 import { supabase } from '../lib/supabase';
+import { Link } from 'react-router-dom';
 
 const SetupPage = () => {
     const [syncing, setSyncing] = useState(false);
@@ -61,49 +62,74 @@ const SetupPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0a060a] text-white p-8">
+        <div className="min-h-screen bg-[#0a060a] text-white p-8 font-outfit">
             <div className="max-w-4xl mx-auto">
-                <h1 className="text-4xl font-bold mb-8">🛠️ GiftMagic Setup</h1>
+                <div className="flex items-center gap-4 mb-12">
+                    <Link to="/" className="flex items-center gap-3 group">
+                        <div className="relative">
+                            <img
+                                src="/logo.svg"
+                                alt="Gift Magic"
+                                className="h-12 w-12 object-contain group-hover:scale-110 transition-transform"
+                                onError={(e: any) => {
+                                    e.currentTarget.src = "/logo.png";
+                                }}
+                            />
+                        </div>
+                        <div className="flex flex-col leading-tight">
+                            <span className="text-3xl font-black tracking-tight flex items-center">
+                                <span className="gradient-text">Gift</span>
+                                <span className="text-white ml-2">Magic</span>
+                            </span>
+                            <span className="text-[10px] font-bold tracking-[0.2em] text-[#f04299]/60 uppercase mt-1">Digital Experience</span>
+                        </div>
+                    </Link>
+                    <div className="h-12 w-px bg-white/10 mx-4" />
+                    <h1 className="text-2xl font-black uppercase tracking-widest text-white/30">System Setup</h1>
+                </div>
 
                 <div className="space-y-4 mb-8">
                     <button
                         onClick={runFullSetup}
                         disabled={syncing}
-                        className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 px-6 rounded-xl disabled:opacity-50"
+                        className="w-full gradient-primary hover:opacity-90 text-white font-black py-5 px-6 rounded-2xl disabled:opacity-50 shadow-xl shadow-primary/20 uppercase tracking-widest text-sm"
                     >
                         {syncing ? '⏳ Running Setup...' : '🚀 Run Full Setup (Templates + Accounts)'}
                     </button>
 
-                    <button
-                        onClick={syncTemplates}
-                        disabled={syncing}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl disabled:opacity-50"
-                    >
-                        Sync Templates Only
-                    </button>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <button
+                            onClick={syncTemplates}
+                            disabled={syncing}
+                            className="bg-white/5 hover:bg-white/10 text-white font-bold py-4 px-6 rounded-xl border border-white/10 transition-colors uppercase tracking-widest text-xs"
+                        >
+                            Sync Templates Only
+                        </button>
 
-                    <button
-                        onClick={createTestAccounts}
-                        disabled={syncing}
-                        className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl disabled:opacity-50"
-                    >
-                        Create Test Accounts Only
-                    </button>
+                        <button
+                            onClick={createTestAccounts}
+                            disabled={syncing}
+                            className="bg-white/5 hover:bg-white/10 text-white font-bold py-4 px-6 rounded-xl border border-white/10 transition-colors uppercase tracking-widest text-xs"
+                        >
+                            Create Test Accounts Only
+                        </button>
+                    </div>
                 </div>
 
-                <div className="bg-black/50 p-6 rounded-xl border border-white/10">
-                    <h2 className="text-xl font-bold mb-4">📋 Setup Log</h2>
-                    <pre className="text-sm text-green-400 whitespace-pre-wrap font-mono">
-                        {result || 'Click a button above to start...'}
+                <div className="glass-card p-8 rounded-3xl border border-white/10">
+                    <h2 className="text-sm font-black uppercase tracking-[0.3em] text-white/20 mb-6 flex items-center gap-3">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                        System Initialization Log
+                    </h2>
+                    <pre className="text-sm text-green-400 whitespace-pre-wrap font-mono bg-black/50 p-6 rounded-2xl border border-white/5 max-h-[400px] overflow-y-auto">
+                        {result || 'Waiting for instruction...'}
                     </pre>
                 </div>
 
-                <div className="mt-8 p-6 bg-blue-900/20 border border-blue-500/30 rounded-xl">
-                    <h3 className="text-lg font-bold mb-2">📝 Credentials (After Setup)</h3>
-                    <div className="space-y-2 text-sm">
-                        <p><strong>Admin:</strong> admin@giftmagic.com / Admin@123456</p>
-                        <p><strong>User:</strong> user@giftmagic.com / User@123456</p>
-                    </div>
+                <div className="mt-8 text-center">
+                    <Link to="/login" className="text-xs font-black uppercase tracking-widest text-white/20 hover:text-primary transition-colors">
+                        Go to Authenticate Hub →
+                    </Link>
                 </div>
             </div>
         </div>

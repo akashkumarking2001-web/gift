@@ -74,114 +74,183 @@ const Page11Ending = ({ data, isEditing = false, onUpdate }: Page11EndingProps) 
             const ctx = canvas.getContext('2d');
             if (!ctx) return;
 
-            // Set canvas size (Poster size)
-            canvas.width = 800;
-            canvas.height = 1200;
+            // Set canvas size (Poster size - High Res)
+            const width = 1200;
+            const height = 1800;
+            canvas.width = width;
+            canvas.height = height;
 
-            // Background
-            const gradient = ctx.createLinearGradient(0, 0, 0, 1200);
-            gradient.addColorStop(0, '#fce7f3'); // pink-100
-            gradient.addColorStop(1, '#fbcfe8'); // pink-200
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, 800, 1200);
+            // 1. Deep Premium Background
+            const bgGradient = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, height);
+            bgGradient.addColorStop(0, '#2d0b1d'); // Deep wine
+            bgGradient.addColorStop(0.5, '#1a050f'); // Near black
+            bgGradient.addColorStop(1, '#050105'); // Absolute depths
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, width, height);
 
-            // Pattern Overlay (Hearts)
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            for (let i = 0; i < 50; i++) {
-                const x = Math.random() * 800;
-                const y = Math.random() * 1200;
-                const size = Math.random() * 20 + 10;
+            // 2. Ambient Particles & Glows
+            for (let i = 0; i < 30; i++) {
+                const x = Math.random() * width;
+                const y = Math.random() * height;
+                const size = Math.random() * 200 + 50;
+                const pGlow = ctx.createRadialGradient(x, y, 0, x, y, size);
+                pGlow.addColorStop(0, 'rgba(240, 66, 153, 0.1)');
+                pGlow.addColorStop(1, 'rgba(240, 66, 153, 0)');
+                ctx.fillStyle = pGlow;
                 ctx.beginPath();
                 ctx.arc(x, y, size, 0, Math.PI * 2);
                 ctx.fill();
             }
 
-            // Text: Call to Action
-            ctx.fillStyle = '#be185d'; // pink-700
-            ctx.font = 'bold 60px serif';
+            // 3. Top Call to Action Text
+            ctx.shadowColor = 'rgba(240, 66, 153, 0.8)';
+            ctx.shadowBlur = 30;
+            ctx.font = 'bold 80px serif';
+            ctx.fillStyle = '#ffffff';
             ctx.textAlign = 'center';
-            ctx.fillText("Scan for a Surprise!", 400, 150);
-            ctx.fillStyle = '#db2777'; // pink-600
-            ctx.font = 'italic 40px serif';
-            ctx.fillText("A special message is waiting...", 400, 220);
+            ctx.fillText("Scan for a Surprise!", width / 2, height * 0.12);
 
-            // Teddy Bears (Emojis)
-            ctx.font = '150px serif';
-            ctx.fillText("🧸", 200, 600);
-            ctx.fillText("🧸", 600, 600);
+            ctx.shadowBlur = 0;
+            ctx.font = 'italic 40px serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.fillText("A special mystery message is waiting...", width / 2, height * 0.16);
+
+            // 4. Central Design: QR Code and Teddy Bears
+            const qrSize = 400;
+            const centralY = height * 0.45;
 
             // Generate QR Code
-            const qrDataUrl = await QRCode.toDataURL(window.location.href, { width: 300, margin: 1, color: { dark: '#be185d', light: '#ffffff' } });
+            const qrDataUrl = await QRCode.toDataURL(window.location.href, {
+                width: qrSize,
+                margin: 1,
+                color: { dark: '#000000', light: '#ffffff' }
+            });
             const qrImg = new Image();
             qrImg.src = qrDataUrl;
             await new Promise((resolve) => { qrImg.onload = resolve; });
 
-            // Draw QR Code (Centered between bears)
-            ctx.drawImage(qrImg, 250, 450, 300, 300);
+            // QR Card with Shadow
+            ctx.save();
+            ctx.translate(width / 2, centralY);
+            ctx.shadowColor = 'rgba(0,0,0,0.8)';
+            ctx.shadowBlur = 60;
+            ctx.shadowOffsetY = 30;
 
-            // Draw User Photo (if uploaded)
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.roundRect(-qrSize / 2, -qrSize / 2, qrSize, qrSize, 30);
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+            ctx.drawImage(qrImg, -qrSize / 2 + 20, -qrSize / 2 + 20, qrSize - 40, qrSize - 40);
+            ctx.restore();
+
+            // 5. Teddy Bears (Flanking)
+            const drawTeddy = (x: number, y: number, scale: number, flip = false) => {
+                ctx.save();
+                ctx.translate(x, y);
+                if (flip) ctx.scale(-1, 1);
+
+                ctx.shadowColor = 'rgba(0,0,0,0.6)';
+                ctx.shadowBlur = 40;
+                ctx.shadowOffsetY = 20;
+
+                ctx.font = `${scale}px serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText("🧸", 0, 0);
+
+                ctx.shadowColor = '#f04299';
+                ctx.shadowBlur = 15;
+                ctx.globalCompositeOperation = 'source-atop';
+                ctx.fillStyle = 'rgba(240, 66, 153, 0.15)';
+                ctx.fillText("🧸", 0, 0);
+
+                ctx.restore();
+            };
+
+            drawTeddy(width * 0.18, centralY, 300); // Left Bear
+            drawTeddy(width * 0.82, centralY, 300, true); // Right Bear
+
+            // 6. User's Photo (Premium Frame at Bottom)
             if (userPhoto) {
                 const photoImg = new Image();
                 photoImg.src = userPhoto;
                 await new Promise((resolve) => { photoImg.onload = resolve; });
 
-                // Frame Logic
-                const frameSize = 250;
-                const frameX = 400 - frameSize / 2;
-                const frameY = 850;
+                const frameSize = 450;
+                const photoY = height * 0.78;
 
+                const drawHeartPath = (x: number, y: number, size: number) => {
+                    ctx.beginPath();
+                    const topCurveHeight = size * 0.3;
+                    ctx.moveTo(x, y + size * 0.2);
+                    ctx.bezierCurveTo(x, y, x - size / 2, y, x - size / 2, y + topCurveHeight);
+                    ctx.bezierCurveTo(x - size / 2, y + (size + topCurveHeight) / 2, x, y + size, x, y + size);
+                    ctx.bezierCurveTo(x, y + size, x + size / 2, y + (size + topCurveHeight) / 2, x + size / 2, y + topCurveHeight);
+                    ctx.bezierCurveTo(x + size / 2, y, x, y, x, y + size * 0.2);
+                    ctx.closePath();
+                };
+
+                // Frame Glow
                 ctx.save();
-                ctx.beginPath();
-                if (selectedFrame === 'circle') {
-                    ctx.arc(400, frameY + frameSize / 2, frameSize / 2, 0, Math.PI * 2);
-                } else if (selectedFrame === 'heart') {
-                    // Simple heart path
-                    const topCurveHeight = frameSize * 0.3;
-                    ctx.moveTo(400, frameY + frameSize * 0.2);
-                    ctx.bezierCurveTo(400, frameY, 400 - frameSize / 2, frameY, 400 - frameSize / 2, frameY + topCurveHeight);
-                    ctx.bezierCurveTo(400 - frameSize / 2, frameY + (frameSize + topCurveHeight) / 2, 400, frameY + frameSize, 400, frameY + frameSize);
-                    ctx.bezierCurveTo(400, frameY + frameSize, 400 + frameSize / 2, frameY + (frameSize + topCurveHeight) / 2, 400 + frameSize / 2, frameY + topCurveHeight);
-                    ctx.bezierCurveTo(400 + frameSize / 2, frameY, 400, frameY, 400, frameY + frameSize * 0.2);
+                ctx.shadowColor = '#f04299';
+                ctx.shadowBlur = 80;
+                if (selectedFrame === 'heart') {
+                    drawHeartPath(width / 2, photoY - frameSize / 2, frameSize);
+                } else if (selectedFrame === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(width / 2, photoY, frameSize / 2, 0, Math.PI * 2);
                 } else {
-                    // Box
-                    ctx.rect(frameX, frameY, frameSize, frameSize);
+                    ctx.rect(width / 2 - frameSize / 2, photoY - frameSize / 2, frameSize, frameSize);
                 }
-                ctx.closePath();
-                ctx.clip();
-
-                // Draw image to fill frame
-                const scale = Math.max(frameSize / photoImg.width, frameSize / photoImg.height);
-                const x = frameX + (frameSize - photoImg.width * scale) / 2;
-                const y = frameY + (frameSize - photoImg.height * scale) / 2;
-                ctx.drawImage(photoImg, x, y, photoImg.width * scale, photoImg.height * scale);
+                ctx.fillStyle = 'rgba(240, 66, 153, 0.4)';
+                ctx.fill();
                 ctx.restore();
 
-                // Draw Frame Border
+                // Mask & Image
                 ctx.save();
-                ctx.beginPath();
-                ctx.lineWidth = 10;
-                ctx.strokeStyle = '#be185d';
-                if (selectedFrame === 'circle') {
-                    ctx.arc(400, frameY + frameSize / 2, frameSize / 2, 0, Math.PI * 2);
-                } else if (selectedFrame === 'heart') {
-                    const topCurveHeight = frameSize * 0.3;
-                    ctx.moveTo(400, frameY + frameSize * 0.2);
-                    ctx.bezierCurveTo(400, frameY, 400 - frameSize / 2, frameY, 400 - frameSize / 2, frameY + topCurveHeight);
-                    ctx.bezierCurveTo(400 - frameSize / 2, frameY + (frameSize + topCurveHeight) / 2, 400, frameY + frameSize, 400, frameY + frameSize);
-                    ctx.bezierCurveTo(400, frameY + frameSize, 400 + frameSize / 2, frameY + (frameSize + topCurveHeight) / 2, 400 + frameSize / 2, frameY + topCurveHeight);
-                    ctx.bezierCurveTo(400 + frameSize / 2, frameY, 400, frameY, 400, frameY + frameSize * 0.2);
+                if (selectedFrame === 'heart') {
+                    drawHeartPath(width / 2, photoY - frameSize / 2, frameSize);
+                } else if (selectedFrame === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(width / 2, photoY, frameSize / 2, 0, Math.PI * 2);
                 } else {
-                    ctx.rect(frameX, frameY, frameSize, frameSize);
+                    ctx.rect(width / 2 - frameSize / 2, photoY - frameSize / 2, frameSize, frameSize);
                 }
-                ctx.closePath();
+                ctx.clip();
+
+                const scale = Math.max(frameSize / photoImg.width, frameSize / photoImg.height);
+                ctx.drawImage(photoImg, width / 2 - (photoImg.width * scale) / 2, photoY - (photoImg.height * scale) / 2, photoImg.width * scale, photoImg.height * scale);
+                ctx.restore();
+
+                // Border
+                ctx.save();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 10;
+                if (selectedFrame === 'heart') {
+                    drawHeartPath(width / 2, photoY - frameSize / 2, frameSize);
+                } else if (selectedFrame === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(width / 2, photoY, frameSize / 2, 0, Math.PI * 2);
+                } else {
+                    ctx.rect(width / 2 - frameSize / 2, photoY - frameSize / 2, frameSize, frameSize);
+                }
                 ctx.stroke();
                 ctx.restore();
 
-                // Caption under photo
-                ctx.fillStyle = '#db2777';
-                ctx.font = '20px serif';
-                ctx.fillText("Sent with Love", 400, 1150);
+                // Caption
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.font = 'bold 30px serif';
+                ctx.fillText("SENT WITH ❤️ BY GIFT MAGIC", width / 2, height - 100);
             }
+
+            // Vignette
+            const vignette = ctx.createRadialGradient(width / 2, height / 2, width / 4, width / 2, height / 2, height);
+            vignette.addColorStop(0, 'rgba(0,0,0,0)');
+            vignette.addColorStop(1, 'rgba(0,0,0,0.6)');
+            ctx.fillStyle = vignette;
+            ctx.fillRect(0, 0, width, height);
 
             setPosterUrl(canvas.toDataURL('image/png'));
             setShareStep('poster_result');

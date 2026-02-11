@@ -285,19 +285,23 @@ const Checkout = () => {
       {/* Navbar */}
       <nav className="w-full z-50 px-6 py-4 relative">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group">
-            <img
-              src="/logo.png"
-              alt="Gift Magic"
-              className="h-10 w-auto object-contain group-hover:scale-105 transition-transform"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                const checkoutTextLogo = document.getElementById('checkout-text-logo');
-                if (checkoutTextLogo) checkoutTextLogo.style.display = 'block';
-              }}
-            />
-            <div id="checkout-text-logo" style={{ display: 'none' }} className="text-2xl font-black tracking-tighter text-white">
-              <span className="text-primary pr-2">♥</span>Gift Magic
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="relative">
+              <img
+                src="/logo.svg"
+                alt="Gift Magic"
+                className="h-10 w-10 object-contain group-hover:scale-110 transition-transform"
+                onError={(e: any) => {
+                  e.currentTarget.src = "/logo.png";
+                }}
+              />
+            </div>
+            <div className="flex flex-col leading-tight">
+              <span className="text-2xl font-black tracking-tight flex items-center">
+                <span className="gradient-text">Gift</span>
+                <span className="text-white ml-1">Magic</span>
+              </span>
+              <span className="text-[9px] font-bold tracking-[0.2em] text-[#f04299]/60 uppercase">Digital Experience</span>
             </div>
           </Link>
           <div className="flex items-center gap-2 text-white/60 text-sm font-medium bg-white/5 px-3 py-1.5 rounded-full border border-white/5">

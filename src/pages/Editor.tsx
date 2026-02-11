@@ -32,6 +32,7 @@ const Editor = () => {
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
     const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number }>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     const [showQRGenerator, setShowQRGenerator] = useState(false);
+    const [showMusicModal, setShowMusicModal] = useState(false);
 
     // Load template and gift data
     useEffect(() => {
@@ -182,12 +183,23 @@ const Editor = () => {
         }
     };
 
-    const handleShare = () => {
-        if (!gift?.gift_uuid) {
-            handlePublish();
+    const handleShare = async () => {
+        if (!gift?.is_published) {
+            await handlePublish();
+        }
+
+        // Use the most up-to-date gift object after publishing if necessary
+        const latestGift = await GiftService.getGift(id!);
+
+        if (!latestGift?.gift_uuid) {
+            toast({
+                title: "Internal Error",
+                description: "Gift UUID not found. Please try saving again.",
+                variant: "destructive"
+            });
             return;
         }
-        const url = `${window.location.origin}/gift/${gift.gift_uuid}`;
+        const url = `${window.location.origin}/gift/${latestGift.gift_uuid}`;
         navigator.clipboard.writeText(url);
         toast({
             title: "Link Copied!",
@@ -272,6 +284,16 @@ const Editor = () => {
                     </div>
 
                     <div className="flex items-center gap-3">
+                        <motion.button
+                            onClick={() => setShowMusicModal(true)}
+                            whileHover={{ y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="xl:hidden flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-white/70 hover:text-white"
+                        >
+                            <Music className="w-4 h-4" />
+                            <span className="hidden sm:inline">Music</span>
+                        </motion.button>
+
                         <motion.button
                             onClick={handlePreview}
                             whileHover={{ y: -2 }}
@@ -733,6 +755,119 @@ const Editor = () => {
                 onClose={() => setShowQRGenerator(false)}
                 giftUrl={gift?.gift_uuid ? `${window.location.origin}/gift/${gift.gift_uuid}` : window.location.href}
             />
+
+            {/* Mobile Music Modal */}
+            <AnimatePresence>
+                {showMusicModal && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+                        onClick={() => setShowMusicModal(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                            className="bg-[#121212] border border-white/10 w-full max-w-md rounded-3xl overflow-hidden shadow-2xl flex flex-col p-6"
+                            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                        >
+                            <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-xs">
+                                    <Music className="w-4 h-4" /> Audio Experience
+                                </div>
+                                <button onClick={() => setShowMusicModal(false)} className="text-white/40 hover:text-white transition-colors">✕</button>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-white/40 block mb-2">Background Ambience</label>
+                                    <select
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none appearance-none cursor-pointer hover:bg-white/10 transition-colors"
+                                        onChange={(e) => {
+                                            const track = DEFAULT_MUSIC_TRACKS.find(t => t.url === e.target.value);
+                                            if (track) {
+                                                updateField('global_settings', 'bgMusicUrl', track.url);
+                                                toast({ title: "Music Selected", description: `Now playing: ${track.name}` });
+                                            }
+                                        }}
+                                        value={DEFAULT_MUSIC_TRACKS.find(t => t.url === giftData['global_settings']?.bgMusicUrl)?.url || ""}
+                                    >
+                                        <option value="" disabled>Choose a romantic track...</option>
+                                        {DEFAULT_MUSIC_TRACKS.map((track) => (
+                                            <option key={track.id} value={track.url} className="bg-black text-white">
+                                                🎵 {track.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="relative flex items-center gap-4">
+                                    <div className="h-[1px] flex-1 bg-white/10"></div>
+                                    <span className="text-[10px] font-bold uppercase text-white/20">OR UPLOAD</span>
+                                    <div className="h-[1px] flex-1 bg-white/10"></div>
+                                </div>
+
+                                <div className="flex items-center gap-3">
+                                    <div className="relative flex-1">
+                                        <input
+                                            type="text"
+                                            value={giftData['global_settings']?.bgMusicUrl || ""}
+                                            readOnly
+                                            placeholder="No track selected"
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white/60 focus:outline-none"
+                                        />
+                                        <button
+                                            onClick={() => document.getElementById('mobile-bgm-upload')?.click()}
+                                            className="absolute right-2 top-2 p-1.5 hover:bg-white/10 rounded-lg transition-colors text-white/40 hover:text-primary"
+                                        >
+                                            <Music className="w-4 h-4" />
+                                        </button>
+                                        <input
+                                            id="mobile-bgm-upload"
+                                            type="file"
+                                            accept="audio/mp3,audio/mpeg"
+                                            className="hidden"
+                                            onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
+                                                const file = e.target.files?.[0];
+                                                if (!file) return;
+                                                setIsUploading(true);
+                                                try {
+                                                    const url = await GiftService.uploadMedia(file);
+                                                    if (url) updateField('global_settings', 'bgMusicUrl', url);
+                                                    toast({ title: "Audio Uploaded", description: "Background ambience set successfully." });
+                                                } catch (err) {
+                                                    toast({ title: "Upload Failed", variant: "destructive" });
+                                                } finally {
+                                                    setIsUploading(false);
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                    {giftData['global_settings']?.bgMusicUrl && (
+                                        <button
+                                            onClick={() => updateField('global_settings', 'bgMusicUrl', '')}
+                                            className="p-3 bg-red-500/10 text-red-500 rounded-xl"
+                                        >
+                                            ✕
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            <motion.button
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => setShowMusicModal(false)}
+                                className="mt-8 w-full py-4 rounded-xl font-bold bg-primary text-primary-foreground uppercase tracking-widest text-xs"
+                            >
+                                Done
+                            </motion.button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div >
     );
 };
