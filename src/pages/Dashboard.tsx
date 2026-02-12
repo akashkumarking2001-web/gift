@@ -282,104 +282,131 @@ const Dashboard = () => {
                       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* 
                           New Logic: Combine individual purchases and bundle template access.
-                          We want to show one card per 'usable' template.
+                          If user has "*" access, they have everything.
                         */}
-                        {[...lockedTemplates, ...unlockedTemplates].map((access, i) => {
-                          const template = allTemplates.find(t => t.id.toString() === access.template_id || t.slug === access.template_id);
-                          const purchase = purchases.find(p => p.id === access.purchase_id);
-                          const isLocked = access.is_locked;
-                          const isRejected = purchase?.status === 'rejected';
-                          const isBundle = purchase?.is_bundle;
+                        {(() => {
+                          const hasAllAccess = unlockedTemplates.some(a => a.template_id === '*');
+                          const isAllAccessPending = lockedTemplates.some(a => a.template_id === '*');
 
-                          return (
-                            <motion.div
-                              key={access.id}
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: i * 0.1 }}
-                              className="group relative"
-                              style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
-                            >
-                              <div className={`glass-card flex flex-col h-full ${isLocked ? 'opacity-75' : 'cursor-pointer hover:border-primary/50'} transition-all duration-500 overflow-hidden shadow-2xl`}>
-                                {/* Bundle Badge */}
-                                {isBundle && (
-                                  <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1">
-                                    <Gift className="w-3 h-3" />
-                                    BUNDLE ITEM
-                                  </div>
-                                )}
-
-                                {/* Locked Overlay */}
-                                {isLocked && purchase?.status !== 'rejected' && (
-                                  <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center">
-                                    <Lock className="w-12 h-12 text-primary mb-4 animate-pulse" />
-                                    <h4 className="text-white font-bold text-lg mb-2">
-                                      Template Locked
-                                    </h4>
-                                    <p className="text-white/60 text-sm mb-4">
-                                      Verification in progress...
-                                    </p>
-                                    <div className="flex items-center gap-2 text-primary text-xs font-bold bg-primary/10 px-4 py-2 rounded-full">
-                                      <Clock className="w-4 h-4" />
-                                      Available within 2 hours
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* Rejected Overlay */}
-                                {isRejected && (
-                                  <div className="absolute inset-0 bg-red-950/90 backdrop-blur-md z-10 flex flex-col items-center justify-center p-6 text-center border-2 border-red-500/50 space-y-4">
-                                    <div className="bg-red-500/20 p-3 rounded-full">
-                                      <AlertCircle className="w-8 h-8 text-red-500" />
-                                    </div>
-                                    <div>
-                                      <h4 className="text-white font-bold text-lg">Payment Rejected</h4>
-                                      <p className="text-white/60 text-xs mt-1">Your payment was rejected.<br />Please resubmit your request.</p>
-                                    </div>
-
-                                    <Link
-                                      to={`/checkout?templateId=${template?.id}&title=${encodeURIComponent(template?.title || '')}&price=${template?.price}&mrp=${template?.originalPrice}`}
-                                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors w-full"
-                                    >
-                                      Re-request
-                                    </Link>
-
-                                    <div className="pt-2 border-t border-white/10 w-full">
-                                      <a href="https://instagram.com/gift_magic" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 text-[10px] text-white/40 hover:text-white transition-colors">
-                                        <Instagram className="w-3 h-3" />
-                                        Contact us for quick ID activation
-                                      </a>
-                                    </div>
-                                  </div>
-                                )}
-
-                                <div className={`h-40 bg-gradient-to-br ${template?.color || 'from-primary to-secondary'} opacity-20 group-hover:opacity-40 transition-all duration-700 flex items-center justify-center text-7xl relative overflow-hidden`}>
-                                  <div>{template?.icon || '🎁'}</div>
-                                </div>
-                                <div className="p-6 flex-1 flex flex-col justify-between">
-                                  <div>
-                                    <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-2 block">{template?.category || 'Template'}</span>
-                                    <h3 className="text-xl font-black text-white leading-tight mb-2">{template?.title || purchase?.template_title}</h3>
-                                    <div className="text-xs text-white/40 mb-4">
-                                      {purchase?.purchased_at ? `Purchased ${new Date(purchase.purchased_at).toLocaleDateString()}` : 'New Access'}
-                                    </div>
-                                  </div>
-                                  {!isLocked && !isRejected && (
-                                    <button
-                                      onClick={() => template && handleCreateGift(template.id)}
-                                      className="w-full gradient-primary py-3 rounded-2xl text-primary-foreground font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 group-hover:scale-[1.02] transition-transform"
-                                    >
-                                      <Eye className="w-4 h-4" />
-                                      Customize Now
-                                    </button>
-                                  )}
-                                  {/* Hidden space for layout structure when locked/rejected */}
-                                  {(isLocked || isRejected) && <div className="h-10"></div>}
-                                </div>
-                              </div>
-                            </motion.div>
+                          // Get all unique template IDs the user has access to
+                          const accessibleTemplateIds = new Set(
+                            [...unlockedTemplates, ...lockedTemplates]
+                              .filter(a => a.template_id !== '*')
+                              .map(a => a.template_id)
                           );
-                        })}
+
+                          // If all access, add all templates to the set
+                          if (hasAllAccess || isAllAccessPending) {
+                            allTemplates.forEach(t => accessibleTemplateIds.add(t.slug));
+                          }
+
+                          // Render cards for each accessible template
+                          return Array.from(accessibleTemplateIds).map((templateId, i) => {
+                            const template = allTemplates.find(t => t.id.toString() === templateId || t.slug === templateId);
+                            if (!template) return null;
+
+                            // Find the specific access record for this template OR the "*" record
+                            const specificAccess = [...unlockedTemplates, ...lockedTemplates].find(a => a.template_id === templateId);
+                            const allAccess = [...unlockedTemplates, ...lockedTemplates].find(a => a.template_id === '*');
+
+                            const access = specificAccess || allAccess;
+                            if (!access) return null;
+
+                            const purchase = purchases.find(p => p.id === access.purchase_id);
+                            const isLocked = access.is_locked;
+                            const isRejected = purchase?.status === 'rejected';
+                            const isBundle = purchase?.is_bundle || access.template_id === '*';
+
+                            return (
+                              <motion.div
+                                key={access.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: i * 0.1 }}
+                                className="group relative"
+                                style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
+                              >
+                                <div className={`glass-card flex flex-col h-full ${isLocked ? 'opacity-75' : 'cursor-pointer hover:border-primary/50'} transition-all duration-500 overflow-hidden shadow-2xl`}>
+                                  {/* Bundle Badge */}
+                                  {isBundle && (
+                                    <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1">
+                                      <Gift className="w-3 h-3" />
+                                      BUNDLE ITEM
+                                    </div>
+                                  )}
+
+                                  {/* Locked Overlay */}
+                                  {isLocked && purchase?.status !== 'rejected' && (
+                                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center">
+                                      <Lock className="w-12 h-12 text-primary mb-4 animate-pulse" />
+                                      <h4 className="text-white font-bold text-lg mb-2">
+                                        Template Locked
+                                      </h4>
+                                      <p className="text-white/60 text-sm mb-4">
+                                        Verification in progress...
+                                      </p>
+                                      <div className="flex items-center gap-2 text-primary text-xs font-bold bg-primary/10 px-4 py-2 rounded-full">
+                                        <Clock className="w-4 h-4" />
+                                        Available within 2 hours
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Rejected Overlay */}
+                                  {isRejected && (
+                                    <div className="absolute inset-0 bg-red-950/90 backdrop-blur-md z-10 flex flex-col items-center justify-center p-6 text-center border-2 border-red-500/50 space-y-4">
+                                      <div className="bg-red-500/20 p-3 rounded-full">
+                                        <AlertCircle className="w-8 h-8 text-red-500" />
+                                      </div>
+                                      <div>
+                                        <h4 className="text-white font-bold text-lg">Payment Rejected</h4>
+                                        <p className="text-white/60 text-xs mt-1">Your payment was rejected.<br />Please resubmit your request.</p>
+                                      </div>
+
+                                      <Link
+                                        to={`/checkout?templateId=${template?.id}&title=${encodeURIComponent(template?.title || '')}&price=${template?.price}&mrp=${template?.originalPrice}`}
+                                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors w-full"
+                                      >
+                                        Re-request
+                                      </Link>
+
+                                      <div className="pt-2 border-t border-white/10 w-full">
+                                        <a href="https://instagram.com/gift_magic" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 text-[10px] text-white/40 hover:text-white transition-colors">
+                                          <Instagram className="w-3 h-3" />
+                                          Contact us for quick ID activation
+                                        </a>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  <div className={`h-40 bg-gradient-to-br ${template?.color || 'from-primary to-secondary'} opacity-20 group-hover:opacity-40 transition-all duration-700 flex items-center justify-center text-7xl relative overflow-hidden`}>
+                                    <div>{template?.icon || '🎁'}</div>
+                                  </div>
+                                  <div className="p-6 flex-1 flex flex-col justify-between">
+                                    <div>
+                                      <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em] mb-2 block">{template?.category || 'Template'}</span>
+                                      <h3 className="text-xl font-black text-white leading-tight mb-2">{template?.title || purchase?.template_title}</h3>
+                                      <div className="text-xs text-white/40 mb-4">
+                                        {purchase?.purchased_at ? `Purchased ${new Date(purchase.purchased_at).toLocaleDateString()}` : 'New Access'}
+                                      </div>
+                                    </div>
+                                    {!isLocked && !isRejected && (
+                                      <button
+                                        onClick={() => template && handleCreateGift(template.id)}
+                                        className="w-full gradient-primary py-3 rounded-2xl text-primary-foreground font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 group-hover:scale-[1.02] transition-transform"
+                                      >
+                                        <Eye className="w-4 h-4" />
+                                        Customize Now
+                                      </button>
+                                    )}
+                                    {/* Hidden space for layout structure when locked/rejected */}
+                                    {(isLocked || isRejected) && <div className="h-10"></div>}
+                                  </div>
+                                </div>
+                              </motion.div>
+                            );
+                          });
+                        })()}
 
                         {/* Fallback for legacy purchases that don't have user_template_access records */}
                         {purchases

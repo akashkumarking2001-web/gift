@@ -116,14 +116,14 @@ const Page1Cover: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate }) 
                             isEditing={!!isEditing}
                             label="Badge"
                         >
-                            <span className="text-pink-600 tracking-[0.4em] text-[10px] md:text-[12px] font-black italic">
+                            <span className="text-pink-600 tracking-[0.3em] text-[13px] md:text-[14px] font-bold italic uppercase">
                                 {data.badgeText || "Flagship 8k experience"}
                             </span>
                         </V3EditableField>
                         <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-[#ff4d94] animate-spin-slow" />
                     </div>
 
-                    <h1 className="text-4xl md:text-7xl lg:text-8xl font-black text-[#4a041a] mb-6 md:mb-8 tracking-tighter leading-[0.9] italic font-romantic">
+                    <h1 className="text-5xl md:text-8xl lg:text-9xl font-bold text-[#4a041a] mb-6 md:mb-8 tracking-tighter leading-[0.9] italic font-romantic">
                         <V3EditableField
                             value={data.titleLine1 || "Pure"}
                             onUpdate={(v) => safeUpdate('titleLine1', v)}
@@ -141,7 +141,7 @@ const Page1Cover: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate }) 
                         </V3EditableField>
                     </h1>
 
-                    <div className="text-[#4a041a]/60 text-base md:text-xl lg:text-2xl mb-10 md:mb-14 max-w-lg mx-auto font-medium leading-relaxed italic font-romantic px-4">
+                    <div className="text-[#4a041a] text-lg md:text-2xl lg:text-3xl mb-10 md:mb-14 max-w-xl mx-auto font-medium leading-relaxed italic font-romantic px-4">
                         <V3EditableField
                             value={data.description || `"A digital sanctuary crafted for the most beautiful soul."`}
                             onUpdate={(v) => safeUpdate('description', v)}
@@ -155,9 +155,9 @@ const Page1Cover: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate }) 
 
                     <div className="space-y-6">
                         <motion.p
-                            animate={{ opacity: [0.4, 0.8, 0.4] }}
+                            animate={{ opacity: [0.6, 1, 0.6] }}
                             transition={{ duration: 2, repeat: Infinity }}
-                            className="text-pink-400 text-[11px] font-black tracking-widest"
+                            className="text-pink-500 text-[14px] font-bold tracking-widest uppercase italic"
                         >
                             {isEditing ? "Editing mode" : "Gently pressure the heart to enter"}
                         </motion.p>
@@ -188,9 +188,9 @@ const Page1Cover: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate }) 
             {/* Whispering Footer - Hidden Poem Surprise */}
             <div
                 onClick={() => setShowPoem(!showPoem)}
-                className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 text-pink-400/40 text-[10px] md:text-[11px] font-black tracking-[0.3em] whitespace-nowrap italic cursor-pointer group flex flex-col items-center"
+                className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 text-pink-600/60 text-[12px] md:text-[14px] font-bold tracking-[0.2em] whitespace-nowrap italic cursor-pointer group flex flex-col items-center"
             >
-                <div className="group-hover:text-pink-500 transition-colors">
+                <div className="group-hover:text-pink-600 transition-colors uppercase">
                     {data.footerText || "v3 flagship edition • immersive romance"}
                 </div>
                 <AnimatePresence>
@@ -199,7 +199,7 @@ const Page1Cover: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate }) 
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 10 }}
-                            className="mt-3 text-pink-600/60 font-romantic text-[12px] md:text-sm text-center max-w-[200px] md:max-w-xs px-4"
+                            className="mt-3 text-pink-700 font-romantic text-sm md:text-base text-center max-w-[250px] md:max-w-md px-4"
                         >
                             "Where there is love, there is life... and where you are, there is my heart."
                         </motion.div>

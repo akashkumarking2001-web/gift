@@ -96,11 +96,11 @@ const Page2LoveLetter: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                                 isEditing={!!isEditing}
                                 label="Chapter"
                             >
-                                <span className="text-pink-600/50 text-[12px] md:text-[14px] tracking-[0.5em] font-black block mb-4 italic">
+                                <span className="text-pink-600 text-[13px] md:text-[14px] tracking-[0.4em] font-bold block mb-4 italic uppercase">
                                     {data.chapterTitle || "a private manuscript"}
                                 </span>
                             </V3EditableField>
-                            <div className="h-[3px] w-24 bg-gradient-to-r from-pink-500/30 to-transparent rounded-full" />
+                            <div className="h-[3px] w-24 bg-gradient-to-r from-pink-500/50 to-transparent rounded-full" />
                         </motion.div>
 
                         <div className="space-y-10 md:space-y-14 text-[#4a041a] leading-tight px-2">
@@ -108,7 +108,7 @@ const Page2LoveLetter: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.8 }}
-                                className="font-romantic text-4xl md:text-6xl lg:text-7xl font-black italic text-[#4a041a] tracking-tight"
+                                className="font-romantic text-5xl md:text-7xl lg:text-8xl font-bold italic text-[#4a041a] tracking-tight"
                             >
                                 Dear <V3EditableField
                                     value={data.coupleName || 'love'}
@@ -122,7 +122,7 @@ const Page2LoveLetter: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 1.5, duration: 1.5 }}
-                                className="font-handwriting text-2xl md:text-3xl lg:text-4xl leading-[1.4] text-[#4a041a]/85 max-w-4xl"
+                                className="font-handwriting text-3xl md:text-4xl lg:text-5xl leading-[1.3] text-[#4a041a] max-w-4xl"
                             >
                                 <V3EditableField
                                     value={data.description || "Every moment spent with you feels like a page from a storybook I never want to close. Your smile is the light that guides me through the darkest nights, and your laughter is the melody my heart beats to."}
@@ -137,7 +137,7 @@ const Page2LoveLetter: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 3, duration: 1.5 }}
-                                className="text-lg md:text-2xl text-pink-900/50 font-romantic italic leading-relaxed max-w-3xl font-black tracking-tight"
+                                className="text-xl md:text-3xl text-pink-900 font-romantic italic leading-relaxed max-w-3xl font-bold tracking-tight"
                             >
                                 <V3EditableField
                                     value={data.subText || "This isn't just a collection of pixels on a screen. It's a journey through the universe we've built together—one heartbeat at a time."}
@@ -169,7 +169,7 @@ const Page2LoveLetter: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 5.5 }}
-                                className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-max text-[11px] text-pink-500 font-black tracking-[0.4em] italic opacity-60"
+                                className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-max text-[13px] text-pink-600 font-bold tracking-[0.3em] italic uppercase"
                             >
                                 {isEditing ? "editing" : "tap the pulse"}
                             </motion.div>
@@ -181,7 +181,7 @@ const Page2LoveLetter: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                             transition={{ delay: 4 }}
                             className="text-center md:text-right"
                         >
-                            <p className="text-[#ff4d94] font-handwriting text-4xl md:text-5xl lg:text-6xl mb-4 drop-shadow-sm -rotate-2">
+                            <p className="text-[#ff4d94] font-handwriting text-5xl md:text-6xl lg:text-7xl mb-4 drop-shadow-sm -rotate-2">
                                 <V3EditableField
                                     value={data.closingText || "forever yours,"}
                                     onUpdate={(v) => safeUpdate('closingText', v)}
@@ -189,7 +189,7 @@ const Page2LoveLetter: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                                     label="Closing"
                                 />
                             </p>
-                            <p className="text-[#4a041a] font-black text-2xl md:text-4xl lg:text-5xl tracking-tight italic font-romantic v3-gradient-text">
+                            <p className="text-[#4a041a] font-bold text-3xl md:text-5xl lg:text-6xl tracking-tight italic font-romantic v3-gradient-text">
                                 <V3EditableField
                                     value={data.signature || "your love"}
                                     onUpdate={(v) => safeUpdate('signature', v)}

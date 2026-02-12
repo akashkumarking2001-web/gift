@@ -57,7 +57,7 @@ const Page5Reasons: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate }
                     viewport={{ once: true }}
                     className="text-center mb-16 md:mb-24"
                 >
-                    <div className="inline-flex items-center gap-4 bg-pink-500/5 border border-pink-500/10 px-6 py-2 md:px-10 md:py-3 rounded-full mb-8 md:mb-10 shadow-inner backdrop-blur-sm">
+                    <div className="inline-flex items-center gap-4 bg-pink-500/10 border border-pink-500/20 px-6 py-2 md:px-10 md:py-3 rounded-full mb-8 md:mb-10 shadow-inner backdrop-blur-sm">
                         <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-pink-500 animate-pulse" />
                         <V3EditableField
                             value={data.chapterLabel || "chapter iv • the essentials"}
@@ -65,12 +65,12 @@ const Page5Reasons: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate }
                             isEditing={!!isEditing}
                             label="Chapter"
                         >
-                            <span className="text-[11px] md:text-[12px] text-pink-600/60 font-black italic tracking-[0.4em]">
+                            <span className="text-[13px] md:text-[14px] text-pink-600 tracking-[0.3em] font-bold italic uppercase">
                                 {data.chapterLabel || "chapter iv • the essentials"}
                             </span>
                         </V3EditableField>
                     </div>
-                    <h2 className="text-4xl md:text-7xl lg:text-[9rem] font-black text-[#4a041a] tracking-tight leading-[0.9] mb-4 md:mb-8 italic">
+                    <h2 className="text-5xl md:text-8xl lg:text-[10rem] font-bold text-[#4a041a] tracking-tight leading-[0.9] mb-4 md:mb-8 italic">
                         <V3EditableField
                             value={data.titleLine1 || "Reasons I"}
                             onUpdate={(v) => safeUpdate('titleLine1', v)}
@@ -87,13 +87,13 @@ const Page5Reasons: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate }
                             <span className="v3-gradient-text block mt-2 md:mt-4">{data.titleLine2 || "Adore You"}</span>
                         </V3EditableField>
                     </h2>
-                    <div className="text-pink-900/40 text-[10px] md:text-[11px] font-black tracking-[0.6em] italic animate-pulse mt-10 md:mt-16 group">
+                    <div className="text-pink-600 text-[13px] md:text-[14px] font-bold tracking-[0.4em] italic uppercase animate-pulse mt-10 md:mt-16 group">
                         <V3EditableField
                             value={data.instruction || "pressure each heartbeat to remember"}
                             onUpdate={(v) => safeUpdate('instruction', v)}
                             isEditing={!!isEditing}
                         >
-                            <span className="group-hover:text-pink-600 transition-colors duration-500">
+                            <span className="group-hover:text-pink-700 transition-colors duration-500">
                                 {data.instruction || "pressure each heartbeat to remember"}
                             </span>
                         </V3EditableField>

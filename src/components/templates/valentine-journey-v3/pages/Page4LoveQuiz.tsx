@@ -125,12 +125,12 @@ const Page4LoveQuiz: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate 
                                 isEditing={!!isEditing}
                                 label="Chapter"
                             >
-                                <span className="text-[11px] md:text-[12px] text-pink-600/60 font-black italic tracking-[0.3em]">
+                                <span className="text-[13px] md:text-[14px] text-pink-600 font-bold italic tracking-[0.2em] uppercase">
                                     {data.chapterLabel || "interactive trivia • chapter three"}
                                 </span>
                             </V3EditableField>
                         </div>
-                        <h2 className="text-3xl md:text-6xl lg:text-7xl font-black text-[#4a041a] leading-[1] tracking-tight mb-4 md:mb-6 italic">
+                        <h2 className="text-4xl md:text-7xl lg:text-8xl font-bold text-[#4a041a] leading-[1] tracking-tight mb-4 md:mb-6 italic">
                             <V3EditableField
                                 value={data.titleLine1 || "Our secret"}
                                 onUpdate={(v) => safeUpdate('titleLine1', v)}
@@ -149,7 +149,7 @@ const Page4LoveQuiz: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate 
                         </h2>
                     </div>
 
-                    <div className="text-xl md:text-3xl lg:text-4xl text-[#4a041a]/90 font-black mb-10 md:mb-14 leading-tight italic font-romantic tracking-tight px-2">
+                    <div className="text-2xl md:text-4xl lg:text-5xl text-[#4a041a] font-bold mb-10 md:mb-14 leading-tight italic font-romantic tracking-tight px-2">
                         <V3EditableField
                             value={quiz.question}
                             onUpdate={(v) => safeUpdate('quiz', { ...quiz, question: v })}
@@ -166,18 +166,18 @@ const Page4LoveQuiz: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate 
                             const isCorrect = option === quiz.correctAnswer;
                             const isSelected = selectedOption === index;
 
-                            let bgColor = "bg-white/45 border-white/60 hover:bg-white/80 hover:border-pink-200";
+                            let bgColor = "bg-white/60 border-white shadow-md hover:bg-white/95 hover:border-pink-200";
                             let textColor = "text-[#4a041a]";
 
                             if (showResult && !isEditing) {
                                 if (isCorrect) {
-                                    bgColor = "bg-green-50/50 backdrop-blur-xl border-green-400 shadow-[0_0_30px_rgba(34,197,94,0.15)] scale-[1.02] z-10";
+                                    bgColor = "bg-green-100/80 backdrop-blur-xl border-green-400 shadow-[0_0_30px_rgba(34,197,94,0.2)] scale-[1.02] z-10";
                                     textColor = "text-green-900";
                                 } else if (isSelected && !isCorrect) {
-                                    bgColor = "bg-rose-50/50 border-rose-300 opacity-80";
+                                    bgColor = "bg-rose-100/80 border-rose-300 opacity-80";
                                     textColor = "text-rose-900";
                                 } else {
-                                    bgColor = "opacity-25 blur-[1px]";
+                                    bgColor = "opacity-40 blur-[1px]";
                                 }
                             }
 
@@ -185,8 +185,8 @@ const Page4LoveQuiz: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate 
                                 <motion.div
                                     key={index}
                                     onClick={() => handleSelect(index)}
-                                    whileHover={(!showResult && !isEditing) ? { y: -5, scale: 1.01, backgroundColor: "rgba(255, 255, 255, 0.9)" } : {}}
-                                    className={`w-full p-6 md:p-8 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-500 flex flex-col items-center justify-center text-center shadow-lg relative overflow-hidden ${bgColor}`}
+                                    whileHover={(!showResult && !isEditing) ? { y: -5, scale: 1.01, backgroundColor: "rgba(255, 255, 255, 1)" } : {}}
+                                    className={`w-full p-6 md:p-8 rounded-[2.5rem] md:rounded-[3rem] border-2 transition-all duration-500 flex flex-col items-center justify-center text-center shadow-lg relative overflow-hidden ${bgColor}`}
                                 >
                                     <V3EditableField
                                         value={option}
@@ -195,7 +195,7 @@ const Page4LoveQuiz: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdate 
                                         label={`Option ${index + 1}`}
                                         className="w-full"
                                     >
-                                        <span className={`text-base md:text-lg lg:text-xl font-black tracking-tight italic ${textColor}`}>
+                                        <span className={`text-lg md:text-xl lg:text-2xl font-bold tracking-tight italic ${textColor}`}>
                                             {option}
                                         </span>
                                     </V3EditableField>

@@ -45,16 +45,17 @@ const AdminDashboard = () => {
     valentines: {
       id: 'valentines',
       title: "Valentine's Bundle",
-      price: 199,
+      price: 99,
       originalPrice: 2499,
       templates: ["romantic-valentines-journey-v2", "love-question-v1", "5-things-love"],
       isActive: true
     },
-    premium: {
-      id: 'premium',
-      title: "Single Premium Template",
-      price: 149,
-      originalPrice: 1299,
+    'all-access': {
+      id: 'all-access',
+      title: "All Assets Bundle",
+      price: 399,
+      originalPrice: 9999,
+      templates: ["*"],
       isActive: true
     }
   });
@@ -1051,22 +1052,22 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* Premium Single Bundle */}
+            {/* All Assets Bundle */}
             <div className="glass-card p-8 rounded-3xl border border-white/10">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center text-2xl">💎</div>
                 <div>
-                  <h4 className="text-xl font-bold">Single Premium Details</h4>
-                  <p className="text-sm text-white/40">Pricing for single template purchases</p>
+                  <h4 className="text-xl font-bold">All Assets Bundle</h4>
+                  <p className="text-sm text-white/40">Configuration for the All-Access package</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-white/40">Display Title</label>
+                  <label className="text-xs font-bold uppercase tracking-widest text-white/40">Title</label>
                   <input
-                    value={bundles.premium.title}
-                    onChange={(e) => setBundles({ ...bundles, premium: { ...bundles.premium, title: e.target.value } })}
+                    value={bundles['all-access'].title}
+                    onChange={(e) => setBundles({ ...bundles, 'all-access': { ...bundles['all-access'], title: e.target.value } })}
                     className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50"
                   />
                 </div>
@@ -1075,8 +1076,8 @@ const AdminDashboard = () => {
                     <label className="text-xs font-bold uppercase tracking-widest text-white/40">Price (₹)</label>
                     <input
                       type="number"
-                      value={bundles.premium.price}
-                      onChange={(e) => setBundles({ ...bundles, premium: { ...bundles.premium, price: parseInt(e.target.value) } })}
+                      value={bundles['all-access'].price}
+                      onChange={(e) => setBundles({ ...bundles, 'all-access': { ...bundles['all-access'], price: parseInt(e.target.value) } })}
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50"
                     />
                   </div>
@@ -1084,11 +1085,47 @@ const AdminDashboard = () => {
                     <label className="text-xs font-bold uppercase tracking-widest text-white/40">Original (₹)</label>
                     <input
                       type="number"
-                      value={bundles.premium.originalPrice}
-                      onChange={(e) => setBundles({ ...bundles, premium: { ...bundles.premium, originalPrice: parseInt(e.target.value) } })}
+                      value={bundles['all-access'].originalPrice}
+                      onChange={(e) => setBundles({ ...bundles, 'all-access': { ...bundles['all-access'], originalPrice: parseInt(e.target.value) } })}
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50"
                     />
                   </div>
+                </div>
+              </div>
+
+              <div className="space-y-2 mb-6">
+                <label className="text-xs font-bold uppercase tracking-widest text-white/40">Included Templates (Slug IDs)</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-40 overflow-y-auto pr-2">
+                  <label className="flex items-center gap-3 p-3 bg-primary/10 rounded-xl hover:bg-primary/20 cursor-pointer transition-colors border border-primary/20">
+                    <input
+                      type="checkbox"
+                      checked={bundles['all-access'].templates.includes('*')}
+                      onChange={(e) => {
+                        const newTemplates = e.target.checked ? ["*"] : [];
+                        setBundles({ ...bundles, 'all-access': { ...bundles['all-access'], templates: newTemplates } });
+                      }}
+                      className="w-4 h-4 rounded border-white/20 bg-white/5 text-primary focus:ring-primary"
+                    />
+                    <span className="text-sm font-bold text-primary italic">ALL TEMPLATES (*)</span>
+                  </label>
+                  {templates.map(t => (
+                    <label key={t.id} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl hover:bg-white/10 cursor-pointer transition-colors border border-white/5">
+                      <input
+                        type="checkbox"
+                        disabled={bundles['all-access'].templates.includes('*')}
+                        checked={bundles['all-access'].templates.includes('*') || bundles['all-access'].templates.includes(t.slug)}
+                        onChange={(e) => {
+                          const current = bundles['all-access'].templates;
+                          const newTemplates = e.target.checked
+                            ? [...current, t.slug]
+                            : current.filter((slug: string) => slug !== t.slug);
+                          setBundles({ ...bundles, 'all-access': { ...bundles['all-access'], templates: newTemplates } });
+                        }}
+                        className="w-4 h-4 rounded border-white/20 bg-white/5 text-primary focus:ring-primary"
+                      />
+                      <span className="text-sm font-medium">{t.title}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
             </div>
@@ -1192,11 +1229,11 @@ const AdminDashboard = () => {
                         let price = 0;
 
                         if (val === "valentines") {
-                          title = "Valentine's Special Bundle (3 Templates)";
-                          price = 199;
+                          title = bundles.valentines.title;
+                          price = bundles.valentines.price;
                         } else if (val === "all-access") {
-                          title = "All-Access Combo (19+ Templates)";
-                          price = 399;
+                          title = bundles['all-access'].title;
+                          price = bundles['all-access'].price;
                         } else {
                           const t = templates.find(t => t.id.toString() === val);
                           title = t?.title || "";
@@ -1212,10 +1249,10 @@ const AdminDashboard = () => {
                       }}
                       className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 appearance-none"
                     >
-                      <option value="" disabled>Select Template / Bundle</option>
+                      <option value="none">Select Template or Bundle</option>
                       <optgroup label="Bundles">
-                        <option value="valentines">Valentine's Special Bundle (₹199)</option>
-                        <option value="all-access">All-Access Combo (₹399)</option>
+                        <option value="valentines">{bundles.valentines.title}</option>
+                        <option value="all-access">{bundles['all-access'].title}</option>
                       </optgroup>
                       <optgroup label="Individual Templates">
                         {templates.map(t => (

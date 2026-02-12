@@ -14,7 +14,7 @@ const TemplateDetails = () => {
     const navigate = useNavigate();
     const [template, setTemplate] = useState<TemplateDefinition | null>(null);
     const [loading, setLoading] = useState(true);
-    const [isOwned, setIsOwned] = useState(false);
+    const [ownershipStatus, setOwnershipStatus] = useState<'none' | 'pending' | 'owned'>('none');
     const { toast } = useToast();
 
     useEffect(() => {
@@ -25,8 +25,8 @@ const TemplateDetails = () => {
 
             if (t) {
                 try {
-                    const owned = await PurchaseService.hasPurchased(t.id.toString(), t.category);
-                    setIsOwned(owned);
+                    const status = await PurchaseService.getTemplateStatus(t.id.toString());
+                    setOwnershipStatus(status);
                 } catch (e) {
                     console.error("Ownership check failed", e);
                 }
@@ -65,6 +65,21 @@ const TemplateDetails = () => {
     }
 
     const handleBuyNow = () => {
+        if (ownershipStatus === 'owned') {
+            toast({
+                title: "Already Owned",
+                description: "You have already purchased this item.",
+            });
+            return;
+        }
+        if (ownershipStatus === 'pending') {
+            toast({
+                title: "Purchase Pending",
+                description: "Your purchase is awaiting admin approval.",
+            });
+            return;
+        }
+
         navigate("/checkout", {
             state: {
                 title: template.title,
@@ -240,10 +255,11 @@ const TemplateDetails = () => {
 
                         <div className="pt-8 border-t border-white/10 space-y-4">
                             <button
-                                onClick={isOwned ? handleCustomize : handleBuyNow}
-                                className={`w-full ${isOwned ? 'bg-pastel-green hover:bg-emerald-600' : 'bg-primary hover:bg-primary/90'} text-white text-xl font-bold py-5 rounded-2xl shadow-xl transition-all transform hover:scale-[1.02] flex items-center justify-center gap-3`}
+                                onClick={ownershipStatus === 'owned' ? handleCustomize : handleBuyNow}
+                                disabled={ownershipStatus === 'pending'}
+                                className={`w-full ${ownershipStatus === 'owned' ? 'bg-emerald-500 hover:bg-emerald-600' : ownershipStatus === 'pending' ? 'bg-yellow-500/50 cursor-not-allowed' : 'bg-primary hover:bg-primary/90'} text-white text-xl font-bold py-5 rounded-2xl shadow-xl transition-all transform ${ownershipStatus !== 'pending' ? 'hover:scale-[1.02]' : ''} flex items-center justify-center gap-3`}
                             >
-                                {isOwned ? "Customize My Gift" : "Create This Gift Now"}
+                                {ownershipStatus === 'owned' ? "Owned - Customize Now" : ownershipStatus === 'pending' ? "Purchase Pending Approval" : "Create This Gift Now"}
                             </button>
                             <p className="text-center text-xs text-white/40 uppercase tracking-widest">
                                 100% Satisfaction Guarantee

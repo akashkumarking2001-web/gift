@@ -110,48 +110,70 @@ export const PurchaseService = {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return false;
 
-        // 1. Check for individual purchase
-        const { data: individualData } = await supabase
-            .from('user_purchases')
-            .select('id, status')
+        // 1. Check for individual purchase or bundle access (approved only)
+        const { data: accessData } = await supabase
+            .from('user_template_access')
+            .select('id')
             .eq('user_id', user.id)
             .eq('template_id', templateId)
-            .eq('status', 'approved')
+            .eq('is_locked', false)
             .maybeSingle();
 
-        if (individualData) return true;
+        if (accessData) return true;
 
-        // 2. Check for Valentine's Bundle (if template is in Valentine's category)
-        if (category?.toLowerCase().includes('valentine')) {
-            const { data: bundleData } = await supabase
-                .from('user_purchases')
-                .select('id, status')
-                .eq('user_id', user.id)
-                .eq('template_id', 'valentines')
-                .eq('status', 'approved')
-                .maybeSingle();
-
-            if (bundleData) {
-                // If they have the bundle, check if they've used fewer than 3 credits
-                // This is a simplified check - in a real app, you'd track specific template unlocks
-                // For now, if they have the bundle, they have access to all Valentine templates
-                // (Or we can implement a more complex tracking table)
-                return true;
-            }
-        }
-
-        // 3. Check for All-Access Combo
+        // 2. Check for "All Access" bundle specifically (if template_id is '*')
         const { data: allAccessData } = await supabase
-            .from('user_purchases')
-            .select('id, status')
+            .from('user_template_access')
+            .select('id')
             .eq('user_id', user.id)
-            .eq('template_id', 'all-access')
-            .eq('status', 'approved')
+            .eq('template_id', '*')
+            .eq('is_locked', false)
             .maybeSingle();
 
         if (allAccessData) return true;
 
         return false;
+    },
+
+    // Check detailed status of a template for a user
+    async getTemplateStatus(templateId: string): Promise<'none' | 'pending' | 'owned'> {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return 'none';
+
+        // 1. Check for approved access
+        const { data: approvedAccess } = await supabase
+            .from('user_template_access')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('template_id', templateId)
+            .eq('is_locked', false)
+            .maybeSingle();
+
+        if (approvedAccess) return 'owned';
+
+        // 2. Check for "All Access" approved
+        const { data: allAccessApproved } = await supabase
+            .from('user_template_access')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('template_id', '*')
+            .eq('is_locked', false)
+            .maybeSingle();
+
+        if (allAccessApproved) return 'owned';
+
+        // 3. Check for pending access
+        const { data: pendingAccess } = await supabase
+            .from('user_template_access')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('template_id', templateId)
+            .eq('is_locked', true)
+            .maybeSingle();
+
+        if (pendingAccess) return 'pending';
+
+        return 'none';
     },
 
     // Check if user has a valid bundle (generic)

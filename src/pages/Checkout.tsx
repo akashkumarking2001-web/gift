@@ -8,7 +8,7 @@ import {
 import { useToast } from "../hooks/use-toast";
 import { Check, Copy, Shield, Lock, Instagram } from "lucide-react";
 import FloatingHearts from "../components/landing/FloatingHearts";
-import { PurchaseService } from "../lib/purchaseService";
+import { PurchaseService, BundleTemplate } from "../lib/purchaseService";
 import { ProfileService } from "../lib/profileService";
 import { SettingsService } from "../lib/settings";
 import { supabase } from "../lib/supabase";
@@ -55,21 +55,13 @@ const Checkout = () => {
   let templatePrice: number;
   let templateMrp: number;
 
+  const [bundleData, setBundleData] = useState<BundleTemplate | null>(null);
+
   if (checkoutState?.bundle) {
-    // Bundle logic (from state)
-    if (checkoutState.bundle === "valentines") {
-      templateTitle = checkoutState.title || "Valentine's Special Bundle (3 Templates)";
-      templatePrice = checkoutState.price || 199;
-      templateMrp = 1800;
-    } else if (checkoutState.bundle === "all-access") {
-      templateTitle = checkoutState.title || "All-Access Combo (19+ Templates)";
-      templatePrice = checkoutState.price || 399;
-      templateMrp = 5000;
-    } else {
-      templateTitle = checkoutState.title || "Special Bundle";
-      templatePrice = checkoutState.price || 149;
-      templateMrp = checkoutState.mrp || 0;
-    }
+    // Bundle logic (from DB or state)
+    templateTitle = bundleData?.bundle_name || checkoutState.title || (checkoutState.bundle === "valentines" ? "Valentine's Special Bundle" : "Special Bundle");
+    templatePrice = bundleData?.price || checkoutState.price || (checkoutState.bundle === "valentines" ? 99 : checkoutState.bundle === "all-access" ? 399 : 149);
+    templateMrp = bundleData?.original_price || checkoutState.mrp || 2499;
   } else if (checkoutState?.templateId) {
     // Individual template (from state)
     templateTitle = checkoutState.title || selectedTemplate?.title || 'Premium Template';
@@ -94,6 +86,33 @@ const Checkout = () => {
         // Existing user - auto-fill details
         setEmail(user.email || "");
         setIsNewUser(false);
+
+        // Check for duplicate purchase
+        try {
+          if (checkoutState?.templateId) {
+            const status = await PurchaseService.getTemplateStatus(checkoutState.templateId.toString());
+            if (status === 'owned') {
+              toast({ title: "Already Owned", description: "You already have access to this template." });
+              navigate("/dashboard");
+              return;
+            } else if (status === 'pending') {
+              toast({ title: "Purchase Pending", description: "This template is already awaiting approval." });
+              navigate("/dashboard");
+              return;
+            }
+          } else if (checkoutState?.bundle) {
+            // Check if they already have this bundle
+            const bundles = await PurchaseService.getUserBundles();
+            if (bundles.includes(checkoutState.bundle)) {
+              toast({ title: "Bundle Owned", description: "You already have this bundle." });
+              navigate("/dashboard");
+              return;
+            }
+          }
+        } catch (e) {
+          console.error("Duplicate check failed", e);
+        }
+
         try {
           const profile = await ProfileService.getProfile();
           if (profile) {
@@ -119,8 +138,15 @@ const Checkout = () => {
       if (s.instagram_url) setInstagramUrl(s.instagram_url);
     });
 
+    // Load bundle info if needed
+    if (checkoutState?.bundle) {
+      PurchaseService.getBundleConfiguration(checkoutState.bundle).then(b => {
+        if (b) setBundleData(b);
+      });
+    }
+
     checkAuth();
-  }, []);
+  }, [checkoutState]);
 
   const copyUPI = () => {
     navigator.clipboard.writeText(upiId);

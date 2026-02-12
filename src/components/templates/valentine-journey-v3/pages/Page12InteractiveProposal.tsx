@@ -87,14 +87,14 @@ const Page12InteractiveProposal: React.FC<PageProps> = ({ data, onNext, isEditin
                             isEditing={!!isEditing}
                             label="Chapter"
                         >
-                            <span className="text-[12px] text-pink-600/60 font-black italic tracking-[0.4em]">
+                            <span className="text-[14px] md:text-[16px] text-pink-600 font-bold italic tracking-[0.2em] uppercase">
                                 {data.chapterLabel || "a digital confession • chapter xii"}
                             </span>
                         </V3EditableField>
                         <Sparkles className="w-6 h-6 text-pink-500 animate-pulse" />
                     </div>
 
-                    <h2 className="text-4xl md:text-6xl lg:text-7xl font-black text-[#4a041a] leading-[1.1] tracking-tight mb-12 italic">
+                    <h2 className="text-5xl md:text-8xl lg:text-9xl font-bold text-[#4a041a] leading-[1.1] tracking-tighter mb-12 italic">
                         <V3EditableField
                             value={data.recipientName || "My Love"}
                             onUpdate={(v) => safeUpdate('recipientName', v)}
@@ -114,12 +114,12 @@ const Page12InteractiveProposal: React.FC<PageProps> = ({ data, onNext, isEditin
                         </V3EditableField>
                     </h2>
 
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-8 relative min-h-[100px]">
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-8 relative min-h-[120px]">
                         <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => handleSelect('yes')}
-                            className="px-12 py-5 bg-gradient-to-r from-pink-500 to-rose-600 text-white font-black rounded-full shadow-2xl border-4 border-white/20 tracking-widest italic"
+                            className="px-14 py-6 md:px-20 md:py-8 bg-gradient-to-r from-pink-500 to-rose-600 text-white font-bold text-xl md:text-2xl rounded-full shadow-[0_20px_40px_-10px_rgba(255,77,148,0.5)] border-4 border-white/40 tracking-widest italic"
                         >
                             {data.yesText || "I LOVE YOU!"}
                         </motion.button>
@@ -128,7 +128,7 @@ const Page12InteractiveProposal: React.FC<PageProps> = ({ data, onNext, isEditin
                             animate={{ x: noBtnPos.x, y: noBtnPos.y }}
                             onHoverStart={dodge}
                             onClick={dodge}
-                            className="px-12 py-5 bg-white/50 text-[#4a041a] font-black rounded-full shadow-lg border-2 border-white/80 tracking-widest italic backdrop-blur-md"
+                            className="px-14 py-6 md:px-20 md:py-8 bg-white/60 text-[#4a041a] font-bold text-lg md:text-xl rounded-full shadow-xl border-2 border-white tracking-widest italic backdrop-blur-md"
                         >
                             {data.noText || "Wait..."}
                         </motion.button>
@@ -137,29 +137,29 @@ const Page12InteractiveProposal: React.FC<PageProps> = ({ data, onNext, isEditin
                     <AnimatePresence>
                         {selectedOption === 'yes' && (
                             <motion.div
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="mt-16 space-y-8"
+                                className="mt-16 space-y-10"
                             >
-                                <div className="text-2xl md:text-3xl font-black text-pink-600 italic tracking-tight">
+                                <div className="text-3xl md:text-5xl font-bold text-pink-600 italic tracking-tight drop-shadow-sm">
                                     <V3EditableField
                                         value={data.successText || "Great choice! Now proceed to the next page"}
                                         onUpdate={(v) => safeUpdate('successText', v)}
                                         isEditing={!!isEditing}
                                         label="Success Message"
                                     >
-                                        "Great choice! Now proceed to the next page"
+                                        "{data.successText || "Great choice! Now proceed to the next page"}"
                                     </V3EditableField>
                                 </div>
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={handleProceed}
-                                    className="group relative px-10 py-5 bg-[#4a041a] text-white font-black text-[12px] tracking-widest rounded-full shadow-xl overflow-hidden"
+                                    className="group relative px-12 py-6 md:px-16 md:py-8 bg-[#4a041a] text-white font-bold text-[14px] md:text-[16px] tracking-[0.4em] rounded-full shadow-2xl overflow-hidden border-2 border-white/20"
                                 >
                                     <div className="absolute inset-0 bg-white/10 translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-                                    <span className="relative z-10 flex items-center gap-3">
-                                        STEP DEEPER <ChevronRight className="w-4 h-4" />
+                                    <span className="relative z-10 flex items-center justify-center gap-4 italic uppercase">
+                                        STEP DEEPER <ChevronRight className="w-6 h-6" />
                                     </span>
                                 </motion.button>
                             </motion.div>

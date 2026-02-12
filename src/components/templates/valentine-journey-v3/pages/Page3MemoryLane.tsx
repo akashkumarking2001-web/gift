@@ -46,7 +46,7 @@ const Page3MemoryLane: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                     viewport={{ once: true }}
                     className="text-center mb-12 md:mb-24"
                 >
-                    <div className="inline-flex items-center gap-3 bg-pink-500/5 border border-pink-500/10 px-6 py-2 md:px-8 md:py-3 rounded-full mb-6 md:mb-10 shadow-inner">
+                    <div className="inline-flex items-center gap-3 bg-pink-500/10 border border-pink-500/20 px-6 py-2 md:px-8 md:py-3 rounded-full mb-6 md:mb-10 shadow-inner backdrop-blur-sm">
                         <Camera className="w-5 h-5 md:w-6 md:h-6 text-pink-600 animate-pulse" />
                         <V3EditableField
                             value={data.chapterLabel || "chapter ii • immersive memoirs"}
@@ -54,12 +54,12 @@ const Page3MemoryLane: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                             isEditing={!!isEditing}
                             label="Chapter"
                         >
-                            <span className="text-[10px] md:text-[12px] text-pink-600 tracking-[0.4em] font-black italic">
+                            <span className="text-[13px] md:text-[14px] text-pink-600 tracking-[0.3em] font-bold italic uppercase">
                                 {data.chapterLabel || "chapter ii • immersive memoirs"}
                             </span>
                         </V3EditableField>
                     </div>
-                    <h2 className="text-4xl md:text-7xl lg:text-8xl font-black text-[#4a041a] tracking-tight leading-[0.9] mb-4 md:mb-8 italic">
+                    <h2 className="text-5xl md:text-8xl lg:text-9xl font-bold text-[#4a041a] tracking-tight leading-[0.9] mb-4 md:mb-8 italic">
                         <V3EditableField
                             value={data.titleLine1 || "Memory"}
                             onUpdate={(v) => safeUpdate('titleLine1', v)}
@@ -76,7 +76,7 @@ const Page3MemoryLane: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                             <span className="v3-gradient-text block mt-2 md:mt-4">{data.titleLine2 || "Hall"}</span>
                         </V3EditableField>
                     </h2>
-                    <div className="text-pink-900/50 mt-6 md:mt-10 max-w-2xl mx-auto text-base md:text-2xl lg:text-3xl font-romantic italic font-black tracking-tight leading-relaxed px-4">
+                    <div className="text-pink-900 mt-6 md:mt-10 max-w-3xl mx-auto text-xl md:text-3xl lg:text-4xl font-romantic italic font-bold tracking-tight leading-relaxed px-4">
                         <V3EditableField
                             value={data.description || "Each frame is a heartbeat captured in time. Scroll through the sanctuary of our history."}
                             onUpdate={(v) => safeUpdate('description', v)}
@@ -184,7 +184,7 @@ const Page3MemoryLane: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                                                     isEditing={!!isEditing}
                                                     label="Caption"
                                                 >
-                                                    <h4 className="text-[#4a041a] font-romantic font-black text-2xl md:text-4xl italic tracking-tight mb-2">
+                                                    <h4 className="text-[#4a041a] font-romantic font-bold text-3xl md:text-5xl italic tracking-tight mb-2">
                                                         {data[`photoLabel_${i}`] || "pure moment"}
                                                     </h4>
                                                 </V3EditableField>
@@ -194,7 +194,7 @@ const Page3MemoryLane: React.FC<PageProps> = ({ data, onNext, isEditing, onUpdat
                                                     isEditing={!!isEditing}
                                                     label="Date/Meta"
                                                 >
-                                                    <p className="text-pink-600/60 text-[11px] md:text-[12px] tracking-[0.3em] font-black italic">
+                                                    <p className="text-pink-600 text-[12px] md:text-[14px] tracking-[0.2em] font-bold italic uppercase">
                                                         {data[`photoSubLabel_${i}`] || "captured forever"}
                                                     </p>
                                                 </V3EditableField>

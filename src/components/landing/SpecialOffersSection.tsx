@@ -1,8 +1,47 @@
 import { motion } from "framer-motion";
 import { Sparkles, Gift, Heart, ArrowRight, Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { PurchaseService, BundleTemplate } from "../../lib/purchaseService";
 
 const SpecialOffersSection = () => {
+    const [bundles, setBundles] = useState<Record<string, BundleTemplate>>({
+        valentines: {
+            id: 0,
+            bundle_id: 'valentines',
+            bundle_name: "Valentine's Bundle",
+            template_ids: [],
+            price: 99,
+            original_price: 2499,
+            is_active: true,
+            created_at: "",
+            updated_at: ""
+        },
+        'all-access': {
+            id: 0,
+            bundle_id: 'all-access',
+            bundle_name: "All Assets Bundle",
+            template_ids: [],
+            price: 399,
+            original_price: 9999,
+            is_active: true,
+            created_at: "",
+            updated_at: ""
+        }
+    });
+
+    useEffect(() => {
+        PurchaseService.getAllBundles().then(bList => {
+            if (bList && bList.length > 0) {
+                const bObj: any = {};
+                bList.forEach(b => {
+                    bObj[b.bundle_id] = b;
+                });
+                setBundles(prev => ({ ...prev, ...bObj }));
+            }
+        });
+    }, []);
+
     return (
         <section id="special-offers" className="py-16 relative overflow-hidden">
             <div className="absolute inset-0 grid-paper-bg opacity-40" />
@@ -46,7 +85,7 @@ const SpecialOffersSection = () => {
                             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-3xl mb-6 shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
                                 💝
                             </div>
-                            <h3 className="text-2xl font-black text-white mb-2">Valentine's Bundle</h3>
+                            <h3 className="text-2xl font-black text-white mb-2">{bundles.valentines.bundle_name}</h3>
                             <p className="text-muted-foreground">Unlock 3 Premium Valentine's Templates for one low price!</p>
                         </div>
 
@@ -71,13 +110,13 @@ const SpecialOffersSection = () => {
                             <div className="flex items-end gap-3 mb-6">
                                 <div className="flex flex-col">
                                     <span className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-1">Bundle Price</span>
-                                    <span className="text-4xl font-black text-white">₹199</span>
+                                    <span className="text-4xl font-black text-white">₹{bundles.valentines.price}</span>
                                 </div>
-                                <span className="text-lg text-muted-foreground line-through mb-1">₹2,499</span>
-                                <span className="text-xs font-bold text-green-400 bg-green-400/10 px-2 py-1 rounded mb-2">SAVE 92%</span>
+                                <span className="text-lg text-muted-foreground line-through mb-1">₹{bundles.valentines.original_price || 2499}</span>
+                                <span className="text-xs font-bold text-green-400 bg-green-400/10 px-2 py-1 rounded mb-2">SAVE {Math.round((((bundles.valentines.original_price || 2499) - bundles.valentines.price) / (bundles.valentines.original_price || 2499)) * 100)}%</span>
                             </div>
 
-                            <Link to="/checkout" state={{ bundle: "valentines", price: 199 }}>
+                            <Link to="/checkout" state={{ bundle: "valentines", price: bundles.valentines.price, title: bundles.valentines.bundle_name }}>
                                 <button className="w-full gradient-primary text-white font-bold py-4 rounded-xl shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
                                     Get Bundle Now
                                     <ArrowRight className="w-4 h-4" />
@@ -86,7 +125,7 @@ const SpecialOffersSection = () => {
                         </div>
                     </motion.div>
 
-                    {/* Single Premium Template */}
+                    {/* All Assets Bundle */}
                     <motion.div
                         initial={{ opacity: 0, x: 30 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -99,17 +138,17 @@ const SpecialOffersSection = () => {
                             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-3xl mb-6 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
                                 💎
                             </div>
-                            <h3 className="text-2xl font-black text-white mb-2">Single Premium</h3>
-                            <p className="text-muted-foreground">Pick any one premium template and make it yours forever.</p>
+                            <h3 className="text-2xl font-black text-white mb-2">{bundles['all-access'].bundle_name}</h3>
+                            <p className="text-muted-foreground">Unlock EVERYTHING. All current and future templates included.</p>
                         </div>
 
                         <div className="space-y-4 mb-8 flex-1">
                             {[
-                                "Any Premium Template of Choice",
-                                "Rich Animations & Interactive elements",
-                                "HD Photo & Video Support",
-                                "Unlimited Edits",
-                                "Ad-Free Experience"
+                                "Access to ALL 19+ Templates",
+                                "All Future Template Releases",
+                                "Priority Support",
+                                "White-label Options",
+                                "Massive Savings"
                             ].map((item, i) => (
                                 <div key={i} className="flex items-center gap-3">
                                     <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-white">
@@ -123,15 +162,16 @@ const SpecialOffersSection = () => {
                         <div className="pt-6 border-t border-white/10">
                             <div className="flex items-end gap-3 mb-6">
                                 <div className="flex flex-col">
-                                    <span className="text-xs font-bold text-white/40 uppercase tracking-[0.2em] mb-1">Single Template</span>
-                                    <span className="text-4xl font-black text-white">₹149</span>
+                                    <span className="text-xs font-bold text-white/40 uppercase tracking-[0.2em] mb-1">Combo Price</span>
+                                    <span className="text-4xl font-black text-white">₹{bundles['all-access'].price}</span>
                                 </div>
-                                <span className="text-lg text-muted-foreground line-through mb-1">₹1,299</span>
+                                <span className="text-lg text-muted-foreground line-through mb-1">₹{bundles['all-access'].original_price || 9999}</span>
+                                <span className="text-xs font-bold text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded mb-2">BEST VALUE</span>
                             </div>
 
-                            <Link to="/template/romantic-valentines-journey-v2">
+                            <Link to="/checkout" state={{ bundle: "all-access", price: bundles['all-access'].price, title: bundles['all-access'].bundle_name }}>
                                 <button className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-4 rounded-xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-2 text-sm uppercase tracking-widest">
-                                    Explore Library
+                                    Get All Assets
                                     <Gift className="w-4 h-4" />
                                 </button>
                             </Link>
