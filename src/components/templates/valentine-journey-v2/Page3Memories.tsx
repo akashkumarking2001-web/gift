@@ -2,12 +2,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef } from 'react';
 import { GiftService } from '../../../lib/gifts';
 import { Loader2, Upload } from 'lucide-react';
+import GiftBox from './GiftBox';
 
 interface Page3MemoriesProps {
     data: {
         heading?: string;
         photos?: string[];
         polaroidCaption?: string;
+        giftBoxVideo?: string;
     };
     onNext: () => void;
     isEditing?: boolean;
@@ -18,6 +20,7 @@ const Page3Memories = ({ data, onNext, isEditing = false, onUpdate }: Page3Memor
     const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
     const [hoveredPhoto, setHoveredPhoto] = useState<number | null>(null);
     const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
+    const [isGiftBoxUnlocked, setIsGiftBoxUnlocked] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const defaultData = {
@@ -245,17 +248,30 @@ const Page3Memories = ({ data, onNext, isEditing = false, onUpdate }: Page3Memor
                     transition={{ delay: 1, duration: 0.8 }}
                     className="flex justify-center mt-20"
                 >
-                    <motion.button
-                        onClick={onNext}
-                        className="group relative overflow-hidden px-12 py-6 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold text-xs uppercase tracking-[0.2em] shadow-lg shadow-rose-600/30 hover:shadow-rose-600/50 transition-all"
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <span className="relative z-10 flex items-center gap-3">
-                            Continue Journey
-                            <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
-                        </span>
-                    </motion.button>
+                    {!isGiftBoxUnlocked ? (
+                        <GiftBox
+                            videoUrl={data.giftBoxVideo}
+                            onUpdate={(url) => onUpdate?.('giftBoxVideo', url)}
+                            isEditing={isEditing}
+                            onUnlocked={() => setIsGiftBoxUnlocked(true)}
+                            postVideoType="text"
+                            postVideoText="Do you remember this?"
+                        />
+                    ) : (
+                        <motion.button
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            onClick={onNext}
+                            className="group relative overflow-hidden px-12 py-6 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold text-xs uppercase tracking-[0.2em] shadow-lg shadow-rose-600/30 hover:shadow-rose-600/50 transition-all"
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <span className="relative z-10 flex items-center gap-3">
+                                Continue Journey
+                                <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
+                            </span>
+                        </motion.button>
+                    )}
                 </motion.div>
             </div>
 

@@ -1,13 +1,15 @@
 import { motion } from 'framer-motion';
 import { useState, useRef } from 'react';
-import QRCode from 'qrcode';
+import * as QRCode from 'qrcode';
 import { Loader2, Upload, Download, Share2, ImageIcon, Type } from 'lucide-react';
+import GiftBox from './GiftBox';
 
 interface Page11EndingProps {
     data: {
         thankYouText?: string;
         finalMessage?: string;
         shareText?: string;
+        giftBoxVideo?: string;
     };
     onNext?: () => void;
     isEditing?: boolean;
@@ -16,6 +18,7 @@ interface Page11EndingProps {
 
 const Page11Ending = ({ data, isEditing = false, onUpdate }: Page11EndingProps) => {
     const [copied, setCopied] = useState(false);
+    const [isGiftBoxUnlocked, setIsGiftBoxUnlocked] = useState(false);
 
     const defaultData = {
         thankYouText: data.thankYouText || "Thank You For Being Mine",
@@ -408,29 +411,46 @@ const Page11Ending = ({ data, isEditing = false, onUpdate }: Page11EndingProps) 
                     transition={{ delay: 0.9, duration: 0.8 }}
                     className="flex flex-col sm:flex-row gap-6 justify-center items-center"
                 >
-                    {/* Replay Button */}
-                    <motion.button
-                        onClick={handleReplay}
-                        className="group relative overflow-hidden px-10 py-5 rounded-full bg-white text-rose-600 font-bold text-xs uppercase tracking-[0.2em] shadow-lg hover:shadow-xl transition-all min-w-[240px]"
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <span className="relative z-10 flex items-center justify-center gap-2">
-                            🔄 REPLAY STORY
-                        </span>
-                    </motion.button>
+                    {!isGiftBoxUnlocked ? (
+                        <GiftBox
+                            videoUrl={data.giftBoxVideo}
+                            onUpdate={(url) => onUpdate?.('giftBoxVideo', url)}
+                            isEditing={isEditing}
+                            onUnlocked={() => setIsGiftBoxUnlocked(true)}
+                            postVideoType="interaction"
+                            postVideoQuestion="Are you impressed? Do you like this?"
+                        />
+                    ) : (
+                        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center w-full">
+                            {/* Replay Button */}
+                            <motion.button
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                onClick={handleReplay}
+                                className="group relative overflow-hidden px-10 py-5 rounded-full bg-white text-rose-600 font-bold text-xs uppercase tracking-[0.2em] shadow-lg hover:shadow-xl transition-all min-w-[240px]"
+                                whileHover={{ scale: 1.05, y: -2 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <span className="relative z-10 flex items-center justify-center gap-2">
+                                    🔄 REPLAY STORY
+                                </span>
+                            </motion.button>
 
-                    {/* Share Button (Green) */}
-                    <motion.button
-                        onClick={() => setShowShareModal(true)}
-                        className="group relative overflow-hidden px-10 py-5 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold text-xs uppercase tracking-[0.2em] shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/50 transition-all min-w-[240px]"
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <span className="relative z-10 flex items-center justify-center gap-2">
-                            📤 SHARE & QR CODE
-                        </span>
-                    </motion.button>
+                            {/* Share Button (Green) */}
+                            <motion.button
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                onClick={() => setShowShareModal(true)}
+                                className="group relative overflow-hidden px-10 py-5 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold text-xs uppercase tracking-[0.2em] shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/50 transition-all min-w-[240px]"
+                                whileHover={{ scale: 1.05, y: -2 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <span className="relative z-10 flex items-center justify-center gap-2">
+                                    📤 SHARE & QR CODE
+                                </span>
+                            </motion.button>
+                        </div>
+                    )}
                 </motion.div>
 
                 {/* Share Modal */}

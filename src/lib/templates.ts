@@ -490,7 +490,7 @@ export const TEMPLATES: TemplateDefinition[] = [
                 id: 'p3',
                 type: 'photo',
                 title: 'Our Memories',
-                requiredFields: ['heading', 'photos', 'polaroidCaption'],
+                requiredFields: ['heading', 'photos', 'polaroidCaption', 'giftBoxVideo'],
                 config: { maxPhotos: 5, layout: 'polaroid-grid', hasZoomModal: true, hasFloatingHearts: true }
             },
             {
@@ -504,7 +504,7 @@ export const TEMPLATES: TemplateDefinition[] = [
                 id: 'p5',
                 type: 'celebration',
                 title: 'Celebration',
-                requiredFields: ['mainHeading', 'characterImage', 'loveMessage', 'signature'],
+                requiredFields: ['mainHeading', 'characterImage', 'loveMessage', 'signature', 'giftBoxVideo'],
                 config: { hasConfetti: true, confettiDuration: 5000, hasOrbitingHearts: true, hasFireworks: true }
             },
             {
@@ -546,7 +546,7 @@ export const TEMPLATES: TemplateDefinition[] = [
                 id: 'p11',
                 type: 'celebration',
                 title: 'Thank You',
-                requiredFields: ['thankYouText', 'finalMessage', 'shareText'],
+                requiredFields: ['thankYouText', 'finalMessage', 'shareText', 'giftBoxVideo'],
                 config: { hasShareButton: true, hasReplayButton: true, hasFireworks: true, hasFloatingHearts: true, heartCount: 40 }
             }
         ],

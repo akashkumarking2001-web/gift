@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { GiftService } from '../../../lib/gifts';
 import { Loader2, Upload } from 'lucide-react';
+import GiftBox from './GiftBox';
 
 interface Page5CelebrationProps {
     data: {
@@ -10,6 +11,7 @@ interface Page5CelebrationProps {
         characterImage?: string;
         loveMessage?: string;
         signature?: string;
+        giftBoxVideo?: string;
     };
     onNext: () => void;
     isEditing?: boolean;
@@ -19,6 +21,7 @@ interface Page5CelebrationProps {
 const Page5Celebration = ({ data, onNext, isEditing = false, onUpdate }: Page5CelebrationProps) => {
     const [showMessage, setShowMessage] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [isGiftBoxUnlocked, setIsGiftBoxUnlocked] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const defaultData = {
@@ -336,18 +339,32 @@ const Page5Celebration = ({ data, onNext, isEditing = false, onUpdate }: Page5Ce
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 2, duration: 0.8 }}
+                    className="flex justify-center"
                 >
-                    <motion.button
-                        onClick={onNext}
-                        className="group relative overflow-hidden px-12 py-6 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold text-xs uppercase tracking-[0.2em] shadow-lg shadow-rose-600/30 hover:shadow-rose-600/50 transition-all"
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <span className="relative z-10 flex items-center gap-3">
-                            Next Mystery
-                            <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
-                        </span>
-                    </motion.button>
+                    {!isGiftBoxUnlocked ? (
+                        <GiftBox
+                            videoUrl={data.giftBoxVideo}
+                            onUpdate={(url) => onUpdate?.('giftBoxVideo', url)}
+                            isEditing={isEditing}
+                            onUnlocked={() => setIsGiftBoxUnlocked(true)}
+                            postVideoType="interaction"
+                            postVideoQuestion="Are you impressed? Do you like this?"
+                        />
+                    ) : (
+                        <motion.button
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            onClick={onNext}
+                            className="group relative overflow-hidden px-12 py-6 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold text-xs uppercase tracking-[0.2em] shadow-lg shadow-rose-600/30 hover:shadow-rose-600/50 transition-all"
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <span className="relative z-10 flex items-center gap-3">
+                                Next Mystery
+                                <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
+                            </span>
+                        </motion.button>
+                    )}
                 </motion.div>
 
             </div>

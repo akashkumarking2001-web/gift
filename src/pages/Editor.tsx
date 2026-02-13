@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
     ChevronLeft, ChevronRight, Save, Eye, Share2,
     CheckCircle2, Circle, Layout, Image as ImageIcon,
-    Smartphone, Monitor, Music
+    Smartphone, Monitor, Music, Video, Upload as UploadIcon
 } from "lucide-react";
 import { TEMPLATES } from "../lib/templates";
 import { supabase } from "../lib/supabase";
@@ -132,8 +132,8 @@ const Editor = () => {
         try {
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                // Check size (max 50MB for video, 5MB for image)
-                const maxSize = file.type.startsWith('video/') ? 50 * 1024 * 1024 : 5 * 1024 * 1024;
+                // Check size (max 100MB for video, 10MB for image)
+                const maxSize = file.type.startsWith('video/') ? 100 * 1024 * 1024 : 10 * 1024 * 1024;
                 if (file.size > maxSize) {
                     toast({ title: "File too large", description: `${file.name} is too large.`, variant: "destructive" });
                     continue;
@@ -144,10 +144,16 @@ const Editor = () => {
             }
 
             // Update state
-            const currentUrls = giftData[pageId]?.[field] || [];
-            updateField(pageId, field, [...currentUrls, ...newUrls]);
-
-            toast({ title: "Upload Complete", description: `Successfully uploaded ${newUrls.length} file(s).` });
+            if (newUrls.length > 0) {
+                const isArrayField = Array.isArray(giftData[pageId]?.[field]);
+                if (isArrayField) {
+                    const currentUrls = giftData[pageId]?.[field] || [];
+                    updateField(pageId, field, [...currentUrls, ...newUrls]);
+                } else {
+                    updateField(pageId, field, newUrls[0]);
+                }
+                toast({ title: "Upload Complete", description: `Successfully uploaded ${newUrls.length} file(s).` });
+            }
         } catch (error: any) {
             console.error("Upload error:", error);
             toast({ title: "Upload Failed", description: error.message || "Failed to upload media.", variant: "destructive" });
@@ -662,7 +668,51 @@ const Editor = () => {
                                             <span className="text-[8px] font-bold text-white/20 uppercase tracking-widest">Property Layer</span>
                                         </div>
 
-                                        {field.toLowerCase().includes('image') || field.toLowerCase().includes('photo') ? (
+                                        {field.toLowerCase().includes('video') ? (
+                                            <div className="space-y-4">
+                                                <div className="relative group/upload">
+                                                    <input
+                                                        type="text"
+                                                        value={giftData[activePage.id]?.[field] || ""}
+                                                        onChange={(e) => updateField(activePage.id, field, e.target.value)}
+                                                        placeholder="Enter Video URL..."
+                                                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
+                                                    />
+                                                    <div className="absolute right-3 top-3">
+                                                        <button
+                                                            onClick={() => document.getElementById(`file-${field}`)?.click()}
+                                                            className="p-2 hover:bg-white/10 rounded-xl transition-colors text-white/40 hover:text-primary"
+                                                        >
+                                                            <Video className="w-4 h-4" />
+                                                        </button>
+                                                        <input
+                                                            id={`file-${field}`}
+                                                            type="file"
+                                                            accept="video/*"
+                                                            className="hidden"
+                                                            onChange={(e) => handleFileUpload(e, activePage.id, field)}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="p-1.5 bg-white/5 rounded-3xl border border-white/5">
+                                                    <div className="relative aspect-video rounded-2xl overflow-hidden glass-card">
+                                                        {giftData[activePage.id]?.[field] ? (
+                                                            <video
+                                                                src={giftData[activePage.id][field]}
+                                                                className="w-full h-full object-cover"
+                                                                controls
+                                                            />
+                                                        ) : (
+                                                            <div className="w-full h-full flex flex-col items-center justify-center text-white/10 gap-2">
+                                                                <Video className="w-8 h-8" />
+                                                                <span className="text-[10px] font-black uppercase tracking-widest">No Video Selected</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ) : field.toLowerCase().includes('image') || field.toLowerCase().includes('photo') ? (
                                             <div className="space-y-4">
                                                 <div className="relative group/upload">
                                                     <input
@@ -673,9 +723,19 @@ const Editor = () => {
                                                         className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all"
                                                     />
                                                     <div className="absolute right-3 top-3">
-                                                        <button className="p-2 hover:bg-white/10 rounded-xl transition-colors text-white/40 hover:text-primary">
-                                                            <ImageIcon className="w-4 h-4" />
+                                                        <button
+                                                            onClick={() => document.getElementById(`file-${field}`)?.click()}
+                                                            className="p-2 hover:bg-white/10 rounded-xl transition-colors text-white/40 hover:text-primary"
+                                                        >
+                                                            <UploadIcon className="w-4 h-4" />
                                                         </button>
+                                                        <input
+                                                            id={`file-${field}`}
+                                                            type="file"
+                                                            accept="image/*"
+                                                            className="hidden"
+                                                            onChange={(e) => handleFileUpload(e, activePage.id, field)}
+                                                        />
                                                     </div>
                                                 </div>
 
@@ -683,7 +743,7 @@ const Editor = () => {
                                                     <div className="relative aspect-video rounded-2xl overflow-hidden glass-card">
                                                         {giftData[activePage.id]?.[field] ? (
                                                             <img
-                                                                src={giftData[activePage.id][field]}
+                                                                src={Array.isArray(giftData[activePage.id][field]) ? giftData[activePage.id][field][0] : giftData[activePage.id][field]}
                                                                 alt="Preview"
                                                                 className="w-full h-full object-cover"
                                                             />
