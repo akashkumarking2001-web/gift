@@ -1,0 +1,1 @@
+id, business_name, contact_person, email, whatsapp_number, package_name, package_price, payment_status, payment_details, status, admin_notes, created_at, updated_at, business_slug, instagram_id, logo_url, password_plain, custom_domain

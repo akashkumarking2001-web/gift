@@ -1,0 +1,2510 @@
+cat > /mnt/user-data/outputs/COMPLETE_MASTER_DEVELOPMENT_BRIEF.md << 'ENDOFFILE'
+# 🎁 COMPLETE MASTER DEVELOPMENT BRIEF
+## Interactive Emotional Gift Template Marketplace - Full Specification
+
+---
+
+**Project Name:** Interactive Emotional Gift Template Marketplace  
+**Project Type:** Full-Stack SaaS Web Application  
+**Document Version:** 1.0 Final  
+**Date:** February 9, 2026  
+**Estimated Development Time:** 6 weeks MVP, 3 months full platform  
+
+---
+
+## 📋 EXECUTIVE SUMMARY
+
+Build a premium web-based SaaS platform where users can purchase, customize, and share interactive digital gift templates. Each template is a multi-page immersive experience featuring animations, games, photo galleries, and personalized messages, optimized for mobile sharing via WhatsApp and social media.
+
+**Core Value Proposition:**
+- Users create stunning, personalized digital gifts without design skills
+- Recipients receive memorable, interactive experiences on their phones
+- Platform monetizes through template sales with manual payment verification
+
+**Initial Offer:** Valentine's Special - 3 Templates for ₹99 (Regular: ₹1500)
+
+---
+
+## 🎯 TABLE OF CONTENTS
+
+1. [Product Overview & Vision](#1-product-overview)
+2. [Complete Design System](#2-design-system)
+3. [Site Architecture & Navigation](#3-architecture)
+4. [Detailed Feature Specifications](#4-features)
+5. [All 19 Template Breakdowns](#5-templates)
+6. [Technology Stack & Database](#6-technology)
+7. [User Journey Maps](#7-user-journeys)
+8. [Admin Panel Specifications](#8-admin-panel)
+9. [Additional Template Ideas](#9-new-templates)
+10. [Development Roadmap](#10-roadmap)
+11. [Code Examples & Implementation](#11-implementation)
+12. [Testing & Deployment](#12-deployment)
+
+---
+
+<a name="1-product-overview"></a>
+## 1. PRODUCT OVERVIEW & VISION
+
+### 1.1 What We're Building
+
+A marketplace where emotional moments become interactive digital experiences:
+- **For Gifters:** Easy-to-use editor to customize professional templates
+- **For Recipients:** Immersive, mobile-optimized gift experiences
+- **For Business:** Scalable SaaS model with minimal operational overhead
+
+### 1.2 Target Market
+
+**Primary Audience:**
+- Age: 18-35 years
+- Relationship status: In relationships, close friendships
+- Tech-savvy, comfortable with digital gifting
+- Geography: Initially India, expandable globally
+
+**Use Cases:**
+- Valentine's Day expressions
+- Birthday surprises
+- Anniversary celebrations
+- Apologies and reconciliations
+- Friendship appreciation
+- Special announcements
+
+### 1.3 Business Model
+
+**Revenue Streams:**
+1. Individual template sales (₹50-₹299)
+2. Bundle packages (3 templates for ₹99 - Valentine's Special)
+3. Category bundles (All Birthday templates, etc.)
+4. Future: Subscription model (₹299/month - unlimited access)
+
+**Payment Method:** UPI (Manual Verification)
+- User makes payment via UPI app
+- Submits transaction ID
+- Admin manually verifies and approves
+- Account activated within 2 hours
+
+### 1.4 Success Metrics
+
+**MVP Success:**
+- 100 paying users in first month
+- 500+ gifts created
+- 70%+ purchase completion rate
+- < 5% refund rate
+- 4.5+ star rating (user feedback)
+
+---
+
+<a name="2-design-system"></a>
+## 2. COMPLETE DESIGN SYSTEM
+
+### 2.1 Color Palette
+
+**Primary Colors:**
+```css
+/* Core Brand Colors */
+--primary-pink: #FF69B4;          /* Hot Pink - Primary actions */
+--soft-pink: #FFB6C1;             /* Light Pink - Backgrounds */
+--pastel-purple: #D8BFD8;         /* Lavender - Accents */
+--pastel-blue: #B0E0E6;           /* Sky Blue - Secondary elements */
+--pastel-yellow: #FFFACD;         /* Soft Yellow - Highlights */
+--pastel-green: #98FB98;          /* Mint Green - Success states */
+
+/* Background Colors */
+--bg-dark: #1a1a2e;               /* Deep Navy - Primary BG */
+--bg-gradient-start: #2d1b3d;     /* Purple-Black - Gradient start */
+--bg-gradient-end: #0f0f1e;       /* Deep Black - Gradient end */
+
+/* Text Colors */
+--text-primary: #FFFFFF;          /* White - Main text */
+--text-secondary: #FFB6C1;        /* Pink - Secondary text */
+--text-muted: #B8B8C8;            /* Gray - Subtle text */
+
+/* Glassmorphism */
+--glass-bg: rgba(255, 255, 255, 0.08);
+--glass-border: rgba(255, 255, 255, 0.18);
+--glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+
+/* Semantic Colors */
+--success: #90EE90;               /* Light Green */
+--error: #FF6B6B;                 /* Soft Red */
+--warning: #FFD93D;               /* Golden Yellow */
+--info: #6C63FF;                  /* Soft Purple */
+```
+
+### 2.2 Typography System
+
+**Font Families:**
+```css
+--font-primary: 'Poppins', 'Inter', -apple-system, sans-serif;
+--font-accent: 'Pacifico', 'Satisfy', cursive;  /* Romantic headings */
+--font-mono: 'Fira Code', monospace;
+```
+
+**Type Scale:**
+```css
+--text-xs: 0.75rem;    /* 12px */
+--text-sm: 0.875rem;   /* 14px */
+--text-base: 1rem;     /* 16px - Body text */
+--text-lg: 1.125rem;   /* 18px */
+--text-xl: 1.25rem;    /* 20px */
+--text-2xl: 1.5rem;    /* 24px */
+--text-3xl: 1.875rem;  /* 30px */
+--text-4xl: 2.25rem;   /* 36px - Main headings */
+--text-5xl: 3rem;      /* 48px - Hero text */
+```
+
+**Font Weights:**
+- Regular: 400 (body text)
+- Medium: 500 (sub-headings)
+- Semibold: 600 (buttons, emphasis)
+- Bold: 700 (main headings)
+
+### 2.3 Spacing & Layout
+
+**Spacing Scale:**
+```css
+--space-1: 0.25rem;   /* 4px */
+--space-2: 0.5rem;    /* 8px */
+--space-3: 0.75rem;   /* 12px */
+--space-4: 1rem;      /* 16px - Base unit */
+--space-5: 1.5rem;    /* 24px */
+--space-6: 2rem;      /* 32px */
+--space-8: 3rem;      /* 48px */
+--space-10: 4rem;     /* 64px */
+--space-12: 6rem;     /* 96px */
+```
+
+**Container Widths:**
+- Mobile: 100% (with 1rem padding)
+- Tablet: 768px max-width
+- Desktop: 1200px max-width
+- Large Desktop: 1400px max-width
+
+### 2.4 Border Radius & Shadows
+
+**Border Radius:**
+```css
+--radius-sm: 8px;     /* Small elements */
+--radius-md: 12px;    /* Cards, buttons */
+--radius-lg: 16px;    /* Large cards */
+--radius-xl: 24px;    /* Hero elements */
+--radius-2xl: 32px;   /* Special containers */
+--radius-full: 9999px; /* Pills, circles */
+```
+
+**Shadows:**
+```css
+--shadow-soft: 0 8px 32px rgba(255, 105, 180, 0.12);
+--shadow-medium: 0 12px 48px rgba(255, 105, 180, 0.18);
+--shadow-hard: 0 20px 60px rgba(255, 105, 180, 0.25);
+--shadow-glow: 0 0 20px rgba(255, 105, 180, 0.4);
+```
+
+### 2.5 Signature Design Elements
+
+**A. Glassmorphism Cards**
+```css
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+```
+
+**B. Wavy Border (Signature Style)**
+```html
+<!-- SVG Filter Definition -->
+<svg style="position: absolute; width: 0; height: 0;">
+  <defs>
+    <filter id="wavy">
+      <feTurbulence baseFrequency="0.02" numOctaves="3" result="noise" seed="2"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="5"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- Apply to elements -->
+<div style="filter: url(#wavy); border-radius: 20px;"></div>
+```
+
+**C. Grid Paper Pattern Background**
+```css
+.grid-paper-bg {
+  background-color: var(--bg-dark);
+  background-image:
+    linear-gradient(rgba(255, 182, 193, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 182, 193, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+```
+
+**D. Essential Animations**
+
+Float Animation:
+```css
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+.float-element {
+  animation: float 3s ease-in-out infinite;
+}
+```
+
+Pulse Heart:
+```css
+@keyframes pulse-heart {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+.pulse-heart {
+  animation: pulse-heart 1.2s ease-in-out infinite;
+}
+```
+
+Fade In Up:
+```css
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+```
+
+### 2.6 Component Specifications
+
+**Buttons:**
+```css
+/* Primary Button */
+.btn-primary {
+  background: linear-gradient(135deg, #FF69B4, #FF1493);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  box-shadow: var(--shadow-medium);
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hard);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Button Sizes */
+.btn-sm { padding: 0.5rem 1.25rem; font-size: var(--text-sm); }
+.btn-md { padding: 0.75rem 2rem; font-size: var(--text-base); }
+.btn-lg { padding: 1rem 2.5rem; font-size: var(--text-lg); }
+```
+
+**Input Fields:**
+```css
+.input-field {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1.25rem;
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  transition: all 0.3s ease;
+}
+.input-field:focus {
+  border-color: var(--primary-pink);
+  box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
+  outline: none;
+}
+```
+
+**Cards:**
+```css
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-medium);
+}
+```
+
+---
+
+<a name="3-architecture"></a>
+## 3. SITE ARCHITECTURE & NAVIGATION
+
+### 3.1 Complete URL Structure
+
+```
+PUBLIC ROUTES (No Authentication):
+├── /                              Landing page
+├── /templates                      Template gallery
+├── /template/[id]                  Template detail page
+├── /checkout                       Payment page
+├── /login                          Login page
+├── /register                       Registration page
+├── /gift/[uuid]                    Public gift viewer ⭐
+├── /about                          About us
+└── /contact                        Contact/Support
+
+AUTHENTICATED ROUTES (Require Login):
+├── /dashboard                      User dashboard
+├── /dashboard/templates            My purchased templates
+├── /dashboard/editor/[id]          Template editor ⭐⭐⭐
+├── /dashboard/history              Gift history
+├── /dashboard/account              Account settings
+└── /dashboard/billing              Purchase history
+
+ADMIN ROUTES (Separate Admin Auth):
+├── /admin/login                    Admin login
+├── /admin/dashboard                Admin overview
+├── /admin/payments                 Payment approvals ⭐
+├── /admin/users                    User management
+├── /admin/templates                Template CRUD
+├── /admin/analytics                Analytics dashboard
+└── /admin/support                  Support tools
+
+API ROUTES:
+├── /api/auth/register              POST - User registration
+├── /api/auth/login                 POST - User login
+├── /api/templates/list             GET - All templates
+├── /api/templates/[id]             GET - Template details
+├── /api/purchase/create            POST - Create purchase
+├── /api/purchase/verify            POST - Admin verify payment
+├── /api/gifts/create               POST - Create new gift
+├── /api/gifts/update/[id]          PUT - Update gift
+├── /api/gifts/[uuid]               GET - Get gift data
+├── /api/photos/upload              POST - Upload photos
+└── /api/admin/*                    Admin endpoints
+```
+
+### 3.2 Information Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────┐
+│                  LANDING PAGE                       │
+│                        │                            │
+│       ┌────────────────┼────────────────┐          │
+│       │                                  │          │
+│   ┌───▼─────┐                    ┌──────▼──────┐  │
+│   │Template │                    │   Login /   │  │
+│   │ Detail  │                    │   Signup    │  │
+│   └───┬─────┘                    └──────┬──────┘  │
+│       │                                  │          │
+│       └──────────────┬───────────────────┘         │
+│                      │                              │
+│              ┌───────▼────────┐                    │
+│              │   CHECKOUT     │                    │
+│              │  (UPI Payment) │                    │
+│              └───────┬────────┘                    │
+│                      │                              │
+│              ┌───────▼────────┐                    │
+│              │    PENDING     │                    │
+│              │   APPROVAL     │                    │
+│              └────────────────┘                    │
+└─────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────┐
+│          USER DASHBOARD (After Approval)            │
+│                        │                            │
+│       ┌────────────────┼────────────────┐          │
+│       │                │                 │          │
+│   ┌───▼────┐     ┌─────▼─────┐    ┌────▼─────┐   │
+│   │My Temps│     │  History  │    │ Account  │   │
+│   └───┬────┘     └───────────┘    └──────────┘   │
+│       │                                            │
+│   ┌───▼──────────┐                                │
+│   │   TEMPLATE   │                                │
+│   │    EDITOR    │ ⭐ MOST IMPORTANT              │
+│   │ (Page-by-Page)                                │
+│   └───┬──────────┘                                │
+│       │                                            │
+│   ┌───▼────────┐                                  │
+│   │  GENERATE  │                                  │
+│   │    LINK    │                                  │
+│   └───┬────────┘                                  │
+│       │                                            │
+│       ▼                                            │
+│   [Gift History]                                   │
+└─────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────┐
+│         PUBLIC GIFT EXPERIENCE (Shareable)          │
+│                                                     │
+│   yoursite.com/gift/a1b2c3d4-e5f6-7g8h-9i0j       │
+│                                                     │
+│   • No login required                              │
+│   • Mobile-optimized                               │
+│   • Full interactive experience                    │
+│   • Pages load progressively                       │
+│   • All animations work                            │
+│   • Share buttons included                         │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
+<a name="4-features"></a>
+## 4. DETAILED FEATURE SPECIFICATIONS
+
+### 4.1 LANDING PAGE (`/`)
+
+**Layout Structure:**
+
+```
+┌──────────────────────────────────────────────────┐
+│ Header: [LOGO] [Home] [Templates] [Login]       │
+├──────────────────────────────────────────────────┤
+│                  HERO SECTION                    │
+│                                                  │
+│       💝 Create Unforgettable                    │
+│          Digital Gift Experiences                │
+│                                                  │
+│   Turn your feelings into interactive magic ✨   │
+│                                                  │
+│        [ 🎁 Create Your Gift Now → ]            │
+│                                                  │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐        │
+│  │ 5,000+  │  │  4.8★   │  │ Special │        │
+│  │  Gifts  │  │ Rating  │  │  Offer  │        │
+│  └─────────┘  └─────────┘  └─────────┘        │
+├──────────────────────────────────────────────────┤
+│           SPECIAL OFFER BANNER                   │
+│                                                  │
+│   🎉 Valentine's Day Special Offer! 🎉          │
+│                                                  │
+│       Get 3 Premium Templates                    │
+│       ₹1,500 →  ₹99 ONLY                       │
+│                                                  │
+│       [ 🔥 Claim This Offer Now ]               │
+├──────────────────────────────────────────────────┤
+│              HOW IT WORKS                        │
+│                                                  │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐   │
+│  │    1️⃣    │→ │    2️⃣    │→ │    3️⃣    │   │
+│  │  Choose  │   │Customize │   │  Share   │   │
+│  │ Template │   │ & Personalize│   Link   │   │
+│  └──────────┘   └──────────┘   └──────────┘   │
+├──────────────────────────────────────────────────┤
+│            TEMPLATE GALLERY                      │
+│                                                  │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐        │
+│  │Template │  │Template │  │Template │        │
+│  │   1     │  │   2     │  │   3     │        │
+│  │ (Video) │  │ (Video) │  │ (Video) │        │
+│  │  ₹99    │  │  ₹149   │  │  ₹199   │        │
+│  └─────────┘  └─────────┘  └─────────┘        │
+│                                                  │
+│  [Show All 20 Templates →]                      │
+├──────────────────────────────────────────────────┤
+│           WHY CHOOSE US                          │
+│                                                  │
+│  ✅ Easy to customize                           │
+│  ✅ Mobile-optimized                            │
+│  ✅ No design skills needed                     │
+│  ✅ Instant delivery                            │
+├──────────────────────────────────────────────────┤
+│              FOOTER                              │
+│  About | Contact | Terms | Privacy              │
+└──────────────────────────────────────────────────┘
+```
+
+**Features to Implement:**
+
+1. **Hero Section:**
+   - Animated gradient background
+   - Floating hearts (CSS animation)
+   - Grid paper pattern overlay
+   - Main headline with fade-in animation
+   - Primary CTA button (prominent)
+   - Autoplay video/GIF showing sample template
+
+2. **Trust Signals (Animated Counters):**
+   ```javascript
+   // Counter Animation Example
+   useEffect(() => {
+     let count = 0;
+     const target = 5000;
+     const increment = target / 100;
+     const timer = setInterval(() => {
+       count += increment;
+       if (count >= target) {
+         count = target;
+         clearInterval(timer);
+       }
+       setGiftsCount(Math.floor(count));
+     }, 20);
+     return () => clearInterval(timer);
+   }, []);
+   ```
+   - Gifts Created counter (5000+)
+   - Rating (4.8 stars)
+   - Users counter
+   - Glassmorphism cards
+   - Float animation
+
+3. **Special Offer Banner:**
+   - Eye-catching design
+   - Strikethrough original price
+   - Large discount price
+   - Countdown timer (optional: "Offer ends in 3 days")
+   - Direct CTA to checkout
+
+4. **How It Works:**
+   - Three-column layout (mobile: vertical)
+   - Icon + heading + description
+   - Arrow animations between steps
+   - Reveal on scroll (Framer Motion)
+
+5. **Template Gallery:**
+   - Grid: 3 columns (desktop), 2 (tablet), 1 (mobile)
+   - Each card:
+     - Thumbnail/Video preview
+     - Template name
+     - Category badge
+     - Price
+     - "View Details" button
+   - Hover effect: Play video preview (5-10 seconds loop)
+   - Click: Navigate to template detail page
+
+6. **Navigation:**
+   - Sticky header (transparent, becomes solid on scroll)
+   - Logo (left)
+   - Menu items (center)
+   - Login/Signup (right)
+   - Mobile: Hamburger menu
+
+**Technical Implementation:**
+```typescript
+// app/page.tsx (Landing Page)
+export default function LandingPage() {
+  return (
+    <>
+      <Header />
+      <HeroSection />
+      <TrustSignals />
+      <SpecialOfferBanner />
+      <HowItWorks />
+      <TemplateGallery templates={featuredTemplates} />
+      <WhyChooseUs />
+      <Footer />
+    </>
+  );
+}
+```
+
+---
+
+### 4.2 TEMPLATE DETAIL PAGE (`/template/[id]`)
+
+**Layout:**
+
+```
+┌──────────────────────────────────────────────────┐
+│  ← Back to Gallery          [Add to Cart] [Buy] │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│          ┌─────────────────────────┐            │
+│          │                         │            │
+│          │   VIDEO PLAYER          │            │
+│          │  (Template Walkthrough) │            │
+│          │                         │            │
+│          └─────────────────────────┘            │
+│                                                  │
+│  🎯 Romantic Proposal Template                   │
+│  ⭐⭐⭐⭐⭐ 4.9 (1,234 reviews)               │
+│                                                  │
+│  💝 Perfect for: Valentine's Day, Proposals      │
+│                                                  │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
+│                                                  │
+│  What's Included:                                │
+│  ✅ 5 Interactive Pages                         │
+│  ✅ Upload 10 Photos                            │
+│  ✅ Fully Customizable Text                     │
+│  ✅ Unique Shareable Link                       │
+│  ✅ Mobile Optimized                            │
+│  ✅ Lifetime Access (No Expiration)             │
+│                                                  │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
+│                                                  │
+│  Template Features:                              │
+│  📄 Page 1: Animated entrance with panda box    │
+│  📄 Page 2: Interactive "Why You?" hearts       │
+│  📄 Page 3: Polaroid photo slideshow            │
+│  📄 Page 4: "Will you be mine?" game           │
+│  📄 Page 5: Romantic final message              │
+│                                                  │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
+│                                                  │
+│  ┌──────────────┐  ┌─────────────────────────┐ │
+│  │              │  │                         │ │
+│  │   ₹149      │  │  [ Buy Now for ₹149 ]  │ │
+│  │              │  │                         │ │
+│  │ Regular Price│  │ Or get bundle for ₹99  │ │
+│  └──────────────┘  └─────────────────────────┘ │
+│                                                  │
+│  💡 Also in Valentine's Bundle (Save 85%)       │
+│  [ Get 3 Templates for ₹99 → ]                 │
+│                                                  │
+├──────────────────────────────────────────────────┤
+│          SAMPLE CREATIONS                        │
+│  See what others have made:                      │
+│                                                  │
+│  ┌───────┐  ┌───────┐  ┌───────┐              │
+│  │Sample │  │Sample │  │Sample │              │
+│  │  1    │  │  2    │  │  3    │              │
+│  └───────┘  └───────┘  └───────┘              │
+├──────────────────────────────────────────────────┤
+│          CUSTOMER REVIEWS                        │
+│                                                  │
+│  ⭐⭐⭐⭐⭐ "She said YES!" - Rahul           │
+│  ⭐⭐⭐⭐⭐ "So easy and beautiful!" - Priya  │
+│  ⭐⭐⭐⭐⭐ "Best gift ever!" - Amit          │
+│                                                  │
+│  [Load More Reviews]                             │
+└──────────────────────────────────────────────────┘
+```
+
+**Features:**
+
+1. **Video Player:**
+   - Full template walkthrough (auto-plays on page load)
+   - Custom controls
+   - Fullscreen option
+   - Scrubber to jump to specific pages
+
+2. **Template Information:**
+   - Name, category, rating
+   - "Perfect for" use cases
+   - Feature list
+   - Page-by-page breakdown
+
+3. **Pricing:**
+   - Clear regular price
+   - Bundle offer (if applicable)
+   - Call-to-action buttons
+
+4. **Social Proof:**
+   - Sample creations (lightbox gallery)
+   - Customer reviews with ratings
+   - Number of purchases
+
+---
+
+### 4.3 CHECKOUT / PAYMENT PAGE (`/checkout`)
+
+**Critical Flow:**
+
+```
+┌──────────────────────────────────────────────────┐
+│           Complete Your Purchase                 │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  ORDER SUMMARY:                                  │
+│  ┌────────────────────────────────────────────┐ │
+│  │ Valentine's Special Bundle                │ │
+│  │                                            │ │
+│  │ Includes:                                  │ │
+│  │ • Romantic Proposal Template              │ │
+│  │ • Fun Love Quiz Template                  │ │
+│  │ • Birthday Celebration Template           │ │
+│  │                                            │ │
+│  │ Subtotal:        ₹1,500                   │ │
+│  │ Special Discount:-₹1,401                  │ │
+│  │ ─────────────────────────                 │ │
+│  │ Total:             ₹99                    │ │
+│  └────────────────────────────────────────────┘ │
+│                                                  │
+│  YOUR INFORMATION:                               │
+│  ┌────────────────────────────────────────────┐ │
+│  │ Full Name:    [____________________]      │ │
+│  │ Email:        [____________________]      │ │
+│  │ Mobile:       [____________________]      │ │
+│  │ Password:     [____________________]      │ │
+│  │ Confirm Pass: [____________________]      │ │
+│  └────────────────────────────────────────────┘ │
+│                                                  │
+│  PAYMENT METHOD: 💳 UPI Only                    │
+│  ┌────────────────────────────────────────────┐ │
+│  │                                            │ │
+│  │  Scan QR Code or Pay to UPI ID:           │ │
+│  │                                            │ │
+│  │  ┌─────────────┐                          │ │
+│  │  │             │   UPI ID:                │ │
+│  │  │   QR CODE   │   payments@giftsite.upi  │ │
+│  │  │             │                          │ │
+│  │  │  (Scannable)│   Amount: ₹99           │ │
+│  │  │             │                          │ │
+│  │  └─────────────┘                          │ │
+│  │                                            │ │
+│  │  After completing payment, enter:          │ │
+│  │  Transaction ID: [__________________]     │ │
+│  │  (12-digit UTR number)                     │ │
+│  │                                            │ │
+│  │  [ Submit Payment Proof ]                 │ │
+│  └────────────────────────────────────────────┘ │
+│                                                  │
+│  🔒 Secure Payment • Your account will be       │
+│     activated within 2 hours of verification    │
+└──────────────────────────────────────────────────┘
+```
+
+**Implementation Details:**
+
+1. **Form Validation:**
+   - All fields required
+   - Email format validation
+   - Mobile number (10 digits, India)
+   - Password strength indicator
+   - Real-time validation feedback
+
+2. **Account Creation:**
+   - User account created with status: "pending"
+   - Password hashed with bcrypt
+   - Email sent: "Registration successful, pending payment verification"
+
+3. **Payment Information:**
+   - Generate unique QR code per transaction
+   - Display UPI ID
+   - Show exact amount
+   - Clear instructions
+
+4. **Transaction ID Submission:**
+   - 12-digit validation
+   - Save transaction record to database
+   - Associate with user account
+
+5. **Post-Submission:**
+   - Redirect to "Thank You / Pending Approval" page
+   - Send confirmation email
+   - Admin notified of new payment to verify
+
+**Database Records Created:**
+```sql
+-- User record (status: pending)
+INSERT INTO users (email, full_name, mobile, password_hash, status)
+VALUES ('user@email.com', 'User Name', '9876543210', 'hashed_password', 'pending');
+
+-- Purchase record (payment_status: pending)
+INSERT INTO purchases (user_id, transaction_id, amount_inr, payment_status, templates_included)
+VALUES (user_id, 'UTR123456789', 99, 'pending', '["template_1", "template_2", "template_3"]');
+```
+
+---
+
+### 4.4 USER DASHBOARD (`/dashboard`)
+
+**After Admin Approves Payment:**
+
+```
+┌──────────────────────────────────────────────────┐
+│  👋 Welcome back, Rahul!                         │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  [ My Templates ]  [ Gift History ]  [ Account ] │
+│                                                  │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
+│                                                  │
+│  YOUR TEMPLATES                                  │
+│                                                  │
+│  ┌──────────────┐  ┌──────────────┐            │
+│  │   Template   │  │   Template   │            │
+│  │      1       │  │      2       │            │
+│  │  Romantic    │  │  Birthday    │            │
+│  │  Proposal    │  │  Countdown   │            │
+│  │              │  │              │            │
+│  │ [Create Gift]│  │ [Create Gift]│            │
+│  └──────────────┘  └──────────────┘            │
+│                                                  │
+│  ┌──────────────┐  ┌──────────────┐            │
+│  │   Template   │  │   Add More   │            │
+│  │      3       │  │  Templates   │            │
+│  │  Fun Love    │  │              │            │
+│  │    Quiz      │  │  [Browse]    │            │
+│  │              │  │              │            │
+│  │ [Create Gift]│  └──────────────┘            │
+│  └──────────────┘                               │
+│                                                  │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
+│                                                  │
+│  RECENT GIFTS                                    │
+│                                                  │
+│  📦 Birthday Gift for Sarah (Created 2 days ago) │
+│     🔗 View Gift | 📝 Edit | 🗑️ Delete          │
+│     👁️ Viewed 5 times                           │
+│                                                  │
+│  💝 Valentine's for Priya (Created 1 week ago)  │
+│     🔗 View Gift | 📝 Edit | 🗑️ Delete          │
+│     👁️ Viewed 12 times                          │
+│                                                  │
+│  [View All Gifts →]                             │
+│                                                  │
+└──────────────────────────────────────────────────┘
+```
+
+**Features:**
+
+1. **Purchased Templates:**
+   - Grid display of all owned templates
+   - Template thumbnail/preview
+   - "Create New Gift" button per template
+   - Indicates how many gifts created from each
+
+2. **Recent Gifts:**
+   - List of last 5 created gifts
+   - Gift name (editable)
+   - Creation date
+   - View count
+   - Quick actions: View, Edit, Delete
+
+3. **Quick Stats:**
+   - Total gifts created
+   - Total views across all gifts
+   - Templates owned
+
+4. **Navigation:**
+   - Easy access to editor
+   - Purchase more templates
+   - Account settings
+
+---
+
+### 4.5 TEMPLATE EDITOR (`/dashboard/editor/[templateId]`)
+
+**THIS IS THE MOST CRITICAL FEATURE**
+
+**Layout:**
+
+```
+┌──────────────────────────────────────────────────────────┐
+│ ← Dashboard  [Gift Name: __________] [Preview] [Save]   │
+├──────────┬───────────────────────────────────────────────┤
+│          │                                               │
+│  PAGES   │         LIVE PREVIEW                         │
+│  LIST    │         (Mobile View)                        │
+│          │                                               │
+│  ✅ P1   │     ┌──────────────────┐                    │
+│  ✅ P2   │     │                  │                    │
+│  🔄 P3   │     │   [Template]     │                    │
+│  ⏸️ P4   │     │   [Rendering]    │                    │
+│  ⏸️ P5   │     │   [Here]         │                    │
+│          │     │                  │                    │
+│  Progress│     └──────────────────┘                    │
+│  ███░░░  │                                               │
+│  60%     │     [Desktop] [Mobile] Toggle               │
+│          │                                               │
+├──────────┴───────────────────────────────────────────────┤
+│                                                          │
+│  EDITING PANEL - Page 3: Memories Slideshow             │
+│                                                          │
+│  Text Content:                                           │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │ Heading: [Our Precious Memories____________] 30/50 │ │
+│  │ Caption: [Every moment with you is special_] 35/100│ │
+│  └────────────────────────────────────────────────────┘ │
+│                                                          │
+│  Photos (4/10 uploaded):                                 │
+│  ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐           │
+│  │ 1  │ │ 2  │ │ 3  │ │ 4  │ │ +  │ │ +  │           │
+│  │    │ │    │ │    │ │    │ │Add │ │Add │           │
+│  └────┘ └────┘ └────┘ └────┘ └────┘ └────┘           │
+│  [Drag photos to reorder]                                │
+│                                                          │
+│  Options:                                                │
+│  ☑️ Enable transition effects                           │
+│  ☐ Add background music                                 │
+│  Transition: [Fade ▼]                                   │
+│                                                          │
+│  [← Previous: Page 2]  [Next: Page 4 →]  [Auto-save ✓] │
+│                                                          │
+├──────────────────────────────────────────────────────────┤
+│                                                          │
+│  🎁 Ready to share?                                      │
+│  [Generate Shareable Link]  (Enabled when all complete) │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+```
+
+**Core Features:**
+
+1. **Page Navigation Sidebar:**
+   - Lists all pages
+   - Visual completion indicators:
+     - ✅ Complete (all required fields filled)
+     - 🔄 In Progress (some fields filled)
+     - ⏸️ Not Started (no fields filled)
+   - Click to jump to any page
+   - Progress bar showing overall completion
+
+2. **Live Preview:**
+   - Mobile-sized iframe/container (375px width)
+   - Real-time rendering as user types
+   - Can play through interactions
+   - Desktop/Mobile view toggle
+   - Fullscreen preview option
+
+3. **Page-Specific Editing Interface:**
+
+   **For Text Pages:**
+   ```
+   Heading: [Input field]  Character limit: 30/50
+   Body: [Textarea]  Character limit: 200/500
+   Button Text: [Input]  20/30
+   ```
+
+   **For Photo Pages:**
+   ```
+   Upload Photos: [Drag & Drop Zone]
+   - Current: 4/10 photos
+   - Click to upload or drag files
+   - Supported: JPG, PNG, WEBP (max 5MB each)
+   - Thumbnails with delete button
+   - Drag to reorder
+   - Crop tool (if needed)
+   ```
+
+   **For Interactive Pages:**
+   ```
+   Question Text: [Input]
+   "Yes" Button Text: [Input]
+   "No" Button Text: [Input]
+   Success Message: [Textarea]
+   ```
+
+4. **Auto-Save:**
+   - Saves every 30 seconds automatically
+   - "Saved" indicator shows timestamp
+   - Manual save button available
+
+5. **Generate Link:**
+   - Button enabled only when all required fields complete
+   - Clicking generates unique UUID
+   - Shows generated link in modal:
+     ```
+     ✅ Your gift is ready!
+     
+     Link: yoursite.com/gift/a1b2c3d4
+     
+     [Copy Link] [Share on WhatsApp] [Email] [SMS]
+     
+     QR Code: [Image]
+     
+     [Preview as Recipient] [Back to Editor]
+     ```
+
+**Technical Implementation:**
+
+```typescript
+// app/dashboard/editor/[id]/page.tsx
+
+export default function TemplateEditor({ params }: { params: { id: string } }) {
+  const [gift, setGift] = useState<Gift | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [saving, setSaving] = useState(false);
+
+  // Auto-save effect
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (gift?.hasChanges) {
+        saveGift();
+      }
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(timer);
+  }, [gift]);
+
+  // Calculate completion status
+  const getPageStatus = (page: PageData) => {
+    const requiredFields = page.requiredFields || [];
+    const filledFields = requiredFields.filter(field => 
+      page.content[field] && page.content[field].length > 0
+    );
+    
+    if (filledFields.length === 0) return 'not-started';
+    if (filledFields.length === requiredFields.length) return 'complete';
+    return 'in-progress';
+  };
+
+  const updatePage = (pageIndex: number, updates: Partial<PageData>) => {
+    setGift(prev => ({
+      ...prev!,
+      pages: prev!.pages.map((p, i) => 
+        i === pageIndex ? { ...p, ...updates } : p
+      ),
+      hasChanges: true
+    }));
+  };
+
+  const generateLink = async () => {
+    const link = await generateGiftLink(gift!);
+    // Show modal with link
+    setGeneratedLink(link);
+  };
+
+  return (
+    <EditorLayout>
+      <PageList
+        pages={gift?.pages || []}
+        currentPage={currentPage}
+        onPageSelect={setCurrentPage}
+        getStatus={getPageStatus}
+      />
+      
+      <PreviewPane
+        gift={gift}
+        currentPage={currentPage}
+      />
+      
+      <EditingPanel
+        page={gift?.pages[currentPage]}
+        onUpdate={(updates) => updatePage(currentPage, updates)}
+      />
+      
+      <EditorToolbar
+        onSave={saveGift}
+        onGenerateLink={generateLink}
+        saving={saving}
+        canGenerate={isAllPagesComplete()}
+      />
+    </EditorLayout>
+  );
+}
+```
+
+**Page-Specific Editors:**
+
+Different editing interfaces based on page type:
+
+```typescript
+// components/editor/PageEditors/TextPageEditor.tsx
+export function TextPageEditor({ page, onChange }: Props) {
+  return (
+    <div className="text-page-editor">
+      <div className="field">
+        <label>Heading</label>
+        <input
+          value={page.content.heading}
+          onChange={(e) => onChange({ heading: e.target.value })}
+          maxLength={50}
+        />
+        <span className="char-count">{page.content.heading.length}/50</span>
+      </div>
+      
+      <div className="field">
+        <label>Message</label>
+        <textarea
+          value={page.content.message}
+          onChange={(e) => onChange({ message: e.target.value })}
+          maxLength={500}
+        />
+        <span className="char-count">{page.content.message.length}/500</span>
+      </div>
+    </div>
+  );
+}
+
+// components/editor/PageEditors/PhotoPageEditor.tsx
+export function PhotoPageEditor({ page, onChange }: Props) {
+  const [photos, setPhotos] = useState(page.content.photos || []);
+
+  return (
+    <div className="photo-page-editor">
+      <PhotoUploader
+        giftId={page.giftId}
+        pageNumber={page.number}
+        maxPhotos={10}
+        existingPhotos={photos}
+        onPhotosChange={(newPhotos) => {
+          setPhotos(newPhotos);
+          onChange({ photos: newPhotos });
+        }}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+### 4.6 PUBLIC GIFT VIEWER (`/gift/[uuid]`)
+
+**Critical: No Login Required, Mobile-Optimized**
+
+**Experience Flow:**
+
+```
+User opens link → Page loads → Template plays page-by-page
+```
+
+**Features:**
+
+1. **Loading Screen:**
+   - Brand animation
+   - "Preparing your gift..." message
+   - 2-3 seconds
+
+2. **Page Progression:**
+   - Pages load one at a time
+   - Tap/swipe to advance
+   - Back button (optional)
+   - Progress indicator (Page 1 of 5)
+
+3. **Interactions All Work:**
+   - Countdown timers tick
+   - Buttons trigger animations
+   - Games are playable
+   - Photos viewable (tap for fullscreen)
+   - Confetti and particle effects
+   - Background music (with toggle)
+
+4. **Bottom Controls:**
+   ```
+   [🔇 Sound Off]  [❤️ Like]  Page 3/5  [Share →]
+   ```
+
+5. **Footer:**
+   - Small branding: "Create your own at YourSite.com"
+   - Doesn't distract from experience
+
+**Technical:**
+
+```typescript
+// app/gift/[uuid]/page.tsx
+
+export default async function GiftViewer({ params }: { params: { uuid: string } }) {
+  // Server-side fetch gift data
+  const gift = await getGiftByUUID(params.uuid);
+
+  if (!gift) {
+    return <GiftNotFound />;
+  }
+
+  return (
+    <GiftExperience
+      template={gift.template}
+      data={gift.gift_data}
+      photos={gift.photos}
+      recipientName={gift.recipient_name}
+    />
+  );
+}
+
+// components/GiftExperience.tsx
+export function GiftExperience({ template, data, photos }: Props) {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [musicEnabled, setMusicEnabled] = useState(false);
+
+  const pages = template.pages.map((pageConfig, index) => ({
+    ...pageConfig,
+    content: data[index],
+    photos: photos.filter(p => p.page_number === index + 1)
+  }));
+
+  const CurrentPageComponent = getPageComponent(pages[currentPage].type);
+
+  return (
+    <div className="gift-experience">
+      <CurrentPageComponent
+        {...pages[currentPage]}
+        onNext={() => setCurrentPage(prev => prev + 1)}
+      />
+
+      <GiftControls
+        currentPage={currentPage}
+        totalPages={pages.length}
+        musicEnabled={musicEnabled}
+        onToggleMusic={() => setMusicEnabled(!musicEnabled)}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+<a name="5-templates"></a>
+## 5. ALL 19 TEMPLATE DETAILED BREAKDOWNS
+
+Based on video analysis, here are ALL templates decoded page-by-page:
+
+### TEMPLATE 1: Birthday Countdown Celebration
+**Category:** Birthday | **Pages:** 5 | **Complexity:** Medium
+
+**Page 1 - Loading:**
+- Background: Dark gradient (navy to purple)
+- Icon: Single pink heart pulsing
+- Text: "Preparing Something Special"
+- Subtext: "For someone very special..." (EDITABLE)
+- Duration: 3 seconds auto-advance
+
+**Page 2 - Countdown Timer:**
+- Heading: "Birthday Countdown" + cake icon (EDITABLE)
+- Subheading: "The magical moment approaches..." (EDITABLE)
+- Four glassmorphism cards: Days, Hours, Minutes, Seconds
+- Real-time JavaScript countdown
+- Target date: Birthday date/time (EDITABLE)
+- Bottom: "The surprise is just moments away 💝" (EDITABLE)
+- When countdown reaches 00:00:00 → Confetti + auto-advance
+
+**Page 3 - Celebration:**
+- Full-screen confetti animation
+- Gift box icon (3D, animated)
+- Text: "Time to Celebrate!" (EDITABLE)
+- Subtext: "The countdown is over..." (EDITABLE)
+- Button: "🎁 Let's Celebrate! ✨" (EDITABLE)
+- Click → More confetti → Next page
+
+**Page 4 - Message Cards:**
+- Two overlapping cards:
+  - Top card (orange-pink gradient):
+    - Heading: "Special day!" (EDITABLE)
+    - Body: Multi-line message (EDITABLE, 200 char max)
+  - Bottom card (pink):
+    - Text: "I remember everything" (EDITABLE)
+    - Subtext: With dots animation (EDITABLE)
+- Tap anywhere to advance
+
+**Page 5 - Photo Gallery:**
+- Heading: "Precious Memories" (EDITABLE)
+- Grid: 2x2 mobile, 3x3 desktop
+- Photo frames: Polaroid style with wavy borders
+- PHOTOS: 1-10 uploads (REQUIRED)
+- Captions: Optional per photo (EDITABLE)
+- Click photo → Fullscreen lightbox
+- Subtitle: "Every moment is special" (EDITABLE)
+
+**Required Fields:**
+- Birthday date/time
+- Page headings (3)
+- Messages (2)
+- At least 1 photo
+
+---
+
+### TEMPLATE 2: Valentine's Interactive Question
+**Category:** Valentine's Day | **Pages:** 4 | **Complexity:** High (Interactive Game)
+
+**Page 1 - Entry:**
+- Hearts falling animation (particle system)
+- Center: 3D heart rotating
+- Text: "Hey Beautiful..." (EDITABLE - recipient name)
+- Subtext: "I have a question for you..." (EDITABLE)
+- Button: "Continue" (pulsing)
+
+**Page 2 - The Question (GAME):**
+- Heading: "Will You Be My Valentine?" (EDITABLE)
+- Emoji: 💝
+- Two buttons:
+  - "Yes! ❤️" (EDITABLE, normal size)
+  - "No 💔" (EDITABLE, normal size)
+  
+INTERACTIVE LOGIC:
+- Tap "Yes" → Go to celebration page
+- Tap "No" → Button moves to random position
+- "No" text changes each tap:
+  - 1st: "Are you sure? 🥺"
+  - 2nd: "Pretty please? 🙏"
+  - 3rd: "Think again... 💭"
+  - 4th: "Last chance! ⏰"
+  - 5th+: Button shrinks
+  - After 10 taps: "No" disappears, only "Yes" remains
+
+**Page 3 - Celebration:**
+- Full-screen confetti explosion
+- Large text: "Yayyy! 🎉" (EDITABLE)
+- 3D heart grows from center
+- Text: "I knew you'd say yes!" (EDITABLE)
+- Gradient background animation
+- Auto-advance after 3 seconds
+
+**Page 4 - Love Letter:**
+- Styled as handwritten letter
+- Header: "Dear [Name]," (EDITABLE)
+- Body: Long-form message (EDITABLE, 1000 char max, rich text)
+- Signature: "Love, [Your Name]" (EDITABLE)
+- Background: Textured paper
+- Decorative heart borders
+
+**Required Fields:**
+- Recipient name
+- Question text
+- Button labels (2)
+- Love letter content
+- Sender name
+
+---
+
+### TEMPLATE 3: Love Slider
+**Category:** Valentine's / Anniversary | **Pages:** 3 | **Complexity:** Medium
+
+**Page 1 - Build-up:**
+- Sequence animation (4.5 seconds total):
+  - "Do you know..." (1.5s)
+  - "How much..." (1.5s)
+  - "I love you?" (1.5s)
+- Soft background color transitions
+- Floating hearts
+- Opening question (EDITABLE)
+- Auto-advance
+
+**Page 2 - Interactive Slider:**
+- Heading: "Let me show you..." (EDITABLE)
+- Large horizontal slider:
+  - Range: 0% to "∞"
+  - Track: Pink gradient
+  - Thumb: Heart icon
+- Display text updates as slider moves:
+  - 0-25%: "I love you" (EDITABLE)
+  - 26-50%: "I love you so much" (EDITABLE)
+  - 51-75%: "I love you to the moon" (EDITABLE)
+  - 76-99%: "I love you to the stars" (EDITABLE)
+  - 100%: "I love you to INFINITY! ♾️💗" (EDITABLE)
+- Instruction: "Slide to discover 💕"
+- Must reach 100% to unlock "Continue" button
+- Confetti at 100%
+
+**Page 3 - Final Message:**
+- Infinity symbol (♾️) animated
+- Heading: "My love for you has no limits" (EDITABLE)
+- Body: Custom message (EDITABLE, 500 char max)
+- Animated gradient background
+- Floating particles
+
+**Required Fields:**
+- Opening text
+- 5 slider range messages
+- Final message
+
+---
+
+### TEMPLATE 4: 5 Things I Love About You
+**Category:** Valentine's / Anniversary | **Pages:** 3 | **Complexity:** Medium
+
+**Page 1 - Intro:**
+- Header: "There are so many reasons..." (EDITABLE)
+- Subtext: "But here are my favorite 5 ❤️" (EDITABLE)
+- Animated heart icon
+- Button: "Tap to continue"
+
+**Page 2 - Flip Cards:**
+- Grid of 5 cards (can be 3, 5, or 10 - CONFIGURABLE)
+- Layout: Artistic arrangement
+- Each card:
+  - Front: Number (1-5) + heart icon
+  - Back: Reason text + emoji
+  - Glassmorphism effect
+  - Wavy border
+- Tap card → 3D flip (180° Y-axis)
+- 5 reasons (EDITABLE, each 100 char max):
+  1. "Your smile brightens my days ☀️"
+  2. "The way you laugh makes everything better 😊"
+  3. "Your kindness touches everyone 🌸"
+  4. "You make me want to be better 🌟"
+  5. "Every moment with you is a treasure 💎"
+- After all revealed: "Continue" button
+
+**Page 3 - Conclusion:**
+- Header: "And that's just the beginning..." (EDITABLE)
+- Body: Final message (EDITABLE, 500 char max)
+- Decorative hearts and stars
+
+**Required Fields:**
+- Intro text
+- Number of cards (3/5/10)
+- Each card reason
+- Conclusion message
+
+---
+
+### TEMPLATE 5: Panda Character Love
+**Category:** Valentine's (Cute) | **Pages:** 4 | **Complexity:** Medium
+
+**Page 1 - Character Intro:**
+- Animated panda character (Lottie/SVG)
+- Panda waves
+- Text: "Hey cutie! 🐼" (EDITABLE - greeting)
+- Speech bubble: "I made something for you..." (EDITABLE)
+- Button: "Open it! 🎁"
+
+**Page 2 - Gift Box:**
+- 3D gift box (closed)
+- Ribbon on top
+- Text: "Tap to open your surprise!" (EDITABLE)
+- Box shaking animation
+- Tap → Box opens, confetti bursts
+- Reveal: "A special message for you!" (EDITABLE)
+- "Read it" button
+
+**Page 3 - Character with Rose:**
+- Panda holding rose
+- Speech bubble: Custom message (EDITABLE, 300 char max)
+- Background: Floating hearts
+- Character: Slight bounce animation
+- Character selection: Panda/Bear/Cat (CONFIGURABLE)
+- Rose color: Red/Pink/White (CONFIGURABLE)
+
+**Page 4 - Final Question:**
+- Question: "Will you be mine forever?" (EDITABLE)
+- Two buttons (both say yes in different ways):
+  - "Yes! 💕" (EDITABLE)
+  - "Of course! 💗" (EDITABLE)
+- Both lead to celebration
+- Heart explosion effect
+- "Yayyy!" message
+- Share button
+
+**Required Fields:**
+- Greeting
+- Gift box text
+- Speech bubble message
+- Final question
+- Button labels
+
+---
+
+### TEMPLATE 6: Anniversary Counter
+**Category:** Anniversary | **Pages:** 4 | **Complexity:** Low-Medium
+
+**Page 1 - Intro:**
+- Heading: "Our Special Day" (EDITABLE - event name)
+- Calendar icon with heart
+- Date display: "February 14, 2024" (EDITABLE - the date)
+- Subtext: "Let me show you something..." (EDITABLE)
+
+**Page 2 - Time Together:**
+- Heading: "We've been together for..." (EDITABLE)
+- Four counting displays (glassmorphism cards):
+  - Years
+  - Months
+  - Days
+  - Seconds (updates live)
+- Start date (EDITABLE - calculates from this)
+- Bottom text: "And counting... ⏰💕" (EDITABLE)
+- Real-time JavaScript calculation
+
+**Page 3 - Timeline:**
+- Vertical timeline with milestones (3-10, CONFIGURABLE):
+  ```
+  ⭕ "First Met" - Jan 1, 2023 (EDITABLE)
+  ⭕ "First Date" - Jan 15, 2023 (EDITABLE)
+  ⭕ "Became Official" - Feb 14, 2023 (EDITABLE)
+  ⭕ "Today & Forever" ❤️ (EDITABLE)
+  ```
+- Each milestone:
+  - Event name (EDITABLE)
+  - Date (EDITABLE)
+  - Optional photo (OPTIONAL UPLOAD)
+  - Optional description (EDITABLE)
+- Scrollable if >5 milestones
+- Animated reveal on scroll
+
+**Page 4 - Love Letter:**
+- Styled as scroll/parchment
+- Heading: "A Message from My Heart" (EDITABLE)
+- Body: Long message (EDITABLE, rich text, 1000 char max)
+- Signature area (EDITABLE)
+- Decorative borders
+
+**Required Fields:**
+- Event name
+- Special date
+- Start date (for counter)
+- At least 3 timeline milestones
+- Final message
+
+---
+
+### TEMPLATE 7: Birthday Cake & Candles
+**Category:** Birthday | **Pages:** 5 | **Complexity:** Medium-High (Game)
+
+**Page 1 - Age Counter:**
+- Character animation
+- Text: "A special someone was born..." (EDITABLE)
+- Number counts from 0 to age (rapid animation)
+- Ends: "[Age] years ago today!" (Age calculated from birth year - EDITABLE)
+- Confetti when reaching final number
+
+**Page 2 - Virtual Cake (GAME):**
+- Illustrated birthday cake (3D/2D)
+- Candles on top (matches age, or shows 1-3, CONFIGURABLE)
+- Text: "Make a wish and light the candles!" (EDITABLE)
+- INTERACTION:
+  - Each candle starts unlit
+  - Tap candle → Flame appears (flicker animation)
+  - After all lit → "Blow them out!" instruction
+  - User taps rapidly or (optionally) blows into mic
+  - Candles blow out → Smoke animation
+  - "Happy Birthday!" + confetti
+- Cake style: Chocolate/Vanilla/Strawberry (CONFIGURABLE)
+- Wish text after blowing (EDITABLE)
+
+**Page 3 - Balloon Pop Game:**
+- 4-5 balloons floating
+- Each contains hidden letter
+- Letters spell message (e.g., "HAPPY" or "B-DAY", CONFIGURABLE)
+- Text: "Pop the balloons! 🎈" (EDITABLE)
+- INTERACTION:
+  - Tap balloon → Pop animation + sound
+  - Letter revealed
+  - After all popped → Letters rearrange to spell message
+- "Continue" button appears
+
+**Page 4 - Photo Slideshow:**
+- Heading: "Celebrating You! 📸" (EDITABLE)
+- Slideshow:
+  - Current photo large
+  - Thumbnail strip below
+  - Navigation arrows
+  - Auto-play (optional, 3 seconds per photo)
+- PHOTOS: 1-10 uploads (REQUIRED)
+- Captions per photo (OPTIONAL)
+- Background music toggle (CONFIGURABLE)
+- Music from preset library (SELECTABLE)
+
+**Page 5 - Surprise Gift Box:**
+- Large 3D gift box
+- Bow on top
+- Text: "One more surprise..." (EDITABLE)
+- Instruction: "Tap to unwrap!"
+- INTERACTION:
+  - Tap → Unwrapping animation (multi-step)
+  - Bow unties
+  - Lid lifts
+  - Inside: Final birthday message (EDITABLE, 300 char max)
+  - Confetti burst
+- Share/download options
+
+**Required Fields:**
+- Birth year (for age)
+- Birthday person's name
+- Number of candles
+- Balloon message
+- At least 1 photo
+- Final surprise message
+
+---
+
+### TEMPLATE 8: Apology - Can We Talk
+**Category:** Apology | **Pages:** 4 | **Complexity:** Medium
+
+**Page 1 - Sad Intro:**
+- Sad panda/character illustration
+- Character looks down
+- Animated tear falling
+- Text: "Hey... can we talk? 🥺" (EDITABLE)
+- Muted color palette
+- Light rain animation in background
+- Character selection: Panda/Bear (CONFIGURABLE)
+
+**Page 2 - Apology Text:**
+- Heading: "I'm so sorry..." (EDITABLE)
+- Text fades in line by line (1 second delay):
+  - "I messed up" (EDITABLE)
+  - "I hurt you" (EDITABLE)
+  - "I hate that I made you sad" (EDITABLE)
+- Character in corner (remorseful pose)
+- Dark background
+
+**Page 3 - Three Reasons:**
+- Heading: "3 Reasons Why I Need You" (EDITABLE)
+- Three heart-shaped cards:
+  - Initially show just heart icon
+  - Tap → Card expands, reveals text
+- 3 reasons (EDITABLE, each 100 char max):
+  1. "You make me a better person"
+  2. "Life isn't the same without you"
+  3. "I promise to do better"
+- After all revealed: "Continue" button
+
+**Page 4 - Forgiveness Request:**
+- Heading: "Can you forgive me? 🙏" (EDITABLE)
+- Body: Longer apology (EDITABLE, 500 char max)
+- Character: Now hopeful
+- Two buttons:
+  - "I forgive you ❤️" (EDITABLE)
+  - "Let's talk about it 💬" (EDITABLE)
+- Background transitions from dark to lighter
+- Either button → Thank you message + hearts
+
+**Required Fields:**
+- Opening text
+- 3 apology lines
+- 3 reasons
+- Final apology message
+- Button labels
+
+---
+
+### TEMPLATE 9: Peace Treaty (Fun Apology)
+**Category:** Apology (Light) | **Pages:** 3 | **Complexity:** Medium
+
+**Page 1 - Acknowledgment:**
+- Character scratching head
+- Text: "Okay, okay... I messed up 🤦" (EDITABLE)
+- Subtext: "Like, a LOT" (EDITABLE)
+- Slightly humorous tone
+
+**Page 2 - Swipe Away Mistakes (GAME):**
+- Title: "Let's clear the air..." (EDITABLE)
+- Dark clouds floating (3-6, CONFIGURABLE)
+- Each cloud contains a mistake:
+  - "Forgot to call" (EDITABLE)
+  - "Was late again" (EDITABLE)
+  - "Said something dumb" (EDITABLE)
+- Instruction: "Swipe away my mistakes 🌤️"
+- Sky background (starts cloudy)
+- INTERACTION:
+  - Swipe cloud off screen
+  - Cloud floats away
+  - Sky clears gradually
+  - When all gone → Sun appears, rainbow animation
+  - "All clear! ☀️" message
+- "Continue" button
+
+**Page 3 - Virtual Hug:**
+- Two characters (opposite sides of screen)
+- Arms open
+- Text: "Let's make up? 🤗" (EDITABLE)
+- Button: "Give me a hug"
+- INTERACTION:
+  - Tap → Characters slide together
+  - Hug animation
+  - Hearts float up
+  - Message: "I promise to be better! 💕" (EDITABLE)
+
+**Required Fields:**
+- Opening text
+- 3-6 mistake texts
+- Final promise message
+
+---
+
+### TEMPLATE 10: Cuteness Scanner
+**Category:** Fun / Personality | **Pages:** 4 | **Complexity:** Medium
+
+**Page 1 - Scanner Intro:**
+- Tech-style UI
+- Text: "Initializing Cuteness Scanner... 🔍"
+- Progress bar filling
+- Loading messages (cycle through):
+  - "Analyzing vibes..." (EDITABLE)
+  - "Measuring smile level..." (EDITABLE)
+  - "Detecting charm..." (EDITABLE)
+- Auto-advances after ~3 seconds
+
+**Page 2 - Scanning Animation:**
+- Scanning laser (horizontal line up/down)
+- Target: Placeholder silhouette OR uploaded photo (OPTIONAL UPLOAD)
+- Percentage counter: 0% → 120% (animates)
+- Status messages update:
+  - 10%: "Detecting basic cuteness" (EDITABLE)
+  - 50%: "Cuteness overload!" (EDITABLE)
+  - 100%: "Off the charts!" (EDITABLE)
+  - 120%: "TOO CUTE TO HANDLE! 💕" (EDITABLE)
+- Maximum percentage (CONFIGURABLE: 100%, 120%, 200%, 1000%)
+- Optional alarm sound at max
+
+**Page 3 - Report Card:**
+- Styled as official document
+- Heading: "OFFICIAL CUTENESS REPORT"
+- Recipient name
+- Date
+- Rating bars (3-5, CONFIGURABLE):
+  ```
+  😊 Smile:       ████████████ 120% (EDITABLE)
+  💖 Kindness:    ████████████ 115% (EDITABLE)
+  ✨ Overall Vibe: ████████████ 125% (EDITABLE)
+  ```
+- Each bar over 100% (breaking the scale)
+- Stamp graphic: "CERTIFIED CUTIE" (EDITABLE)
+- Animated bar filling (stagger effect)
+
+**Page 4 - Secret Message:**
+- Sequential text reveals (fade in/out):
+  - "One more thing..." (EDITABLE)
+  - "You're not just cute..." (EDITABLE)
+  - "You're the BEST! 🌟" (EDITABLE)
+- Confetti animation
+- Final message area (EDITABLE, 200 char max)
+
+**Required Fields:**
+- Target person's name
+- Loading messages (3)
+- Status messages (4)
+- Max percentage
+- Rating categories (3-5)
+- Percentages per category
+- Reveal messages (3)
+- Final message
+
+---
+
+### TEMPLATE 11: Soulmate Matcher
+**Category:** Love / Fun | **Pages:** 4 | **Complexity:** Medium
+
+**Page 1 - Analysis:**
+- Heading: "Analyzing Our Connection..." (EDITABLE)
+- Animated EKG line (heart rate monitor)
+- Loading bar
+- Status: "Calculating compatibility..." (EDITABLE)
+- Both names displayed: "[You] ❤️ [Partner]" (EDITABLE)
+
+**Page 2 - Result:**
+- Large percentage: "100% MATCH! 💯" (CONFIGURABLE: 95-100%)
+- Circular progress indicator (animated)
+- Two hearts merging animation
+- Text: "Perfect Soulmate Detected! ✨" (EDITABLE)
+- Confetti burst
+
+**Page 3 - Why Perfect:**
+- Heading: "Why we're meant to be:" (EDITABLE)
+- List of 3-5 reasons (EDITABLE, each 80 char max):
+  - "We make each other laugh 😂"
+  - "We support each other's dreams 🌟"
+  - "We're best friends first 🤝"
+- Each reason fades in sequentially
+- Icons next to each
+
+**Page 4 - Declaration:**
+- Two characters holding hands
+- Text: "Forever & Always 💕" (EDITABLE)
+- Final message (EDITABLE, 300 char max)
+- Character styles (CONFIGURABLE)
+
+**Required Fields:**
+- Both names
+- Match percentage
+- 3-5 reasons
+- Final message
+
+---
+
+### TEMPLATE 12: New Year / Fresh Start
+**Category:** New Year / Encouragement | **Pages:** 4 | **Complexity:** Medium
+
+**Page 1 - Year Transition:**
+- Text: "Preparing for 2026..." (EDITABLE - year)
+- "2025" fades out (EDITABLE - old year)
+- "2026" fades in with sparkle (EDITABLE - new year)
+- Fireworks animation
+
+**Page 2 - Clear Negativity (GAME):**
+- Title: "Let's leave behind..." (EDITABLE)
+- Floating negative items (4-6, CONFIGURABLE):
+  - "Stress" (EDITABLE)
+  - "Worries" (EDITABLE)
+  - "Bad Vibes" (EDITABLE)
+  - "Problems" (EDITABLE)
+- Instruction: "Swipe them away! 👋"
+- INTERACTION:
+  - Swipe item off screen
+  - Items disappear
+  - Screen brightens
+  - Positive items appear (EDITABLE):
+    - "Joy"
+    - "Success"
+    - "Love"
+    - "Peace"
+
+**Page 3 - Golden Ticket:**
+- Illustrated golden ticket
+- Text: "Your ticket to an amazing year!" (EDITABLE)
+- Ticket details:
+  - "Valid: All of 2026" (EDITABLE - year)
+  - "Includes: Happiness, Love, Success" (EDITABLE)
+  - "Admit: One Amazing Person" (EDITABLE)
+- Recipient name on ticket (EDITABLE)
+- Ticket reveal animation (slide in)
+- Sparkle effects
+
+**Page 4 - New Year Message:**
+- Heading: "Happy New Year!" (EDITABLE)
+- Subheading: "To my favorite person" (EDITABLE)
+- Longer message (EDITABLE, 500 char max)
+- Fireworks animation background
+
+**Required Fields:**
+- Old year, new year
+- Negative items (4-6)
+- Positive items (4-6)
+- Ticket details
+- Recipient name
+- Final message
+
+---
+
+### TEMPLATE 13: Friendship Memory Game
+**Category:** Friendship | **Pages:** 4 | **Complexity:** Medium-High (Game)
+
+**Page 1 - Intro:**
+- Text: "To My Amazing Friend" (EDITABLE)
+- Friendship icons (two figures)
+- Subtext: "I made something for you!" (EDITABLE)
+- Friend's name (EDITABLE)
+
+**Page 2 - Memory Match (GAME):**
+- Grid of cards: 4x4 (16 cards) or 3x4 (12 cards), CONFIGURABLE
+- Cards face-down initially
+- Icon pairs (8 pairs for 16 cards):
+  - Coffee cups
+  - Books
+  - Music notes
+  - Hearts
+  - Stars
+  - Game controllers
+- Optional: Timer and move counter
+- INTERACTION:
+  - Tap card to flip
+  - Tap second card
+  - If match: Cards stay face-up, celebration
+  - If no match: Flip back after 1 second
+  - When all pairs found: "You did it!" + "Continue" button
+
+**Page 3 - Photo Album:**
+- Heading: "Our Best Moments" (EDITABLE)
+- Horizontal scrolling photo strip
+- Polaroid-style frames
+- PHOTOS: 1-10 uploads (REQUIRED)
+- Captions per photo (OPTIONAL)
+- Grid paper pattern background
+- Smooth swipe/scroll
+
+**Page 4 - Message:**
+- Styled as handwritten note
+- Heading: "Thanks for being you! 🌟" (EDITABLE)
+- Message body (EDITABLE, 500 char max)
+- Signature (EDITABLE)
+- Decorative friendship icons
+
+**Required Fields:**
+- Friend's name
+- Grid size (12 or 16 cards)
+- At least 1 photo
+- Final message
+
+---
+
+### TEMPLATES 14-19: Variations & Extended Formats
+
+Based on video analysis, these are variations of the core templates with different themes:
+
+**TEMPLATE 14: Valentine's Purple Variation**
+- Similar to Template 2 (Interactive Question)
+- Purple pastel color scheme instead of pink
+- Different character illustrations
+- Alternative interaction: Drag hearts instead of buttons
+- 4 pages
+
+**TEMPLATE 15: Extended Birthday**
+- Combines Template 1 + Template 7
+- 6 pages total:
+  1. Countdown
+  2. Age celebration
+  3. Virtual cake
+  4. Balloon pop
+  5. Photo gallery (15 photos max)
+  6. Gift unwrap
+- Most complex birthday template
+
+**TEMPLATE 16: Love Story Timeline**
+- Interactive relationship timeline
+- 6-8 pages
+- Pages:
+  1. "How we met" intro
+  2. Interactive map (places you've been together)
+  3. Timeline with 5-10 milestones (photos per milestone)
+  4. "First date" details
+  5. Special memories
+  6. "Forever together" promise
+
+**TEMPLATE 17: Memory Scrapbook Vol 1**
+- Pure photo focus
+- 10+ pages
+- Different layouts per page:
+  - Grid layouts
+  - Masonry layouts
+  - Scattered polaroid style
+  - Full-screen slideshows
+- Minimal text (just photo captions)
+- Up to 50 photos total
+- Best for: Travel memories, year in review
+
+**TEMPLATE 18: Memory Scrapbook Vol 2**
+- Similar to Template 17
+- More minimalist aesthetic
+- Black and white filter option
+- Handwriting-style captions
+- 10+ pages
+- Up to 50 photos
+
+**TEMPLATE 19: Message in a Bottle**
+- Simplest template (3 pages)
+- Minimalist design
+- Pages:
+  1. Ocean waves animation, bottle floating
+  2. "Click to open bottle" interaction
+     - Bottle opening animation
+     - Message unfurls from inside
+  3. Message display (scroll-like paper)
+     - Long-form message (EDITABLE, 1000 char max)
+- Clean, elegant, quick to create
+
+---
+
+<a name="6-technology"></a>
+## 6. TECHNOLOGY STACK & DATABASE
+
+### 6.1 Technology Stack
+
+**Frontend:**
+- **Framework:** Next.js 14+ (App Router) with TypeScript
+- **Styling:** Tailwind CSS + Custom CSS
+- **Animations:** Framer Motion (primary), CSS animations
+- **State Management:** Zustand (lightweight)
+- **Forms:** React Hook Form + Zod validation
+- **Images:** Next/Image + Sharp
+- **Icons:** Lucide React
+- **Drag & Drop:** @dnd-kit or react-beautiful-dnd
+- **Confetti:** canvas-confetti
+- **Characters:** Lottie React (for animated characters)
+- **Music:** Howler.js
+- **QR Code:** qrcode.react
+- **Rich Text:** Tiptap or Lexical
+- **Date:** date-fns
+
+**Backend:**
+- **Platform:** Supabase
+  - Authentication (email/password)
+  - PostgreSQL database
+  - Storage (user photos, template assets)
+  - Real-time subscriptions (admin panel)
+  - Row Level Security (RLS)
+
+**Deployment:**
+- **Hosting:** Vercel (optimized for Next.js)
+- **Domain:** Custom domain with HTTPS
+- **CDN:** Vercel Edge Network (automatic)
+- **Analytics:** Vercel Analytics + Google Analytics
+
+### 6.2 Database Schema
+
+```sql
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Users table
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  full_name VARCHAR(255) NOT NULL,
+  mobile VARCHAR(20),
+  password_hash VARCHAR(255) NOT NULL,
+  status VARCHAR(20) DEFAULT 'pending', -- pending, approved, rejected
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Templates table (master list)
+CREATE TABLE templates (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  category VARCHAR(100) NOT NULL, -- valentine, birthday, anniversary, apology, fun
+  description TEXT,
+  preview_video_url TEXT,
+  thumbnail_url TEXT,
+  page_count INTEGER NOT NULL,
+  complexity VARCHAR(20) DEFAULT 'medium', -- low, medium, high
+  price_inr INTEGER NOT NULL,
+  sale_price_inr INTEGER,
+  is_active BOOLEAN DEFAULT true,
+  features JSONB, -- Array of feature strings
+  page_config JSONB NOT NULL, -- Full page configuration
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Purchases table
+CREATE TABLE purchases (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  transaction_id VARCHAR(255) UNIQUE NOT NULL, -- UTR from UPI
+  amount_inr INTEGER NOT NULL,
+  payment_status VARCHAR(20) DEFAULT 'pending', -- pending, verified, rejected
+  templates_included JSONB NOT NULL, -- Array of template IDs
+  purchase_type VARCHAR(50) DEFAULT 'individual', -- individual, bundle
+  created_at TIMESTAMP DEFAULT NOW(),
+  verified_at TIMESTAMP,
+  verified_by UUID REFERENCES users(id), -- Admin who verified
+  rejection_reason TEXT
+);
+
+-- User templates (junction table)
+CREATE TABLE user_templates (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  template_id UUID REFERENCES templates(id) ON DELETE CASCADE,
+  purchase_id UUID REFERENCES purchases(id),
+  created_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE(user_id, template_id)
+);
+
+-- Gifts table (created instances)
+CREATE TABLE gifts (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  template_id UUID REFERENCES templates(id),
+  gift_uuid VARCHAR(36) UNIQUE NOT NULL, -- Public shareable UUID
+  gift_name VARCHAR(255) DEFAULT 'My Gift',
+  gift_data JSONB NOT NULL, -- All customized content
+  recipient_name VARCHAR(255),
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  view_count INTEGER DEFAULT 0,
+  last_viewed_at TIMESTAMP
+);
+
+-- Gift photos table
+CREATE TABLE gift_photos (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  gift_id UUID REFERENCES gifts(id) ON DELETE CASCADE,
+  page_number INTEGER NOT NULL,
+  photo_url TEXT NOT NULL,
+  caption TEXT,
+  display_order INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Admin users table (separate from regular users)
+CREATE TABLE admin_users (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  full_name VARCHAR(255) NOT NULL,
+  role VARCHAR(50) DEFAULT 'admin', -- admin, super_admin
+  created_at TIMESTAMP DEFAULT NOW(),
+  last_login_at TIMESTAMP
+);
+
+-- Analytics events (optional)
+CREATE TABLE analytics_events (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  event_type VARCHAR(100) NOT NULL, -- page_view, purchase, gift_created, gift_viewed
+  user_id UUID REFERENCES users(id),
+  gift_id UUID REFERENCES gifts(id),
+  metadata JSONB,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Create indexes for performance
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_status ON users(status);
+CREATE INDEX idx_templates_category ON templates(category);
+CREATE INDEX idx_templates_active ON templates(is_active);
+CREATE INDEX idx_purchases_user ON purchases(user_id);
+CREATE INDEX idx_purchases_status ON purchases(payment_status);
+CREATE INDEX idx_gifts_uuid ON gifts(gift_uuid);
+CREATE INDEX idx_gifts_user ON gifts(user_id);
+CREATE INDEX idx_gift_photos_gift ON gift_photos(gift_id);
+CREATE INDEX idx_analytics_type ON analytics_events(event_type);
+CREATE INDEX idx_analytics_created ON analytics_events(created_at);
+```
+
+### 6.3 Supabase Storage Buckets
+
+```
+Buckets Configuration:
+
+1. user-photos (Public read, authenticated write)
+   - Stores user-uploaded photos for gifts
+   - Path structure: /{gift_id}/photo_{timestamp}.jpg
+   - Max file size: 5MB
+   - Allowed types: image/jpeg, image/png, image/webp
+
+2. template-previews (Public read, admin write only)
+   - Stores template preview videos and thumbnails
+   - Path structure: /{template_id}/preview.mp4, thumbnail.jpg
+   - No size limit (admin controlled)
+
+3. template-assets (Public read, admin write only)
+   - Stores template-specific assets
+   - Path structure: /{template_id}/character.svg, background.jpg, audio.mp3
+```
+
+**Storage Policies:**
+
+```sql
+-- User photos: Users can only upload to their own gifts
+CREATE POLICY "Users upload own gifts"
+ON storage.objects FOR INSERT
+TO authenticated
+WITH CHECK (
+  bucket_id = 'user-photos' AND
+  (storage.foldername(name))[1] IN (
+    SELECT id::text FROM gifts WHERE user_id = auth.uid()
+  )
+);
+
+-- User photos: Public read
+CREATE POLICY "Public read user photos"
+ON storage.objects FOR SELECT
+TO public
+USING (bucket_id = 'user-photos');
+
+-- User photos: Users can delete own
+CREATE POLICY "Users delete own photos"
+ON storage.objects FOR DELETE
+TO authenticated
+USING (
+  bucket_id = 'user-photos' AND
+  (storage.foldername(name))[1] IN (
+    SELECT id::text FROM gifts WHERE user_id = auth.uid()
+  )
+);
+
+-- Template previews/assets: Public read
+CREATE POLICY "Public read templates"
+ON storage.objects FOR SELECT
+TO public
+USING (bucket_id IN ('template-previews', 'template-assets'));
+
+-- Template previews/assets: Admin write only
+CREATE POLICY "Admin write templates"
+ON storage.objects FOR INSERT
+TO authenticated
+WITH CHECK (
+  bucket_id IN ('template-previews', 'template-assets') AND
+  EXISTS (SELECT 1 FROM admin_users WHERE id = auth.uid())
+);
+```
+
+### 6.4 Row Level Security (RLS) Policies
+
+```sql
+-- Users table: Users can read own data
+CREATE POLICY "Users read own"
+ON users FOR SELECT
+TO authenticated
+USING (id = auth.uid());
+
+-- Users table: Users can update own data
+CREATE POLICY "Users update own"
+ON users FOR UPDATE
+TO authenticated
+USING (id = auth.uid());
+
+-- Templates table: Everyone can read active templates
+CREATE POLICY "Public read active templates"
+ON templates FOR SELECT
+TO public
+USING (is_active = true);
+
+-- Purchases table: Users can read own purchases
+CREATE POLICY "Users read own purchases"
+ON purchases FOR SELECT
+TO authenticated
+USING (user_id = auth.uid());
+
+-- User templates: Users can read own
+CREATE POLICY "Users read own templates"
+ON user_templates FOR SELECT
+TO authenticated
+USING (user_id = auth.uid());
+
+-- Gifts table: Users can CRUD own gifts
+CREATE POLICY "Users read own gifts"
+ON gifts FOR SELECT
+TO authenticated
+USING (user_id = auth.uid());
+
+CREATE POLICY "Users create gifts"
+ON gifts FOR INSERT
+TO authenticated
+WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users update own gifts"
+ON gifts FOR UPDATE
+TO authenticated
+USING (user_id = auth.uid());
+
+CREATE POLICY "Users delete own gifts"
+ON gifts FOR DELETE
+TO authenticated
+USING (user_id = auth.uid());
+
+-- Gifts table: Public can read gift by UUID (for viewing)
+CREATE POLICY "Public read gift by UUID"
+ON gifts FOR SELECT
+TO public
+USING (gift_uuid IS NOT NULL);
+
+-- Gift photos: Users can read photos of own gifts
+CREATE POLICY "Users read own gift photos"
+ON gift_photos FOR SELECT
+TO authenticated
+USING (
+  gift_id IN (SELECT id FROM gifts WHERE user_id = auth.uid())
+);
+
+-- Gift photos: Users can insert photos to own gifts
+CREATE POLICY "Users insert own gift photos"
+ON gift_photos FOR INSERT
+TO authenticated
+WITH CHECK (
+  gift_id IN (SELECT id FROM gifts WHERE user_id = auth.uid())
+);
+
+-- Gift photos: Users can delete photos from own gifts
+CREATE POLICY "Users delete own gift photos"
+ON gift_photos FOR DELETE
+TO authenticated
+USING (
+  gift_id IN (SELECT id FROM gifts WHERE user_id = auth.uid())
+);
+
+-- Gift photos: Public can read photos (for public gift viewing)
+CREATE POLICY "Public read gift photos"
+ON gift_photos FOR SELECT
+TO public
+USING (
+  gift_id IN (SELECT id FROM gifts WHERE gift_uuid IS NOT NULL)
+);
+```
+
+### 6.5 Environment Variables
+
+```bash
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# App
+NEXT_PUBLIC_BASE_URL=https://yourdomain.com
+NEXT_PUBLIC_APP_NAME=Your Gift Site
+
+# Email (for notifications - use Resend, SendGrid, or similar)
+EMAIL_FROM=noreply@yourdomain.com
+EMAIL_API_KEY=your-email-api-key
+
+# Analytics (optional)
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+
+# Admin
+ADMIN_SECRET_KEY=your-admin-secret-for-2fa
+```
+
+---
+
+<a name="7-user-journeys"></a>
+## 7. USER JOURNEY MAPS
+
+### 7.1 Complete New User Purchase Journey
+
+```
+STEP 1: DISCOVERY
+User lands on homepage (from ad, social media, search)
+↓
+Sees hero section with value proposition
+↓
+Scrolls through template gallery
+↓
+Hovers over templates (video previews play)
+↓
+Intrigued by "Valentine's Special - 3 for ₹99"
+
+STEP 2: EXPLORATION
+Clicks on template to view details
+↓
+Watches full preview video (20-30 seconds)
+↓
+Reads features and page breakdown
+↓
+Sees customer reviews (social proof)
+↓
+Notices bundle offer (Save ₹1401!)
+↓
+Decides to purchase bundle
+
+STEP 3: CHECKOUT
+Clicks "Buy Bundle for ₹99"
+↓
+Redirected to checkout page
+↓
+Sees order summary (3 templates, ₹99 total)
+↓
+Fills registration form:
+  - Full name
+  - Email
+  - Mobile number
+  - Create password
+↓
+Sees UPI payment section:
+  - QR code displayed
+  - UPI ID shown
+  - Amount: ₹99
+
+STEP 4: PAYMENT
+Opens UPI app (PhonePe, GPay, Paytm, etc.)
+↓
+Scans QR code OR enters UPI ID manually
+↓
+Confirms payment of ₹99
+↓
+Payment successful in UPI app
+↓
+Gets transaction ID (12-digit UTR)
+↓
+Returns to website
+↓
+Enters transaction ID in form
+↓
+Clicks "Submit Payment Proof"
+
+STEP 5: PENDING STATE
+Redirected to "Thank You" page
+↓
+Sees message: "Payment under verification"
+↓
+Receives confirmation email:
+  - Order ID
+  - Transaction ID
+  - "We'll verify within 2 hours"
+↓
+Waits for admin approval
+
+STEP 6: APPROVAL
+(Admin verifies payment in backend)
+↓
+Admin clicks "Approve"
+↓
+User status changes from "pending" to "approved"
+↓
+User receives "Account Approved" email
+↓
+Email contains login link
+
+STEP 7: FIRST LOGIN
+User clicks login link from email
+↓
+Enters email and password
+↓
+Logs in successfully
+↓
+Lands on dashboard
+
+STEP 8: DASHBOARD VIEW
+Sees welcome message: "Welcome, [Name]!"
+↓
+Sees 3 purchased templates displayed
+↓
+Each template has "Create Gift" button
+↓
+Also sees:
+  - "Recent Gifts" section (empty)
+  - Account navigation
+  - "Buy More Templates" link
+
+STEP 9: CREATING FIRST GIFT
+Clicks "Create Gift" on "Romantic Proposal" template
+↓
+Redirected to editor: /dashboard/editor/template-1
+↓
+Sees editor interface:
+  - Page list on left (5 pages)
+  - Preview in center
+  - Editing panel at bottom
+↓
+Page 1 selected by default
+
+STEP 10: EDITING PAGES
+Goes through each page:
+
+Page 1 (Greeting):
+- Changes "Hey Cutiepie" to "Dear Priya"
+- Edits subtext: "I have something special for you"
+- Clicks "Next Page"
+
+Page 2 (Why You):
+- Edits 4 reasons:
+  1. "Your smile makes my day"
+  2. "Your kindness inspires me"
+  3. "You make me laugh"
+  4. "You're my best friend"
+- Clicks "Next Page"
+
+Page 3 (Memories):
+- Uploads 6 photos
+  - Selects from phone gallery
+  - Photos upload to Supabase
+  - Thumbnails appear
+- Adds optional captions
+- Clicks "Next Page"
+
+Page 4 (Question):
+- Keeps default: "Will you be my Valentine?"
+- Customizes "No" button responses
+- Clicks "Next Page"
+
+Page 5 (Final Message):
+- Writes long romantic message (500 chars)
+- Signs: "Love, Rahul"
+- Clicks "Save"
+
+STEP 11: PREVIEW
+Clicks "Preview" button
+↓
+Modal opens with mobile-sized preview
+↓
+Plays through entire template
+↓
+Tests interactions:
+  - Countdown works
+  - Buttons clickable
+  - Photos display correctly
+  - Animations smooth
+↓
+Satisfied with result
+↓
+Closes preview
+
+STEP 12: GENERATE LINK
+All pages marked complete (✅ icons)
+↓
+"Generate Shareable Link" button now enabled
+↓
+Clicks button
+↓
+System:
+  - Creates UUID: a1b2c3d4-e5f6-7g8h-9i0j
+  - Saves gift to database
+  - Uploads photos to storage
+↓
+Success modal appears:
+  - Shows generated link
+  - QR code displayed
+  - Share buttons: WhatsApp,

@@ -1,0 +1,3 @@
+﻿Creating users safely via Official API...
+Admin Signup: Database error finding user
+User Signup: Database error finding user

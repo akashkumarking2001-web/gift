@@ -1,0 +1,13 @@
+﻿Testing login...
+Error: AuthApiError: Database error querying schema
+    at handleError (D:\downloads\New folder\gift-main\gift-main\node_modules\@supabase\auth-js\dist\main\lib\fetch.js:66:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async _handleRequest (D:\downloads\New folder\gift-main\gift-main\node_modules\@supabase\auth-js\dist\main\lib\fetch.js:109:9)
+    at async _request (D:\downloads\New folder\gift-main\gift-main\node_modules\@supabase\auth-js\dist\main\lib\fetch.js:91:18)
+    at async SupabaseAuthClient.signInWithPassword (D:\downloads\New folder\gift-main\gift-main\node_modules\@supabase\auth-js\dist\main\GoTrueClient.js:443:23)
+    at async test (file:///D:/downloads/New%20folder/gift-main/gift-main/test-login.js:15:29) {
+  __isAuthError: true,
+  status: 500,
+  code: 'unexpected_failure'
+}
+Data: { user: null, session: null }

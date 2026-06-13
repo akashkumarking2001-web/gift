@@ -1,0 +1,45 @@
+﻿
+  [32m[1mVITE[22m v5.4.19[39m  [2mready in [0m[1m257[22m[2m[0m ms[22m
+
+  [32mΓ₧£[39m  [1mLocal[22m:   [36mhttp://localhost:[1m8080[22m/[39m
+  [32mΓ₧£[39m  [1mNetwork[22m: [36mhttp://192.168.1.2:[1m8080[22m/[39m
+[2m[32m  Γ₧£[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+node : Error: The following 
+dependencies are imported but 
+could not be resolved:
+At line:1 char:1
++ node "node_modules/vite/bin/
+vite.js" > 
+vite_start_output.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~
+    + CategoryInfo          : 
+    NotSpecified: (Error: Th  
+  e foll...ot be resolved::   
+ String) [], RemoteExcepti    
+on
+    + FullyQualifiedErrorId : 
+    NativeCommandError
+ 
+
+  [36mlucide-react[39m 
+[37m[2m(imported by 
+D:/downloads/New folder/gift-m
+ain/gift-main/src/components/t
+emplates/valentine-journey-v3/
+V3Background.tsx)[22m[39m
+
+Are they installed?
+    at file:///D:/downloads/Ne
+w%20folder/gift-main/gift-main
+/node_modules/vite/dist/node/c
+hunks/dep-C6uTJdX2.js:50669:15
+    at process.processTicksAnd
+Rejections (node:internal/proc
+ess/task_queues:103:5)
+    at async file:///D:/downlo
+ads/New%20folder/gift-main/gif
+t-main/node_modules/vite/dist/
+node/chunks/dep-C6uTJdX2.js:50
+174:26

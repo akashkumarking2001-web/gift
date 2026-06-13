@@ -1,0 +1,12 @@
+﻿[
+  {
+    "business_slug": "ak",
+    "email": "aksasih@gmail.com",
+    "password_hash": "$2a$06$CWQCm98JtMfWP4dskE8TtO4y2.dL4YD4FdF1u7MsTlKm6OJI.G5z."
+  },
+  {
+    "business_slug": "aka",
+    "email": "akash1@gmail.com",
+    "password_hash": "$2a$06$siTlyrzETEIhUIz9maxujeQejXtqpNqWvKsCudFFwI./oc7EWzqk6"
+  }
+]

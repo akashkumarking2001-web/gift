@@ -1,0 +1,65 @@
+{
+  "expo": {
+    "name": "Giftmagic",
+    "slug": "giftmagic",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0a060a",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0a060a"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.giftmagic.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Giftmagic needs camera access to scan QR codes and enable AR experiences.",
+        "NSPhotoLibraryUsageDescription": "Allow Giftmagic to access your photos so you can create custom AR frames."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0a060a"
+      },
+      "package": "com.giftmagic.app",
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Giftmagic to access your camera."
+        }
+      ]
+    ],
+    "scheme": "giftmagic",
+    "extra": {
+      "eas": {
+        "projectId": "6f2b1d79-3257-49c6-a80b-ae60b08cc7a0"
+      },
+      "router": {
+        "origin": false
+      }
+    },
+    "experiments": {
+      "baseUrl": "/magic-frame"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+﻿[
+  { key: 'upi_id', value: 'giftmagic@slc' },
+  {
+    key: 'qr_code_url',
+    value: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh7NBpP40HeOtV3IAtq-ct-BgzPvDaqKpsMYSb9b6TWM81jTYGhbG3A35l7Jg9Y2l6UqsLFxJZg3XvNQO8zTJSSEbA9JWAKzrd8AvqdK9QTvm_3_fYcfJXffneicPHE_SUa73_gHT-PKWOfydkDcNWxfVk2148TO3ctOhDqN7StHO5XZ1FZQYsHfTc0SA4/s540/IMG_20260211_120123.jpg'
+  },
+  {
+    key: 'instagram_url',
+    value: 'https://www.instagram.com/giftmagicdigital?igsh=MXJxanNuamlyZmZkZw=='
+  },
+  {
+    key: 'bundle_config',
+    value: `{"valentines":{"id":"valentines","title":"Valentine's Bundle","price":99,"originalPrice":2499,"templates":["romantic-valentines-journey-v2","love-question-v1","5-things-love","love-slider","valentine-journey-v3"],"isActive":true},"premium":{"id":"premium","title":"Single Premium Template","price":149,"originalPrice":1299,"isActive":true}}`
+  }
+]

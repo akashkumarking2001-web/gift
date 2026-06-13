@@ -1,0 +1,19 @@
+﻿[
+  {
+    id: 'b9d13805-4f64-4bd6-b6d9-8ce148392d6b',
+    business_name: 'ak',
+    business_slug: 'ak',
+    logo_url: '',
+    email: 'aksasih@gmail.com',
+    password_hash: '$2a$06$CWQCm98JtMfWP4dskE8TtO4y2.dL4YD4FdF1u7MsTlKm6OJI.G5z.',
+    instagram_id: '@ak',
+    package_type: '299',
+    frame_limit: 600,
+    frames_used: 0,
+    activation_date: '2026-03-21',
+    next_renewal_date: '2026-04-21',
+    is_active: true,
+    show_frames_preview: false,
+    created_at: '2026-03-21T07:34:57.335847+00:00'
+  }
+]

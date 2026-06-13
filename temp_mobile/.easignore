@@ -1,0 +1,22 @@
+node_modules/
+.expo/
+dist/
+build/
+.gradle/
+android/.gradle/
+android/build/
+ios/build/
+**/build/
+**/.gradle/
+
+# Specific locks
+*.lock
+**/checksums.lock
+
+# Assets (already fixed, but keep them out of upload if not needed)
+# Actually we need them for the build.
+# !assets/
+
+# Git
+.git/
+.env
