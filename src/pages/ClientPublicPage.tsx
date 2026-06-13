@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import WhatsAppSupport from "../components/WhatsAppSupport";
 import confetti from "canvas-confetti";
 import { supabase } from "../lib/supabase";
+import { SettingsService } from "../lib/settings";
 
 interface ClientPublicPageProps {
     slug: string;
@@ -29,10 +30,22 @@ function KaviyaCheckoutPage({ slug, biz }: { slug: string; biz: BusinessClient }
         packageName: string;
     } | null>(null);
 
+    // Dynamic settings
+    const [settings, setSettings] = useState<any>({});
+
+    useEffect(() => {
+        SettingsService.getSettings().then((s: any) => {
+            setSettings(s || {});
+        });
+    }, []);
+
+    const normalPrice = Number(settings.kaviya_normal_package_price) || 300;
+    const livePrice = Number(settings.kaviya_live_package_price) || 1000;
+
     const packages = [
         {
             name: "Normal Package",
-            price: 300,
+            price: normalPrice,
             description: "Unlock high-quality standard AR frame experiences.",
             features: [
                 "Virtual Experience",
@@ -46,7 +59,7 @@ function KaviyaCheckoutPage({ slug, biz }: { slug: string; biz: BusinessClient }
         },
         {
             name: "Live Package",
-            price: 1000,
+            price: livePrice,
             description: "Ultimate interactive experience with lifetime validity.",
             features: [
                 "Live Experience",
@@ -54,7 +67,7 @@ function KaviyaCheckoutPage({ slug, biz }: { slug: string; biz: BusinessClient }
                 "Lifetime Hosting & Support",
                 "Priority Admin Setup"
             ],
-            color: "from-purple-500/15 via-[#f04299]/15 to-pink-500/15 border-[#f04299]/30",
+            color: "from-purple-500/15 via-[#f04299]/15 to-[#f04299]/10 border-[#f04299]/30",
             buttonColor: "bg-gradient-to-r from-pink-600 to-purple-600 hover:opacity-90 shadow-purple-600/20",
             badge: "Best Value"
         }

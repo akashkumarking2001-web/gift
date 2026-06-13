@@ -561,6 +561,27 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleSaveKaviyaSettings = async () => {
+    try {
+      const normalPrice = settings.kaviya_normal_package_price !== undefined ? settings.kaviya_normal_package_price : '300';
+      const livePrice = settings.kaviya_live_package_price !== undefined ? settings.kaviya_live_package_price : '1000';
+      
+      await SettingsService.updateSetting('kaviya_normal_package_price', normalPrice.toString());
+      await SettingsService.updateSetting('kaviya_live_package_price', livePrice.toString());
+      
+      // Update local settings state to reflect saved changes
+      setSettings((prev: any) => ({
+        ...prev,
+        kaviya_normal_package_price: normalPrice.toString(),
+        kaviya_live_package_price: livePrice.toString()
+      }));
+
+      toast({ title: "Success", description: "Kaviya package prices updated successfully." });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to save Kaviya settings.", variant: "destructive" });
+    }
+  };
+
   const handleSavePriceSettings = async () => {
     try {
       // 1. Save Personal Pricing
@@ -811,6 +832,13 @@ const AdminDashboard = () => {
           >
             <Settings className="w-5 h-5" />
             System Config
+          </button>
+          <button
+            onClick={() => { setActiveTab('kaviya-settings'); setIsSidebarOpen(false); }}
+            className={`w-full flex items-center gap-3 px-6 py-3.5 text-sm font-medium transition-colors ${activeTab === 'kaviya-settings' ? 'bg-[#f04299]/10 text-[#f04299] border-r-2 border-[#f04299]' : 'text-white/60 hover:text-[#f04299] hover:bg-white/5'}`}
+          >
+            <Sparkles className="w-5 h-5 text-[#f04299]" />
+            Kaviya Pricing
           </button>
         </nav>
 
@@ -2286,6 +2314,73 @@ const AdminDashboard = () => {
                 Save Configuration
               </button>
 
+            </div>
+          </div>
+        )}
+
+        {/* Kaviya Pricing Tab */}
+        {activeTab === 'kaviya-settings' && (
+          <div className="max-w-2xl mx-auto glass-card p-8 rounded-3xl border border-[#f04299]/20 relative overflow-hidden">
+            {/* Glowing background details */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl -z-10" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl -z-10" />
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2.5 rounded-xl bg-pink-500/20 text-[#f04299]">
+                <Sparkles className="w-6 h-6 animate-pulse" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-black">Kaviya's Pricing Settings</h3>
+                <p className="text-xs text-white/50">Manage the package prices specifically for Kaviya's subdomain</p>
+              </div>
+            </div>
+
+            <div className="space-y-6 mt-8">
+              {/* Normal Package Price */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold uppercase tracking-widest text-[#f04299] flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse"></span>
+                    Normal Package Price (₹)
+                  </label>
+                  <span className="text-[10px] bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full font-bold">Default: ₹300</span>
+                </div>
+                <input
+                  type="number"
+                  value={settings.kaviya_normal_package_price !== undefined ? settings.kaviya_normal_package_price : '300'}
+                  onChange={(e) => setSettings({ ...settings, kaviya_normal_package_price: e.target.value })}
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-[#f04299]/50 focus:ring-1 focus:ring-[#f04299]/50 transition-all font-mono"
+                  placeholder="300"
+                />
+                <p className="text-[10px] text-white/40">Enter the price in INR. Customers will pay this amount during checkout for the Normal Package.</p>
+              </div>
+
+              {/* Live Package Price */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold uppercase tracking-widest text-purple-400 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></span>
+                    Live Package Price (₹)
+                  </label>
+                  <span className="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-bold">Default: ₹1000</span>
+                </div>
+                <input
+                  type="number"
+                  value={settings.kaviya_live_package_price !== undefined ? settings.kaviya_live_package_price : '1000'}
+                  onChange={(e) => setSettings({ ...settings, kaviya_live_package_price: e.target.value })}
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all font-mono"
+                  placeholder="1000"
+                />
+                <p className="text-[10px] text-white/40">Enter the price in INR. Customers will pay this amount during checkout for the Live Package.</p>
+              </div>
+
+              <button
+                onClick={handleSaveKaviyaSettings}
+                className="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold py-4 rounded-xl mt-8 shadow-lg shadow-pink-600/20 hover:scale-[1.01] transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <Save className="w-5 h-5" />
+                Save Kaviya Pricing
+              </button>
             </div>
           </div>
         )}
